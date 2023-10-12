@@ -20,7 +20,7 @@
     <item
         android:id="@+id/communityFragment"
         android:title="@string/menu_community"
-        android:icon="@drawable/chat"
+        android:icon="@drawable/commu"
         />
     <item
         android:id="@+id/settingFragment"
