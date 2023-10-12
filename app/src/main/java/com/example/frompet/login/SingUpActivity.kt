@@ -3,14 +3,13 @@ package com.example.frompet.login
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.frompet.R
-import com.example.frompet.databinding.ActivityLoginBinding
-import com.example.frompet.databinding.ActivityMainBinding
+import com.example.frompet.databinding.ActivitySingUpBinding
 
-class LoginActivity : AppCompatActivity() {
-    private lateinit var mBinding:ActivityLoginBinding
+class SingUpActivity : AppCompatActivity() {
+    private lateinit var mBinding:ActivitySingUpBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivityLoginBinding.inflate(layoutInflater)
+        mBinding = ActivitySingUpBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
     }
 }
