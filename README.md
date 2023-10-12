@@ -1,1 +1,1 @@
-### Fianl Project FromPet 반려동물 데이팅 앱
+### Final Project FromPet 반려동물 데이팅 앱
