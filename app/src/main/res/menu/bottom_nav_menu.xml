@@ -4,28 +4,28 @@
     <item
         android:id="@+id/homeFragment"
         android:title="@string/menu_home"
-        android:icon="@drawable/home"
+        android:icon="@drawable/icon_home_unselected"
         />
 
     <item
         android:id="@+id/chatFragment"
         android:title="@string/menu_chat"
-        android:icon="@drawable/commu"
+        android:icon="@drawable/icon_chat_unselected"
         />
     <item
         android:id="@+id/mapFragment"
         android:title="@string/menu_map"
-        android:icon="@drawable/map"
+        android:icon="@drawable/icon_map_unselected"
         />
     <item
         android:id="@+id/communityFragment"
         android:title="@string/menu_community"
-        android:icon="@drawable/chat"
+        android:icon="@drawable/icon_commu_unselected"
         />
     <item
         android:id="@+id/settingFragment"
         android:title="@string/menu_set"
-        android:icon="@drawable/setting"
+        android:icon="@drawable/icon_setting_unselected"
         />
 
 </menu>
