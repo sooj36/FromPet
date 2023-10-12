@@ -1,16 +1,16 @@
 package com.example.frompet.login
 
+import android.os.Binder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.frompet.R
-import com.example.frompet.databinding.ActivityLoginBinding
-import com.example.frompet.databinding.ActivityMainBinding
+import com.example.frompet.databinding.ActivityPasswordResetBinding
 
-class LoginActivity : AppCompatActivity() {
-    private lateinit var mBinding:ActivityLoginBinding
+class PasswordResetActivity : AppCompatActivity() {
+    private lateinit var mBinding:ActivityPasswordResetBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivityLoginBinding.inflate(layoutInflater)
+        mBinding = ActivityPasswordResetBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
     }
 }

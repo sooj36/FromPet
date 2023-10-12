@@ -15,6 +15,15 @@
         android:theme="@style/Theme.FromPet"
         tools:targetApi="31">
         <activity
+            android:name=".login.SingUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".login.PasswordResetActivity"
+            android:exported="false" />
+        <activity
+            android:name=".login.MemberInfoActivity"
+            android:exported="false" />
+        <activity
             android:name=".login.LoginActivity"
             android:exported="false" />
         <activity
