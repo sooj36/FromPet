@@ -2,4 +2,20 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="hotPink">#F61D5D</color>
+    <color name="hotOrenge">#E03427</color>
+    <color name="navy">#1B273F</color>
+    <color name="green">#799468</color>
+    <color name="darkPink">#946872</color>
+    <color name="warmBlue">#0F82ED</color>
+    <color name="rightPink">#FF88C1</color>
+    <color name="lipPink">#FF5794</color>
+    <color name="rightBeige">#DCBAB7</color>
+    <color name="beige">#DCB8AB</color>
+    <color name="peachPuff">#F4D1B1</color>
+    <color name="rightOrenge">#F68531</color>
+
+
+
+
 </resources>
