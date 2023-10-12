@@ -1,9 +1,10 @@
-package com.example.frompet
+package com.example.frompet.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.example.frompet.R
 import com.example.frompet.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
