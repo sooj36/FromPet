@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.frompet.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.frompet.chating.ChatingFragment"
+        android:label="fragment_chating"
+        tools:layout="@layout/fragment_chating" />
+    <fragment
+        android:id="@+id/communityFragment"
+        android:name="com.example.frompet.commutiy.CommunicationFragment"
+        android:label="fragment_communication"
+        tools:layout="@layout/fragment_communication" />
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.frompet.setting.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" />
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.frompet.map.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" />
+</navigation>

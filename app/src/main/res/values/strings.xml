@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">FromPet</string>
+    <string name="menu_home">홈</string>
+    <string name="menu_chat">채팅</string>
+    <string name="menu_map">맵</string>
+    <string name="menu_community">커뮤</string>
+    <string name="menu_set">설정</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
