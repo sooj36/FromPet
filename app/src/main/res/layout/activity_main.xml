@@ -27,6 +27,7 @@
         android:background="@color/hotPink"
         app:itemTextColor="#020202"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:itemIconSize="35dp"
         app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
