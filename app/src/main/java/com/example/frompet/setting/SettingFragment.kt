@@ -12,7 +12,7 @@ import com.example.frompet.databinding.FragmentSettingBinding
 class SettingFragment : Fragment() {
 
     private var _binding : FragmentSettingBinding? = null
-    private val binding get() = _binding
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -21,7 +21,7 @@ class SettingFragment : Fragment() {
          _binding = FragmentSettingBinding.inflate(inflater,container,false)
 
 
-        return binding?.root
+        return binding.root
     }
 
     override fun onDestroyView() {

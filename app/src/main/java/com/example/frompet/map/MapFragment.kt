@@ -20,7 +20,7 @@ class MapFragment : Fragment() {
     ): View? {
          _binding = FragmentMapBinding.inflate(inflater,container,false)
 
-        return binding?.root
+        return binding.root
     }
 
     override fun onDestroyView() {
