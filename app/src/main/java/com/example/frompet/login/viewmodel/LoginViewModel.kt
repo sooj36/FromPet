@@ -2,6 +2,7 @@ package com.example.frompet.login.viewmodel
 
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,6 +27,7 @@ class LoginViewModel : ViewModel() {
                 if (task.isSuccessful) {
                     _user.value = auth.currentUser
                     _loginResult.value = true
+
                 } else {
                     Log.e("zzzzzzzz", "로그인 실패: ${task.exception}")
                     _user.value = null
