@@ -3,6 +3,7 @@ package com.example.frompet.login
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.frompet.R
 import com.example.frompet.databinding.ActivityLoginBinding
@@ -41,13 +42,28 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.loginResult.observe(this) { loginSuccess ->
             if (loginSuccess) {
-                // 로그인 성공한 경우
+                showLoginResultToast(true)
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             } else {
-                // 로그인 실패한 경우, 처리를 하지 않음
+                showLoginResultToast(false)
                 // 실패 메시지 표시나 다른 작업을 수행하려면 여기에 추가
             }
         }
     }
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
+
+    // ... (다른 코드 생략)
+        private fun showLoginResultToast(isSuccess: Boolean) {
+            val message = if (isSuccess) "로그인 성공" else "로그인 실패"
+            showToast(message)
+        }
+
+        private fun showSignUpResultToast(isSuccess: Boolean) {
+            val message = if (isSuccess) "회원가입 성공" else "회원가입 실패"
+            showToast(message)
+        }
+    }
+

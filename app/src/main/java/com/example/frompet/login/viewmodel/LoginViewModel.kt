@@ -39,9 +39,11 @@ class LoginViewModel : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _user.value = auth.currentUser
+                    _loginResult.value = true
                 } else {
                     Log.e("zzzzzzzz", "회원가입 실패: ${task.exception}")
                     _user.value = null
+                    _loginResult.value = false
                 }
             }
     }
