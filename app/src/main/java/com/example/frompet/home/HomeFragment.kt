@@ -10,22 +10,23 @@ import com.example.frompet.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
-    private var mBinding : FragmentHomeBinding? = null
+    private var _binding : FragmentHomeBinding? = null
+    private val binding get() = _binding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentHomeBinding.inflate(inflater,container,false)
+         _binding = FragmentHomeBinding.inflate(inflater,container,false)
 
-        mBinding = binding
 
-        return mBinding?.root
+
+        return binding?.root
     }
 
-    override fun onDestroy() {
-        mBinding = null
-        super.onDestroy()
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
 }
