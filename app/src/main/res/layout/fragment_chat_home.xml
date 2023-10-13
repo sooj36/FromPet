@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".chating.ChatMessageFragment">
+    tools:context=".chating.ChatHomeFragment">
 
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="채팅목록들" />
+        android:text="채팅가능한목록들" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_chat_home"
         android:layout_marginTop="30dp"
