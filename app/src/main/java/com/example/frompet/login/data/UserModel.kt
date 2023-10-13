@@ -1,8 +1,11 @@
 package com.example.frompet.login.data
 
 data class UserModel(
-    val name: String,
-    val email: String,
-    val password: String,
-    val heart: Boolean,
-    )
+    val petAge: Int,
+    val petDescription: String,
+    val petGender: String,
+    val petIntroduction: String,
+    val petName: String,
+    val petProfile:String,
+    val petType: String
+)

@@ -47,7 +47,6 @@ class LoginActivity : AppCompatActivity() {
                 startActivity(intent)
             } else {
                 showLoginResultToast(false)
-                // 실패 메시지 표시나 다른 작업을 수행하려면 여기에 추가
             }
         }
     }
@@ -55,15 +54,10 @@ class LoginActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    // ... (다른 코드 생략)
         private fun showLoginResultToast(isSuccess: Boolean) {
             val message = if (isSuccess) "로그인 성공" else "로그인 실패"
             showToast(message)
         }
 
-        private fun showSignUpResultToast(isSuccess: Boolean) {
-            val message = if (isSuccess) "회원가입 성공" else "회원가입 실패"
-            showToast(message)
-        }
     }
 
