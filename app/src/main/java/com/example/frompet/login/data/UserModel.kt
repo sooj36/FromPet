@@ -6,6 +6,5 @@ data class UserModel(
     val petGender: String,
     val petIntroduction: String,
     val petName: String,
-    val petProfile:String,
     val petType: String
 )

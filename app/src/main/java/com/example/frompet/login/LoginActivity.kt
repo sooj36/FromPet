@@ -3,6 +3,7 @@ package com.example.frompet.login
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.frompet.R
@@ -12,52 +13,80 @@ import com.example.frompet.home.HomeFragment
 import com.example.frompet.login.viewmodel.LoginViewModel
 import com.example.frompet.login.viewmodel.LoginViewModelFactory
 import com.example.frompet.main.MainActivity
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var mBinding:ActivityLoginBinding
+    private var _binding: ActivityLoginBinding? = null
+    private val binding get() = _binding!!
     private val viewModel by lazy {
-        ViewModelProvider(this,
+        ViewModelProvider(
+            this,
             LoginViewModelFactory()
         )[LoginViewModel::class.java]
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mBinding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
+        _binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        mBinding.btLogin.setOnClickListener {
-            val email = mBinding.etEmail.text.toString()
-            val password = mBinding.etPassword.text.toString()
-            viewModel.singIn(email,password)
+        binding.btLogin.setOnClickListener {
+            val email = binding.etEmail.text.toString()
+            val password = binding.etPassword.text.toString()
+            viewModel.singIn(email, password)
 
         }
 
-        mBinding.btSingup.setOnClickListener {
+        binding.btSingup.setOnClickListener {
             val intent = Intent(this, SingUpActivity::class.java)
             startActivity(intent)
         }
 
 
+        viewModel.user.observe(this) { firebaseUser ->
+            if (firebaseUser != null) {
+                val uid = firebaseUser.uid
+                Log.d("LoginActivity", "사용자 UID: $uid")
+
+                // Firebase Firestore에서 사용자 정보 가져오기
+                FirebaseFirestore.getInstance().collection("User")
+                    .document(uid)
+                    .get()
+                    .addOnSuccessListener { documentSnapshot ->
+                        if (documentSnapshot.exists()) {
+                            // 사용자 정보가 Firestore에 있는 경우, MainActivity로 이동
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            // 사용자 정보가 Firestore에 없는 경우, MemberInfoActivity로 이동
+                            val intent = Intent(this, MemberInfoActivity::class.java)
+                            startActivity(intent)
+                        }
+                    }
+                    .addOnFailureListener {
+                    }
+            }
+        }
+
         viewModel.loginResult.observe(this) { loginSuccess ->
             if (loginSuccess) {
                 showLoginResultToast(true)
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
             } else {
                 showLoginResultToast(false)
             }
         }
     }
+
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-        private fun showLoginResultToast(isSuccess: Boolean) {
-            val message = if (isSuccess) "로그인 성공" else "로그인 실패"
-            showToast(message)
-        }
-
+    private fun showLoginResultToast(isSuccess: Boolean) {
+        val message = if (isSuccess) "로그인 성공" else "로그인 실패"
+        showToast(message)
     }
+
+}
 

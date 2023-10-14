@@ -16,19 +16,20 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 
 class SingUpActivity : AppCompatActivity() {
-    private lateinit var mBinding:ActivitySingUpBinding
+    private var _binding: ActivitySingUpBinding? = null
+    private val binding get() = _binding!!
     private val viewModel by lazy {
         ViewModelProvider(this, LoginViewModelFactory())[LoginViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivitySingUpBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
+        _binding = ActivitySingUpBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        mBinding.SignUpButton.setOnClickListener {
-            val email = mBinding.etEmailUp.text.toString()
-            val password = mBinding.etPasswordUp.text.toString()
+        binding.SignUpButton.setOnClickListener {
+            val email = binding.etEmailUp.text.toString()
+            val password = binding.etPasswordUp.text.toString()
             viewModel.signUp(email,password)
 
         }

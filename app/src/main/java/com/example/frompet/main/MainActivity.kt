@@ -1,24 +1,61 @@
 package com.example.frompet.main
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.PendingIntent.getActivity
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.frompet.R
 import com.example.frompet.databinding.ActivityMainBinding
+import com.example.frompet.login.LoginActivity
+import com.example.frompet.login.viewmodel.LoginViewModel
+import com.example.frompet.login.viewmodel.LoginViewModelFactory
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var mBinding: ActivityMainBinding
+    private var _binding: ActivityMainBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel by lazy {
+        ViewModelProvider(this,
+            LoginViewModelFactory()
+        )[LoginViewModel::class.java]
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        binding.btLogout.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            startActivity(intent)
+        }
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        if (currentUser == null) {
+            // 사용자가 로그인되어 있지 않은 경우
+            // LoginActivity로 이동
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish() // 현재 화면 종료
+        } else {
+            setStartApp()
+        }
+       /* viewModel.user.observe(this) { firebaseUser ->
+            if (firebaseUser != null) {
+                val uid = firebaseUser.uid
+                Log.d("ㅋㅋㅋㅋㅋ", "사용자 UID: $uid")
+            }
+        }*/
+    }
+    private fun setStartApp() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.my_nav_host) as NavHostFragment
-
         val navController = navHostFragment.navController
-
-        NavigationUI.setupWithNavController(mBinding.myBottomNav,navController)
-
+        _binding?.let { NavigationUI.setupWithNavController(it.myBottomNav, navController) }
     }
 }
