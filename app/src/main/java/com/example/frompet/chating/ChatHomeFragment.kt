@@ -9,14 +9,14 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frompet.chating.adapter.ChatHomeAdapter
 import com.example.frompet.databinding.FragmentChatHomeBinding
-import com.example.frompet.login.viewmodel.UserViewModel
+import com.example.frompet.login.viewmodel.MatchViewModel
 
 class ChatHomeFragment : Fragment() {
 
     private var _binding: FragmentChatHomeBinding? = null
     private val adapter : ChatHomeAdapter by lazy { binding.rvChatHome.adapter as ChatHomeAdapter }
     private val binding get() = _binding!!
-    private val viewModel: UserViewModel by viewModels()
+    private val viewModel: MatchViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
