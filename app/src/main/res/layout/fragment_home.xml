@@ -39,14 +39,29 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <ImageView
-        android:id="@+id/iv_heart"
+        android:id="@+id/likeBtn"
         android:layout_width="50dp"
         android:layout_height="50dp"
-                android:background="@drawable/heart"
+        android:background="@drawable/heartbtn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.645"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
+
+    <ImageView
+        android:id="@+id/dislikeBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/favorite_border"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.376"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
+
     <LinearLayout
         android:id="@+id/userListLayout"
         android:layout_width="0dp"
