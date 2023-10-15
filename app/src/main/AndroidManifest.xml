@@ -19,7 +19,9 @@
             android:exported="false" />
         <activity
             android:name=".chating.ChatMessageActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".chating.ChatingActivity"
             android:exported="false" />
