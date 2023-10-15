@@ -13,43 +13,112 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 
 class UserViewModel : ViewModel() {
-    val likeList = MutableLiveData<List<UserModel>>()
+    val likeList = MutableLiveData<List<UserModel>?>()
     val disLikeList = MutableLiveData<List<UserModel>>()
-    private val database = FirebaseDatabase.getInstance().getReference("likes")
+    val matchedList = MutableLiveData<List<UserModel>>()
+    private val database = FirebaseDatabase.getInstance().getReference("likeUsers")
     private val firestore = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
 
     fun like(targetUserId: String) {
-        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        Log.d("jun", "$currentUserId")
+        val currentUserId = auth.currentUser?.uid ?: return
+        Log.d("jun", "Current User ID: $currentUserId, Target User ID: $targetUserId")
         database.child(currentUserId).child("liked").child(targetUserId).setValue(true)
         database.child(targetUserId).child("likedBy").child(currentUserId).setValue(true)
+        MatchedUser(targetUserId)
     }
 
     fun dislike(targetUserId: String) {
-        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val currentUserId = auth.currentUser?.uid ?: return
         database.child(currentUserId).child("disliked").child(targetUserId).setValue(true)
         database.child(targetUserId).child("dislikedBy").child(currentUserId).setValue(true)
     }
-
     fun loadlikes() {
-        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val currentUserId = auth.currentUser?.uid ?: return
 
         database.child(currentUserId).child("likedBy").addValueEventListener(object :
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                // 여기서 likedUserIds는 likedBy 항목의 사용자 id목록임 즉 나에게 좋아요보낸사람들
                 val likedUserIds = snapshot.children.mapNotNull { it.key }
                 val likedUsers = mutableListOf<UserModel>()
 
                 likedUserIds.forEach { userId ->
-                    // 여기서 파이어스토어에서 각 사용자의 정보를 로드해서 forEath로 순회하면서 맞는데이터 변환
+
+                    database.child(currentUserId).child("matched").child(userId).addListenerForSingleValueEvent(object: ValueEventListener {
+                        override fun onDataChange(matchedSnapshot: DataSnapshot) {
+                            if (!matchedSnapshot.exists()) { // 매치된 사용자가 아닌 경우에만 추가
+                                firestore.collection("User").document(userId)
+                                    .get()
+                                    .addOnSuccessListener { document ->
+                                        val user = document.toObject(UserModel::class.java)
+                                        user?.let {
+                                            likedUsers.add(it)
+                                            likeList.value = likedUsers.toList()
+                                            Log.d("jun","매치되기전라이크리스트${likeList.value}")
+                                        }
+                                    }
+                            }
+                        }
+                        override fun onCancelled(error: DatabaseError) {}
+                    })
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+    private fun MatchedUser(otherUserUid: String) {
+        val currentUserId = auth.currentUser?.uid ?: return
+
+        val otherUserLikedByMe = database.child(currentUserId).child("liked").child(otherUserUid)
+        val meLikedByOtherUser = database.child(otherUserUid).child("liked").child(currentUserId)
+
+        otherUserLikedByMe.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.value == true) {
+                    meLikedByOtherUser.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.value == true) {
+                                // 서로 like한 경우
+                                Log.d("jun", "매치 유저 uid: $otherUserUid")
+                                database.child(currentUserId).child("matched").child(otherUserUid).setValue(true)
+                                database.child(otherUserUid).child("matched").child(currentUserId).setValue(true)
+                                val currentLikes = likeList.value?.toMutableList()
+                                currentLikes?.removeIf { it.uid == otherUserUid }
+                                likeList.value =currentLikes
+                                Log.d("jun","매치된후라이크리스트:${likeList.value}")
+
+//                                loadlikes()
+                            }
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.d("jun", "Error: ${error.message}")
+                        }
+                    })
+                } else {
+                    Log.d("jun", "Not matched user: $otherUserUid")
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
+        fun loadMatchedUsers() {
+        val currentUserId = auth.currentUser?.uid ?: return
+
+        database.child(currentUserId).child("matched").addValueEventListener(object :
+            ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val matchedUserIds = snapshot.children.mapNotNull { it.key }
+                val matchedUsers = mutableListOf<UserModel>()
+
+                matchedUserIds.forEach { userId ->
                     firestore.collection("User").document(userId)
                         .get()
                         .addOnSuccessListener { document ->
                             val user = document.toObject(UserModel::class.java)
                             user?.let {
-                                likedUsers.add(it)
-                                likeList.value = likedUsers.toList()
+                                matchedUsers.add(it)
+                                matchedList.value = matchedUsers.toList()
                             }
                         }
                         .addOnFailureListener { exception ->
@@ -57,12 +126,14 @@ class UserViewModel : ViewModel() {
                         }
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.d("jun", "db error: ${error.message}")
-            }
+            override fun onCancelled(error: DatabaseError) {}
         })
     }
+
+
+
+
+
 }
 
 
