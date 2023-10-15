@@ -40,7 +40,7 @@ class ChatListAdapter(private val context: Context) : ListAdapter<UserModel, Cha
 
     class DiffCallback : DiffUtil.ItemCallback<UserModel>() {
         override fun areItemsTheSame(oldItem: UserModel, newItem: UserModel): Boolean {
-            return oldItem== newItem
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(oldItem: UserModel, newItem: UserModel): Boolean {

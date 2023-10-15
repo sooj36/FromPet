@@ -2,18 +2,16 @@ package com.example.frompet.chating
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.frompet.R
 import com.example.frompet.databinding.ActivityChatUserDetailBinding
 import com.example.frompet.login.data.UserModel
-import com.example.frompet.login.viewmodel.UserViewModel
+import com.example.frompet.login.viewmodel.MatchViewModel
 
 class ChatUserDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatUserDetailBinding
-    private val viewModel: UserViewModel by lazy {
-        ViewModelProvider(this).get(UserViewModel::class.java)
+    private val viewModel: MatchViewModel by lazy {
+        ViewModelProvider(this).get(MatchViewModel::class.java)
     }
 
 

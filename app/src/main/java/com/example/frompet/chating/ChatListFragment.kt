@@ -7,18 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.frompet.chating.adapter.ChatListAdapter
 import com.example.frompet.databinding.FragmentChatListBinding
-import com.example.frompet.login.viewmodel.UserViewModel
+import com.example.frompet.login.viewmodel.MatchViewModel
 
 
 class ChatListFragment : Fragment() {
     private var _binding: FragmentChatListBinding? = null
     private val binding get() = _binding!!
     private val adapter: ChatListAdapter by lazy { binding.rvChatList.adapter as ChatListAdapter }
-    private val viewModel: UserViewModel by activityViewModels()
+    private val viewModel: MatchViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
