@@ -32,41 +32,46 @@ class LoginActivity : AppCompatActivity() {
         _binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btLogin.setOnClickListener {
-            val email = binding.etEmail.text.toString()
-            val password = binding.etPassword.text.toString()
-            viewModel.singIn(email, password)
-
-        }
 
         binding.btSingup.setOnClickListener {
             val intent = Intent(this, SingUpActivity::class.java)
             startActivity(intent)
         }
 
+        binding.btPasswordRe.setOnClickListener {
+            val intent = Intent(this,PasswordResetActivity::class.java)
+            startActivity(intent)
+        }
+        binding.btLogin.setOnClickListener {
+            val email = binding.etEmail.text.toString()
+            val password = binding.etPassword.text.toString()
+            viewModel.singIn(email, password)
 
-        viewModel.user.observe(this) { firebaseUser ->
-            if (firebaseUser != null) {
-                val uid = firebaseUser.uid
-                Log.d("LoginActivity", "사용자 UID: $uid")
 
-                // Firebase Firestore에서 사용자 정보 가져오기
-                FirebaseFirestore.getInstance().collection("User")
-                    .document(uid)
-                    .get()
-                    .addOnSuccessListener { documentSnapshot ->
-                        if (documentSnapshot.exists()) {
-                            // 사용자 정보가 Firestore에 있는 경우, MainActivity로 이동
-                            val intent = Intent(this, MainActivity::class.java)
-                            startActivity(intent)
-                        } else {
-                            // 사용자 정보가 Firestore에 없는 경우, MemberInfoActivity로 이동
-                            val intent = Intent(this, MemberInfoActivity::class.java)
-                            startActivity(intent)
+
+            viewModel.user.observe(this) { firebaseUser ->
+                if (firebaseUser != null) {
+                    val uid = firebaseUser.uid
+                    Log.d("LoginActivity", "사용자 UID: $uid")
+
+                    // Firebase Firestore에서 사용자 정보 가져오기
+                    FirebaseFirestore.getInstance().collection("User")
+                        .document(uid)
+                        .get()
+                        .addOnSuccessListener { documentSnapshot ->
+                            if (documentSnapshot.exists()) {
+                                // 사용자 정보가 Firestore에 있는 경우, MainActivity로 이동
+                                val intent = Intent(this, MainActivity::class.java)
+                                startActivity(intent)
+                            } else {
+                                // 사용자 정보가 Firestore에 없는 경우, MemberInfoActivity로 이동
+                                val intent = Intent(this, MemberInfoActivity::class.java)
+                                startActivity(intent)
+                            }
                         }
-                    }
-                    .addOnFailureListener {
-                    }
+                        .addOnFailureListener {
+                        }
+                }
             }
         }
 

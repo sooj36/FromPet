@@ -34,6 +34,7 @@ class MemberInfoActivity : AppCompatActivity() {
                 val userModel = UserModel(
                     petAge, petDescription, petGender, petIntroduction, petName,petType
                 )
+                userModel.uid = currentUser.uid
 
                 // Firestore의 "User" 컬렉션에 사용자 정보 저장
                 FirebaseFirestore.getInstance().collection("User")
@@ -42,7 +43,6 @@ class MemberInfoActivity : AppCompatActivity() {
                     .addOnSuccessListener {
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
-                        finish()
                         showToast("회원 정보가 업데이트되었습니다.")
                         finish()
                     }
