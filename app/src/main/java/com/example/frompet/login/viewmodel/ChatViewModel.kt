@@ -12,10 +12,13 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
+import org.checkerframework.checker.builder.qual.ReturnsReceiver
 
 class ChatViewModel : ViewModel() {
     private val _chatMessages = MutableLiveData<List<ChatMessage>>()
     val chatMessages: LiveData<List<ChatMessage>> get() = _chatMessages
+    private val _isTyping =MutableLiveData<Boolean>()
+    val isTyping :LiveData<Boolean> get() = _isTyping
     private val database = FirebaseDatabase.getInstance().reference
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -62,6 +65,20 @@ class ChatViewModel : ViewModel() {
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.d("jun", "불러오기실패: ${databaseError.message}")
             }
+        }
+        )
+    }
+    fun checkTypingStatus(receiverId: String) {
+        database.child("typingStatus").child(receiverId).addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val status = dataSnapshot.getValue(Boolean::class.java)?:false
+                _isTyping.value = status
+            }
+            override fun onCancelled(databaseError: DatabaseError){}
         })
+    }
+    fun setTypingStatus(isTyping:Boolean){
+        val currentId = auth.currentUser?.uid ?: return
+        database.child("typingStatus").child(currentId).setValue(isTyping)
     }
 }
