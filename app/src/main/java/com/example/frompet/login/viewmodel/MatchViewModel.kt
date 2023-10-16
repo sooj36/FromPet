@@ -28,14 +28,14 @@ class MatchViewModel : ViewModel() {
         database.child(targetUserId).child("likedBy").child(currentUserId).setValue(true)
 
     }
-
     fun dislike(targetUserId: String) {
         val currentUserId = auth.currentUser?.uid ?: return
         database.child(currentUserId).child("likedBy").child(targetUserId).removeValue()
-        database.child(currentUserId).child("matched").child(targetUserId).removeValue()
         database.child(targetUserId).child("matched").child(currentUserId).removeValue()
+        //        database.child(currentUserId).child("matched").child(targetUserId).removeValue()
 
     }
+
     fun loadlikes() {
         val currentUserId = auth.currentUser?.uid ?: return
 
@@ -74,7 +74,6 @@ class MatchViewModel : ViewModel() {
 
     fun matchWithUser(otherUserUid: String) {
         val currentUserId = auth.currentUser?.uid ?: return
-
         // 서로 like한 경우
         Log.d("jun", "매치 유저 uid: $otherUserUid")
         database.child(currentUserId).child("matched").child(otherUserUid).setValue(true)

@@ -56,16 +56,19 @@ class ChatUserDetailActivity : AppCompatActivity() {
                 finish()
             }
         }
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
     }
 
     private fun displayUserInfo(user: UserModel) {
         binding.apply {
-            tvPetName.text = "이름: ${user.petName}"
-            tvPetAge.text = "나이: ${user.petAge.toString()}세"
-            tvPetGender.text = "성별: ${user.petGender}"
-            tvPetType.text = "종류: ${user.petType}"
-            tvPetDes.text = "특징: ${user.petDescription}"
-            tvPetIntro.text = "소개: ${user.petIntroduction}"
+            tvPetName.text = "${user.petName}"
+            tvPetAge.text = "${user.petAge.toString()}세"
+            tvPetGender.text = "${user.petGender}"
+            tvPetType.text = "${user.petType}"
+            tvPetDes.text = "${user.petDescription}"
+            tvPetIntro.text = "${user.petIntroduction}"
         }
     }
 }
