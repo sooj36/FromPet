@@ -80,7 +80,7 @@
         android:id="@+id/iv_notification"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="40dp"
         android:src="@drawable/icon_setting_selected"
         app:layout_constraintStart_toStartOf="parent"
@@ -102,7 +102,7 @@
         android:id="@+id/iv_friends"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="50dp"
         android:src="@drawable/icon_setting_selected"
         app:layout_constraintStart_toStartOf="parent"
@@ -124,7 +124,7 @@
         android:id="@+id/iv_share"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="50dp"
         android:src="@drawable/icon_setting_selected"
         app:layout_constraintStart_toStartOf="parent"
@@ -146,10 +146,56 @@
         android:id="@+id/iv_log_out"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="50dp"
         android:src="@drawable/icon_setting_selected"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_share" />
+
+    <ImageButton
+        android:id="@+id/ib_notification"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_notification"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_notification" />
+
+    <ImageButton
+        android:id="@+id/ib_friends"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_friends"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_friends" />
+    <ImageButton
+        android:id="@+id/ib_share"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_share"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_share" />
+    <ImageButton
+        android:id="@+id/ib_log_out"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_log_out"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_log_out" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
