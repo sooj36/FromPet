@@ -4,68 +4,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".login.LoginActivity">
+    tools:context=".login.SingUpActivity">
 
     <TextView
-        android:id="@+id/tv_login"
+        android:id="@+id/tv_singup"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:gravity="center"
-        android:text="로그인"
+        android:text="회원가입"
         android:textColor="#050505"
         android:textSize="24sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <EditText
-        android:id="@+id/et_email"
+        android:id="@+id/et_email_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="이메일"
         android:inputType="textEmailAddress"
-        app:layout_constraintTop_toBottomOf="@+id/tv_login"
-        tools:layout_editor_absoluteX="16dp" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_singup"
+        tools:layout_editor_absoluteX="0dp" />
 
     <EditText
-        android:id="@+id/et_password"
+        android:id="@+id/et_password_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="비밀번호"
         android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@+id/et_email"
-        tools:layout_editor_absoluteX="45dp" />
+        app:layout_constraintTop_toBottomOf="@+id/et_email_up"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <EditText
+        android:id="@+id/et_password_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="비밀번호 확인"
+        android:inputType="textPassword"
+        app:layout_constraintTop_toBottomOf="@+id/et_password_up"
+        tools:layout_editor_absoluteX="0dp" />
 
     <Button
-        android:id="@+id/bt_login"
+        android:id="@+id/SignUpButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:gravity="center"
-        android:text="로그인"
-        app:layout_constraintTop_toBottomOf="@+id/et_password"
-        tools:layout_editor_absoluteX="0dp" />
-
-    <Button
-        android:id="@+id/bt_singup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
         android:text="회원가입"
-        app:layout_constraintTop_toBottomOf="@+id/bt_login"
+        app:layout_constraintTop_toBottomOf="@+id/et_password_check"
         tools:layout_editor_absoluteX="0dp" />
-
-    <Button
-        android:id="@+id/bt_password_re"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="비밀번호 재설정"
-        app:layout_constraintTop_toBottomOf="@+id/bt_singup"
-        tools:layout_editor_absoluteX="0dp" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

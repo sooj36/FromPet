@@ -11,21 +11,21 @@ import com.example.frompet.databinding.FragmentSettingBinding
 
 class SettingFragment : Fragment() {
 
-    private var mBinding : FragmentSettingBinding? = null
+    private var _binding : FragmentSettingBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentSettingBinding.inflate(inflater,container,false)
+         _binding = FragmentSettingBinding.inflate(inflater,container,false)
 
-        mBinding = binding
 
-        return mBinding?.root
+        return binding.root
     }
 
-    override fun onDestroy() {
-        mBinding = null
-        super.onDestroy()
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

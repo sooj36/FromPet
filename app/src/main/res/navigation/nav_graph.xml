@@ -12,9 +12,9 @@
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.example.frompet.chating.ChatingFragment"
+        android:name="com.example.frompet.chating.ChatFragment"
         android:label="fragment_chating"
-        tools:layout="@layout/fragment_chating" />
+        tools:layout="@layout/fragment_chat" />
     <fragment
         android:id="@+id/communityFragment"
         android:name="com.example.frompet.commutiy.CommunicationFragment"

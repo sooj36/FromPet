@@ -4,9 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".main.MainActivity"
     android:orientation="vertical"
     android:weightSum="1">
+
+    <Button
+        android:id="@+id/bt_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="로그아웃"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/my_nav_host"
@@ -24,7 +32,7 @@
         android:id="@+id/my_bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/hotPink"
+        android:background="@color/lipPink"
         app:itemTextColor="#020202"
         app:layout_constraintBottom_toBottomOf="parent"
         app:itemIconSize="35dp"
