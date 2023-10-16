@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.frompet.R
 import com.example.frompet.chating.adapter.ChatListAdapter
 import com.example.frompet.databinding.FragmentChatListBinding
 import com.example.frompet.login.viewmodel.MatchViewModel
@@ -65,9 +66,11 @@ class ChatListFragment : Fragment() {
             viewModel.likeList.observe(viewLifecycleOwner) { users ->
                 users?.let {
                     (rvChatList.adapter as ChatListAdapter).submitList(it)
+                    binding.tvLikeMe.text = getString(R.string.like_me_text ,it.size)
                 }
             }
             viewModel.loadlikes()
+
         }
     }
 
