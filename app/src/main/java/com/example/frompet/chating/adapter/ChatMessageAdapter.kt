@@ -39,7 +39,7 @@ class ChatMessageAdapter(private val currentUserId: String) : ListAdapter<ChatMe
                     tvName.text = chatMessage.senderPetName
                     tvMessage.text = chatMessage.message
                     tvMessage.setBackgroundResource(R.drawable.leftbubble)
-                    tvTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
+                    tvTime.text = SimpleDateFormat("MM월dd일 HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
                     binding.messageItemLinearlayoutMain.gravity = Gravity.LEFT
                 }
 
