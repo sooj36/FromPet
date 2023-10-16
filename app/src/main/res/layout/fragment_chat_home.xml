@@ -9,15 +9,15 @@
 
 
     <TextView
-
         android:id="@+id/tv_possible_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:text=""
+                        android:padding="15dp"
+        android:textStyle="bold"
+        android:text="0명과 대화가 가능해요"
         android:textColor="@color/black"
         android:textSize="20sp" />
 

@@ -20,7 +20,7 @@
     <string name="activity_detail_label_intro">소개</string>
     <string name="activity_detail_label_names">이름</string>
 
-    <string name="like_me_text"> %1$d명이 나를 좋아해요</string>
-    <string name="possible_text"> %1$d명과 대화가 가능해요</string>
+<!--    <string name="like_me_text"> %1$d명이 나를 좋아해요</string>-->
+<!--    <string name="possible_text"> %1$d명과 대화가 가능해요</string>-->
 
 </resources>

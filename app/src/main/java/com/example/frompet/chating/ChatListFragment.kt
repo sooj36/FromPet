@@ -66,7 +66,7 @@ class ChatListFragment : Fragment() {
             viewModel.likeList.observe(viewLifecycleOwner) { users ->
                 users?.let {
                     (rvChatList.adapter as ChatListAdapter).submitList(it)
-                    binding.tvLikeMe.text = getString(R.string.like_me_text ,it.size)
+                    binding.tvLikeMe.text = "${it.size}명이 나를 좋아해요"
                 }
             }
             viewModel.loadlikes()

@@ -39,7 +39,7 @@ class ChatHomeFragment : Fragment() {
         viewModel.matchedList.observe(viewLifecycleOwner) { users ->
             users?.let {
                 adapter.submitList(it)
-                binding.tvPossibleText.text = getString(R.string.possible_text,it.size)
+                binding.tvPossibleText.text = "${it.size}명과 대화가 가능해요"
 
             }
         }
