@@ -1,5 +1,6 @@
 package com.example.frompet.login.data
 
+import android.net.Uri
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
@@ -10,7 +11,7 @@ data class UserModel(
     val petGender: String = "",
     val petIntroduction: String = "",
     val petName: String = "",
-    val petProfile: String = "",
+    val petProfile: Uri?,
     val petType: String = "",
     var uid:String = ""
 
