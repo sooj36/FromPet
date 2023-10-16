@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity() {
 
         val navController = navHostFragment.navController
 
+        mBinding.myBottomNav.itemIconTintList = null
+
         NavigationUI.setupWithNavController(mBinding.myBottomNav,navController)
 
     }
