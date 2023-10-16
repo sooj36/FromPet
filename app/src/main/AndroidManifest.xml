@@ -21,13 +21,16 @@
             android:value="7u1n9emjag" />
 
         <activity
+            android:name=".setting.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".chating.ChatUserDetailActivity"
             android:exported="false" />
         <activity
             android:name=".chating.ChatMessageActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-        
+
         <activity
             android:name=".login.SingUpActivity"
             android:exported="false" />

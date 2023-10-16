@@ -12,7 +12,7 @@ data class UserModel(
     val petName: String = "",
     val petProfile: String = "",
     val petType: String = "",
-    var uid:String = ""
+    var uid:String = "Td4QjX4JQ2Y0EzUVmkY2JIYz8ML2"
 
 
 ): Parcelable
