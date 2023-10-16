@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             if (firebaseUser != null) {
                 val uid = firebaseUser.uid
                 Log.d("ㅋㅋㅋㅋㅋ", "사용자 UID: $uid")
-            }
+            }git pull origin release/1.0.0
         }*/
     }
     private fun setStartApp() {
