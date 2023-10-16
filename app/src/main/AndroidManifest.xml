@@ -24,9 +24,6 @@
             android:name=".setting.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".setting.ProfileActivity"
-            android:exported="false" />
-        <activity
             android:name=".chating.ChatUserDetailActivity"
             android:exported="false" />
         <activity
