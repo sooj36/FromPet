@@ -31,9 +31,11 @@ class MatchViewModel : ViewModel() {
 
     fun dislike(targetUserId: String) {
         val currentUserId = auth.currentUser?.uid ?: return
-        database.child(targetUserId).child("dislikedBy").child(currentUserId).setValue(true)
-    }
+        database.child(currentUserId).child("likedBy").child(targetUserId).removeValue()
+        database.child(currentUserId).child("matched").child(targetUserId).removeValue()
+        database.child(targetUserId).child("matched").child(currentUserId).removeValue()
 
+    }
     fun loadlikes() {
         val currentUserId = auth.currentUser?.uid ?: return
 
@@ -44,25 +46,28 @@ class MatchViewModel : ViewModel() {
                 val likedUsers = mutableListOf<UserModel>()
 
                 likedUserIds.forEach { userId ->
-                    database.child(currentUserId).child("matched").child(userId).addListenerForSingleValueEvent(object: ValueEventListener {
-                        override fun onDataChange(matchedSnapshot: DataSnapshot) {
-                            if (!matchedSnapshot.exists()) { // 매치된 사용자가 아닌 경우에만 추가
-                                firestore.collection("User").document(userId)
-                                    .get()
-                                    .addOnSuccessListener { document ->
-                                        val user = document.toObject(UserModel::class.java)
-                                        user?.let {
-                                            likedUsers.add(it)
-                                            likeList.value = likedUsers.toList()
-                                            Log.d("jun","매치되기전라이크리스트${likeList.value}")
+                    database.child(currentUserId).child("matched").child(userId)
+                        .addValueEventListener(object : ValueEventListener {
+                            override fun onDataChange(matchedSnapshot: DataSnapshot) {
+                                if (!matchedSnapshot.exists()) { // 매치된 사용자가 아닌 경우에만 추가
+                                    firestore.collection("User").document(userId)
+                                        .get()
+                                        .addOnSuccessListener { document ->
+                                            val user = document.toObject(UserModel::class.java)
+                                            user?.let {
+                                                likedUsers.add(it)
+                                                likeList.value = likedUsers.toList()
+                                                Log.d("jun", "매치되기전라이크리스트${likeList.value}")
+                                            }
                                         }
-                                    }
+                                }
                             }
-                        }
-                        override fun onCancelled(error: DatabaseError) {}
-                    })
+
+                            override fun onCancelled(error: DatabaseError) {}
+                        })
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {}
         })
     }
@@ -75,10 +80,10 @@ class MatchViewModel : ViewModel() {
         database.child(currentUserId).child("matched").child(otherUserUid).setValue(true)
         database.child(otherUserUid).child("matched").child(currentUserId).setValue(true)
         database.child(currentUserId).child("likedBy").child(otherUserUid).removeValue()
-        val currentLikes = likeList.value?.toMutableList()?: mutableListOf()
+        val currentLikes = likeList.value?.toMutableList() ?: mutableListOf()
         currentLikes?.removeIf { it.uid == otherUserUid }
         likeList.value = currentLikes
-        Log.d("jun","매치된후라이크리스트:${likeList.value}")
+        Log.d("jun", "매치된후라이크리스트:${likeList.value}")
         loadlikes()
     }
 
@@ -107,11 +112,11 @@ class MatchViewModel : ViewModel() {
                         }
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {}
         })
     }
 }
-
 
 
 

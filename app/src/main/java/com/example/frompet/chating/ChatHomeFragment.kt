@@ -38,6 +38,7 @@ class ChatHomeFragment : Fragment() {
         viewModel.matchedList.observe(viewLifecycleOwner) { users ->
             users?.let {
                 adapter.submitList(it)
+
             }
         }
     }

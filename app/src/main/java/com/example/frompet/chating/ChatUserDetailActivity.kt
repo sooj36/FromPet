@@ -6,19 +6,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import com.example.frompet.R
 import com.example.frompet.databinding.ActivityChatUserDetailBinding
 import com.example.frompet.login.data.UserModel
 import com.example.frompet.login.viewmodel.MatchViewModel
 
-
 class ChatUserDetailActivity : AppCompatActivity() {
-    companion object{
+    companion object {
         const val MATCHED_USERS = "matchedUser"
         const val USER = "user"
+        const val ACTION = "action"
+        const val MATCH = "match"
+        const val DISLIKE = "dislike"
     }
+
     private lateinit var binding: ActivityChatUserDetailBinding
     private val viewModel: MatchViewModel by viewModels()
 
@@ -35,20 +35,25 @@ class ChatUserDetailActivity : AppCompatActivity() {
         binding.likeBtn.setOnClickListener {
             user?.uid?.let { userId ->
                 viewModel.matchWithUser(userId)
-                Toast.makeText(this,"${user.petName} 와(과) 매치 되었습니다!",Toast.LENGTH_LONG).show()
-
+                Toast.makeText(this, "${user.petName} 와(과) 매치 되었습니다!", Toast.LENGTH_LONG).show()
                 val resultIntent = Intent()
                 resultIntent.putExtra(MATCHED_USERS, userId)
+                resultIntent.putExtra(ACTION, MATCH)
                 setResult(Activity.RESULT_OK, resultIntent)
                 finish()
             }
         }
 
         binding.dislikeBtn.setOnClickListener {
-            binding.apply {
-                dislikeBtn.apply {
+            user?.uid?.let { userId ->
+                viewModel.dislike(userId)
+                Toast.makeText(this, "${user.petName}와(과) 매칭에 실패 했습니다!", Toast.LENGTH_LONG).show()
 
-                }
+                val resultIntent = Intent()
+                resultIntent.putExtra(MATCHED_USERS, userId)
+                resultIntent.putExtra(ACTION, DISLIKE)
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish()
             }
         }
     }
