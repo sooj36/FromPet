@@ -7,10 +7,14 @@
     android:background="#69F0AE"
     tools:context="com.example.frompet.map.MapFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.naver.maps.map.MapView
+        android:id="@+id/map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent" />
+
+    <com.example.frompet.map.ScrollAwareMapView
+        android:id="@+id/map_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>
