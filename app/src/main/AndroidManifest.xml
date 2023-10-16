@@ -24,12 +24,6 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".chating.ChatingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".chating.UserActivity"
-            android:exported="false" />
-        <activity
             android:name=".login.SingUpActivity"
             android:exported="false" />
         <activity

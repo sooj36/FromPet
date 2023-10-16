@@ -1,40 +1,53 @@
 package com.example.frompet.chating
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.frompet.R
 import com.example.frompet.databinding.ActivityChatUserDetailBinding
 import com.example.frompet.login.data.UserModel
 import com.example.frompet.login.viewmodel.MatchViewModel
 
+
 class ChatUserDetailActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityChatUserDetailBinding
-    private val viewModel: MatchViewModel by lazy {
-        ViewModelProvider(this).get(MatchViewModel::class.java)
+    companion object{
+        const val MATCHED_USERS = "matchedUser"
+        const val USER = "user"
     }
-
-
+    private lateinit var binding: ActivityChatUserDetailBinding
+    private val viewModel: MatchViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatUserDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val user: UserModel? = intent.getParcelableExtra("user")
+        val user: UserModel? = intent.getParcelableExtra(USER)
         user?.let {
             displayUserInfo(it)
         }
-        binding.likeBtn.setOnClickListener {
 
-            viewModel.like("CmrOTtczqVMUzuCFpVgIp1zFkOH3")
-            finish()
+        binding.likeBtn.setOnClickListener {
+            user?.uid?.let { userId ->
+                viewModel.matchWithUser(userId)
+                Toast.makeText(this,"${user.petName} 와(과) 매치 되었습니다!",Toast.LENGTH_LONG).show()
+
+                val resultIntent = Intent()
+                resultIntent.putExtra(MATCHED_USERS, userId)
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish()
+            }
         }
+
         binding.dislikeBtn.setOnClickListener {
             binding.apply {
                 dislikeBtn.apply {
-                    setAnimation(R.raw.dislike)
-                    playAnimation()
+
                 }
             }
         }
