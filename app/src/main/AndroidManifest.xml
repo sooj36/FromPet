@@ -16,6 +16,20 @@
         android:theme="@style/Theme.FromPet"
         tools:targetApi="31">
         <activity
+            android:name=".chating.ChatUserDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".chating.ChatMessageActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".chating.ChatingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".chating.UserActivity"
+            android:exported="false" />
+        <activity
             android:name=".login.SingUpActivity"
             android:exported="false" />
         <activity

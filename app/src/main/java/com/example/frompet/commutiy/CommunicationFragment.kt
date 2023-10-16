@@ -6,27 +6,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.frompet.R
+import com.example.frompet.databinding.FragmentChatHomeBinding
 import com.example.frompet.databinding.FragmentCommunicationBinding
 import com.example.frompet.databinding.FragmentHomeBinding
 
 
 class CommunicationFragment : Fragment() {
 
-    private var mBinding : FragmentCommunicationBinding? = null
+    private var _binding: FragmentCommunicationBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentCommunicationBinding.inflate(inflater,container,false)
+         _binding = FragmentCommunicationBinding.inflate(inflater,container,false)
 
-        mBinding = binding
-
-        return mBinding?.root
+        return binding?.root
     }
 
-    override fun onDestroy() {
-        mBinding = null
-        super.onDestroy()
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

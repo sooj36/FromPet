@@ -11,21 +11,20 @@ import com.example.frompet.databinding.FragmentMapBinding
 
 class MapFragment : Fragment() {
 
-    private var mBinding : FragmentMapBinding? = null
+    private var _binding : FragmentMapBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentMapBinding.inflate(inflater,container,false)
+         _binding = FragmentMapBinding.inflate(inflater,container,false)
 
-        mBinding = binding
-
-        return mBinding?.root
+        return binding.root
     }
 
-    override fun onDestroy() {
-        mBinding = null
-        super.onDestroy()
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }
