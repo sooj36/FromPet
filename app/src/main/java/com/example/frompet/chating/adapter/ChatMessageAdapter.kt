@@ -32,17 +32,16 @@ class ChatMessageAdapter(private val currentUserId: String) : ListAdapter<ChatMe
                     tvName.text = "나"
                     tvMessage.text = chatMessage.message
                     tvMessage.setBackgroundResource(R.drawable.rightbubble)
-                    tvTime.text = SimpleDateFormat("MM월dd일 hh:mm", Locale.getDefault()).format(chatMessage.timestamp)
+                    tvTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
                     binding.messageItemLinearlayoutMain.gravity = Gravity.RIGHT
                 } else {
 
                     tvName.text = chatMessage.senderPetName
                     tvMessage.text = chatMessage.message
                     tvMessage.setBackgroundResource(R.drawable.leftbubble)
-                    tvTime.text = SimpleDateFormat("MM월dd일 HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
+                    tvTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
                     binding.messageItemLinearlayoutMain.gravity = Gravity.LEFT
                 }
-
             }
         }
     }

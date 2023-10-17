@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import java.lang.IllegalArgumentException
 
 class LoginViewModel : ViewModel() {
@@ -53,6 +54,27 @@ class LoginViewModel : ViewModel() {
                     _loginResult.value = false
                 }
             }
+    }
+    fun loadUserPetProfile(callback: (String?, String?, String?) -> Unit) {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            val firestore = FirebaseFirestore.getInstance()
+            val usersCollection = firestore.collection("User")
+            val userId = currentUser.uid
+
+            usersCollection.document(userId).get()
+                .addOnSuccessListener { documentSnapshot ->
+                    if (documentSnapshot.exists()) {
+                        val petProfile = documentSnapshot.getString("petProfile")
+                        val petName = documentSnapshot.getString("petName")
+                        val petType = documentSnapshot.getString("petType")
+                        callback(petProfile, petName, petType)
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("Firestore", "Error fetching Firestore data", exception)
+                }
+        }
     }
 }
 

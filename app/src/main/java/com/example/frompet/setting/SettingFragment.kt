@@ -8,51 +8,37 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.example.frompet.databinding.FragmentSettingBinding
 import com.example.frompet.login.LoginActivity
+import com.example.frompet.login.viewmodel.LoginViewModel
+import com.example.frompet.login.viewmodel.MatchViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class SettingFragment : Fragment() {
 
-    private var _binding : FragmentSettingBinding? = null
+    private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-         _binding = FragmentSettingBinding.inflate(inflater,container,false)
+        _binding = FragmentSettingBinding.inflate(inflater, container, false)
 
-        val currentUser = FirebaseAuth.getInstance().currentUser
-
-        if (currentUser != null) {
-            val firestore = FirebaseFirestore.getInstance()
-            val usersCollection = firestore.collection("User")
-            val userId = currentUser.uid
-
-            usersCollection.document(userId).get()
-                .addOnSuccessListener { documentSnapshot ->
-                    if (documentSnapshot.exists()) {
-                        val petProfile = documentSnapshot.getString("petProfile")
-                        val petName = documentSnapshot.getString("petName")
-                        val petType = documentSnapshot.getString("petType")
-
-                        petProfile?.let {
-                            Glide.with(requireContext())
-                                .load(it)
-                                .into(binding.ivPet)
-                        }
-                        _binding?.tvPetName?.text = petName
-                        _binding?.tvPetType?.text = petType
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.e("Firestore", "Error fetching Firestore data", exception)
-                }
+        viewModel.loadUserPetProfile { petProfile, petName, petType ->
+            petProfile?.let {
+                Glide.with(this)
+                    .load(it)
+                    .into(binding.ivPet)
+            }
+            binding.tvPetName.text = petName
+            binding.tvPetType.text = petType
         }
-
         binding.ibLogOut.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(requireActivity(), LoginActivity::class.java)
@@ -63,9 +49,6 @@ class SettingFragment : Fragment() {
             val intent = Intent(requireActivity(), ProfileActivity::class.java)
             startActivity(intent)
         }
-
-
-
         return binding.root
     }
 
