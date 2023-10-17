@@ -18,8 +18,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 class MatchViewModel : ViewModel() {
     private val _likeList :MutableLiveData<List<UserModel>?> = MutableLiveData()
     val likeList : MutableLiveData<List<UserModel>?> get() = _likeList
-    val disLikeList = MutableLiveData<List<UserModel>>()
-    val matchedList = MutableLiveData<List<UserModel>>()
+    private val _disLikeList : MutableLiveData<List<UserModel>> = MutableLiveData()
+    val disLikeList : MutableLiveData<List<UserModel>>  get() =  _disLikeList
+    private val _matchedList : MutableLiveData<List<UserModel>> = MutableLiveData()
+    val matchedList : MutableLiveData<List<UserModel>> get() = _matchedList
     private val database = FirebaseDatabase.getInstance().getReference("likeUsers")
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -109,7 +111,7 @@ class MatchViewModel : ViewModel() {
                             val user = document.toObject(UserModel::class.java)
                             user?.let {
                                 matchedUsers.add(it)
-                                matchedList.value = matchedUsers.toList()
+                                _matchedList.value = matchedUsers.toList()
                             }
                         }
                         .addOnFailureListener { exception ->
@@ -121,27 +123,33 @@ class MatchViewModel : ViewModel() {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+
+
+// ... 기존 코드 ...
+
 }
-/* fun loadAllUsers() {
-        val allUsersData = mutableListOf<UserModel>()
-        val currentUserId = auth.currentUser?.uid
-        firestore.collection("User")
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                for (document in querySnapshot.documents) {
-                    val userData = document.toObject(UserModel::class.java)
-                    userData?.let {
-                        if (userData.uid != currentUserId) {
-                            allUsersData.add(it)
-                        }
-                    }
-                }
-                likeList.value = allUsersData.toList()
-            }
-            .addOnFailureListener { exception ->
-                Log.e("shsh", "loading 실패 : $exception")
-}
-    }*/
+
+//    fun loadAllUsers() {
+//        val allUsersData = mutableListOf<UserModel>()
+//        val currentUserId = auth.currentUser?.uid
+//        firestore.collection("User")
+//            .get()
+//            .addOnSuccessListener { querySnapshot ->
+//                for (document in querySnapshot.documents) {
+//                    val userData = document.toObject(UserModel::class.java)
+//                    userData?.let {
+//                        if (userData.uid != currentUserId) {
+//                            allUsersData.add(it)
+//                        }
+//                    }
+//                }
+//                likeList.value = allUsersData.toList()
+//            }
+//            .addOnFailureListener { exception ->
+//                Log.e("shsh", "loading 실패 : $exception")
+//            }
+//    }
+
 
 
 
