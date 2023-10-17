@@ -11,8 +11,6 @@ import com.example.frompet.main.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -54,7 +52,7 @@ class MemberInfoActivity : AppCompatActivity() {
 
                 // User 모델을 생성
                 val userModel = UserModel(
-                    petAge, petDescription, petGender, petIntroduction, petName, /*petProfile,*/ petType
+                    petAge, petDescription, petGender, petIntroduction, petName, petProfile?.toString(), petType
                 )
                 userModel.uid = currentUser.uid
 
@@ -114,13 +112,6 @@ class MemberInfoActivity : AppCompatActivity() {
                 }
         }
     }
-    private fun cropImage(uri: Uri?){
-        CropImage.activity(uri)
-            .setGuidelines(CropImageView.Guidelines.ON)
-            .setCropShape(CropImageView.CropShape.RECTANGLE)
-            .start(this)
-    }
-
     private fun goGallery(){
         val galleryIntent = Intent(Intent.ACTION_PICK)
         galleryIntent.type = "image/*"

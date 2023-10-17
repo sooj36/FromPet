@@ -11,12 +11,14 @@ data class UserModel(
     val petGender: String = "",
     val petIntroduction: String = "",
     val petName: String = "",
-    /*val petProfile: Uri?= null,*/
+    val petProfile: String?,
     val petType: String = "",
-    var uid:String = "Td4QjX4JQ2Y0EzUVmkY2JIYz8ML2"
+    var uid:String = ""
 
 //CmrOTtczqVMUzuCFpVgIp1zFkOH3
-): Parcelable
+): Parcelable{
+    constructor() : this(0, "", "", "", "", null, "", "")
+}
 @Parcelize
 data class ChatMessage(
     val senderId: String = "",
