@@ -47,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_pet_name" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/bt_modify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -67,7 +67,7 @@
         android:background="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/bt_modify" />
 
     <TextView
         android:id="@+id/tv_notification"
@@ -78,8 +78,7 @@
         android:text="알림"
         app:layout_constraintBottom_toBottomOf="@+id/iv_notification"
         app:layout_constraintStart_toEndOf="@+id/iv_notification"
-        app:layout_constraintTop_toTopOf="@+id/iv_notification"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/iv_notification" />
 
         <ImageView
             android:id="@+id/iv_notification"
@@ -122,8 +121,7 @@
         android:text="공유하기"
         app:layout_constraintBottom_toBottomOf="@+id/iv_share"
         app:layout_constraintStart_toEndOf="@+id/iv_share"
-        app:layout_constraintTop_toTopOf="@+id/iv_share"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/iv_share" />
 
         <ImageView
             android:id="@+id/iv_share"
@@ -144,8 +142,7 @@
         android:text="로그아웃"
         app:layout_constraintBottom_toBottomOf="@+id/iv_log_out"
         app:layout_constraintStart_toEndOf="@+id/iv_log_out"
-        app:layout_constraintTop_toTopOf="@+id/iv_log_out"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/iv_log_out" />
 
         <ImageView
             android:id="@+id/iv_log_out"
