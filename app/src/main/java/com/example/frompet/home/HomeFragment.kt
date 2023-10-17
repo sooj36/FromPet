@@ -56,27 +56,11 @@ class HomeFragment : Fragment() {
 
             }
 
-            override fun onCardSwiped(direction: Direction?)  {
-                when (direction) {
-                    Direction.Right -> {
-                        // 오른쪽으로 스와이프 (Like) 했을 때의 처리
-                        Toast.makeText(requireContext(), "Liked", Toast.LENGTH_SHORT).show()
-                    }
-                    Direction.Left -> {
-                        // 왼쪽으로 스와이프 (Dislike) 했을 때의 처리
-                        Toast.makeText(requireContext(), "Disliked", Toast.LENGTH_SHORT).show()
-                    }
-                    else -> {
-                        // 다른 방향으로 스와이프한 경우
-                    }
-                }
-
-                if (manager!!.topPosition == homeAdapter.currentList.size) {
-                    // 이것이 마지막 카드인 경우 추가 처리 가능
-                    Toast.makeText(requireContext(), "This is the last card", Toast.LENGTH_SHORT).show()
+            override fun onCardSwiped(direction: Direction?) {
+                if(manager!!.topPosition == homeAdapter.currentList.size){
+                    Toast.makeText(requireContext(),"this is last card", Toast.LENGTH_SHORT).show()
                 }
             }
-
 
             override fun onCardRewound() {
 
