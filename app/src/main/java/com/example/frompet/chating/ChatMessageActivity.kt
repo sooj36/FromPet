@@ -19,6 +19,7 @@ class ChatMessageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatMessageBinding
     private val viewModel: ChatViewModel by viewModels()
     private val adapter = ChatMessageAdapter(FirebaseAuth.getInstance().currentUser?.uid ?: "")
+    private val auth = FirebaseAuth.getInstance()
     private val typingTimeoutHandler = Handler(Looper.getMainLooper())
     private val typingTimeoutRunnable = Runnable {
         viewModel.setTypingStatus(false)
@@ -49,6 +50,9 @@ class ChatMessageActivity : AppCompatActivity() {
             displayInfo(it)
             viewModel.checkTypingStatus(it.uid)
 
+            val currentUserId = auth.currentUser?.uid ?: return
+            val chatRoomId = viewModel.chatRoom(currentUserId, user.uid)
+
             binding.ivSendBtn.setOnClickListener {
                 val message = binding.etMessage.text.toString()
                 if (message.isNotEmpty()) {
@@ -70,8 +74,9 @@ class ChatMessageActivity : AppCompatActivity() {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
+            viewModel.loadPreviousMessages(chatRoomId)
         }
-        viewModel.loadPreviousMessages()
+
         binding.backBtn.setOnClickListener {
             finish()
         }

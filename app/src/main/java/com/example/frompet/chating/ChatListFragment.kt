@@ -3,16 +3,13 @@ package com.example.frompet.chating
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.frompet.R
 import com.example.frompet.chating.adapter.ChatListAdapter
 import com.example.frompet.databinding.FragmentChatListBinding
 import com.example.frompet.login.viewmodel.MatchViewModel
@@ -36,7 +33,7 @@ class ChatListFragment : Fragment() {
             val matchedUserId = result.data?.getStringExtra(MATCHED_USERS)
             matchedUserId?.let { userId ->
                 when (action) {
-                    MATCH -> viewModel.matchWithUser(userId)
+                    MATCH -> viewModel.matchUser(userId)
                     DISLIKE -> {val currentLikes = viewModel.likeList.value?.toMutableList() ?: mutableListOf()
                         currentLikes.removeIf { it.uid == userId }
                         viewModel.likeList.value = currentLikes}
@@ -69,7 +66,7 @@ class ChatListFragment : Fragment() {
                     binding.tvLikeMe.text = "${it.size}명이 나를 좋아해요"
                 }
             }
-            viewModel.loadlikes()
+            viewModel.loadlike()
 
         }
     }

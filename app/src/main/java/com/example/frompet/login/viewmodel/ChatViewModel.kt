@@ -25,8 +25,13 @@ class ChatViewModel : ViewModel() {
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
+    fun chatRoom(uid1: String, uid2: String): String {
+        return if (uid1 > uid2) "$uid1+$uid2" else "$uid2+$uid1" //두 사람 채팅에는 항상 합친 동일한 구분자로 생성함
+    }
+
     fun sendMessage(receiverId: String, message: String) {
-        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val currentUserId = auth.currentUser?.uid ?: return
+        val chatRoomId = chatRoom(currentUserId, receiverId)
 
         firestore.collection("User").document(currentUserId).get()
             .addOnSuccessListener { document ->
@@ -41,9 +46,9 @@ class ChatViewModel : ViewModel() {
                     timestamp = System.currentTimeMillis()
                 )
 
-                database.child("chatMessages").push().setValue(chatMessage)
+                database.child("chatMessages").child(chatRoomId).push().setValue(chatMessage)
                     .addOnSuccessListener {
-                        loadPreviousMessages()
+                        loadPreviousMessages(chatRoomId)
                     }
                     .addOnFailureListener { exception ->
                         Log.d("jun", "메시지전송실패: ${exception.message}")
@@ -54,21 +59,19 @@ class ChatViewModel : ViewModel() {
             }
     }
 
-    fun loadPreviousMessages() {
-        val currentUserId = auth.currentUser?.uid ?: return
 
-        database.child("chatMessages").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val allMessages = dataSnapshot.children.mapNotNull { it.getValue(ChatMessage::class.java) }
-                    .filter { it.senderId == currentUserId || it.receiverId == currentUserId }
-                _chatMessages.value = allMessages.sortedBy { it.timestamp }
-            }
+    fun loadPreviousMessages(chatRoomId: String) {
+        database.child("chatMessages").child(chatRoomId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val messages = dataSnapshot.children.mapNotNull { it.getValue(ChatMessage::class.java) }
+                    _chatMessages.value = messages.sortedBy { it.timestamp }
+                }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.d("jun", "불러오기실패: ${databaseError.message}")
-            }
-        }
-        )
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.d("jun", "불러오기실패: ${databaseError.message}")
+                }
+            })
     }
     fun checkTypingStatus(receiverId: String) {
         database.child("typingStatus").child(receiverId).addValueEventListener(object : ValueEventListener{

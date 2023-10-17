@@ -1,11 +1,8 @@
 package com.example.frompet.login.viewmodel
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.example.frompet.login.data.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -41,7 +38,7 @@ class MatchViewModel : ViewModel() {
 
     }
 
-    fun loadlikes() {
+    fun loadlike() {
         val currentUserId = auth.currentUser?.uid ?: return
 
         database.child(currentUserId).child("likedBy").addValueEventListener(object :
@@ -80,7 +77,7 @@ class MatchViewModel : ViewModel() {
     }
 
 
-    fun matchWithUser(otherUserUid: String) {
+    fun matchUser(otherUserUid: String) {
         val currentUserId = auth.currentUser?.uid ?: return
         // 서로 like한 경우
         Log.d("jun", "매치 유저 uid: $otherUserUid")
@@ -91,7 +88,7 @@ class MatchViewModel : ViewModel() {
         currentLikes?.removeIf { it.uid == otherUserUid }
         _likeList.value = currentLikes
         Log.d("jun", "매치된후라이크리스트:${_likeList.value}")
-        loadlikes()
+        loadlike()
 
     }
 

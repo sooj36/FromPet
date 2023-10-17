@@ -37,7 +37,7 @@ class ChatUserDetailActivity : AppCompatActivity() {
 
         binding.likeBtn.setOnClickListener {
             user?.uid?.let { userId ->
-                viewModel.matchWithUser(userId)
+                viewModel.matchUser(userId)
                 Toast.makeText(this, "${user.petName} 와(과) 매치 되었습니다!", Toast.LENGTH_LONG).show()
                 val resultIntent = Intent()
                 resultIntent.putExtra(MATCHED_USERS, userId)
