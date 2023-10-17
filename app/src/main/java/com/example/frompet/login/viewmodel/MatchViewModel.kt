@@ -121,29 +121,29 @@ class MatchViewModel : ViewModel() {
     }
 }
 
-    fun loadAllUsers() {
-        val allUsersData = mutableListOf<UserModel>()
-        val currentUserId = auth.currentUser?.uid
-        firestore.collection("User")
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                for (document in querySnapshot.documents) {
-                    val userData = document.toObject(UserModel::class.java)
-                    userData?.let {
-                        if (userData.uid != currentUserId) {
-                            allUsersData.add(it)
-                        }
-                    }
-                }
-                likeList.value = allUsersData.toList()
-            }
-            .addOnFailureListener { exception ->
-                Log.e("shsh", "loading 실패 : $exception")
-            }
-    }
+//    fun loadAllUsers() {
+//        val allUsersData = mutableListOf<UserModel>()
+//        val currentUserId = auth.currentUser?.uid
+//        firestore.collection("User")
+//            .get()
+//            .addOnSuccessListener { querySnapshot ->
+//                for (document in querySnapshot.documents) {
+//                    val userData = document.toObject(UserModel::class.java)
+//                    userData?.let {
+//                        if (userData.uid != currentUserId) {
+//                            allUsersData.add(it)
+//                        }
+//                    }
+//                }
+//                likeList.value = allUsersData.toList()
+//            }
+//            .addOnFailureListener { exception ->
+//                Log.e("shsh", "loading 실패 : $exception")
+//            }
+//    }
 
 
-}
+
 
 
 
