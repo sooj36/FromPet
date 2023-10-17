@@ -72,6 +72,9 @@ class ChatMessageActivity : AppCompatActivity() {
             })
         }
         viewModel.loadPreviousMessages()
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
     }
 
     private fun displayInfo(user: UserModel) {
