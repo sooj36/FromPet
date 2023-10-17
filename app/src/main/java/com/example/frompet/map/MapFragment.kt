@@ -4,23 +4,34 @@ package com.example.frompet.map
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import com.example.frompet.databinding.FragmentMapBinding
 import com.naver.maps.map.MapView
 import com.example.frompet.map.MapFragment
+import com.naver.maps.map.LocationTrackingMode
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.NaverMapOptions
+import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.util.FusedLocationSource
 
-class MapFragment : Fragment() {
+class MapFragment : Fragment(), OnMapReadyCallback {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding
     private var mapView: MapView? = null
+    private lateinit var mNaverMap : NaverMap
 
-    /**전역변수 선언**/
-    private val LOCATION_PERMISSION_REQUEST_CODE : Int = 1000
+    private val PERMISSION_REQUEST_CODE : Int = 1000
+    private val PERMISSIONS = arrayOf(
+        android.Manifest.permission.ACCESS_FINE_LOCATION,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION
+    )
+
     private lateinit var locationSource : FusedLocationSource // 위치 반환 구현체
 
 
@@ -32,9 +43,15 @@ class MapFragment : Fragment() {
         mapView = _binding?.mapView
         mapView?.onCreate(savedInstanceState)
 
+        /**지도를 비동기적으로 초기화하고 지도가 사용 가능해질 때, 수행할 작업의 정의한 onMapReady메서드 호출**/
+        // NaverMap 초기화 처리
+        mapView?.getMapAsync(this)
+
+        locationSource = FusedLocationSource(requireActivity(), PERMISSION_REQUEST_CODE)
 
         return rootView
     }
+
 
     // 생명주기와 싱크 연동
     override fun onStart() {
@@ -72,6 +89,29 @@ class MapFragment : Fragment() {
         super.onDestroyView()
         mapView?.onDestroy()
     }
+
+    override fun onMapReady(p0: NaverMap) {
+        mNaverMap = p0
+        mNaverMap.setLocationSource(locationSource)
+
+        ActivityCompat.requestPermissions(requireActivity(), PERMISSIONS, PERMISSION_REQUEST_CODE )
+        mNaverMap.locationTrackingMode = LocationTrackingMode.Follow
+        Log.d("sooj", "여길 탔나요 ?")
+
+    }
+
+//    override fun onRequestPermissionsResult(
+//        requestCode: Int,
+//        permissions: Array<out String>,
+//        grantResults: IntArray
+//    ) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        if (requestCode == PERMISSION_REQUEST_CODE) {
+//            if (grantResults.isNotEmpty() && grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+//                mNaverMap.setLocationTrackingMode(LocationTrackingMode.Follow)
+//            }
+//        }
+//    }
 
 }
 
