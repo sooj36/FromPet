@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import coil.load
+import com.example.frompet.R
 import com.example.frompet.databinding.ActivityChatUserDetailBinding
 import com.example.frompet.login.data.UserModel
 import com.example.frompet.login.viewmodel.MatchViewModel
@@ -71,6 +73,11 @@ class ChatUserDetailActivity : AppCompatActivity() {
             tvPetType.text = "${user.petType}"
             tvPetDes.text = "${user.petDescription}"
             tvPetIntro.text = "${user.petIntroduction}"
+            user.petProfile.let {
+                ivPetProfile.load(user.petProfile){
+                    error(R.drawable.kakaotalk_20230825_222509794_01)
+                }
+            }
         }
     }
 }

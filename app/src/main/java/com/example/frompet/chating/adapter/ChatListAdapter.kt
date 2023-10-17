@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import com.example.frompet.R
 import com.example.frompet.chating.ChatUserDetailActivity
 
 import com.example.frompet.databinding.ItemChatlistBinding
@@ -32,6 +34,12 @@ class ChatListAdapter(private val context: Context, private val onUserClick: (Us
             binding.apply {
                 tvUserName.text = user.petName
                 tvUserType.text = user.petType
+                user.petProfile?.let {
+                    profileArea.load(it){
+                        error(R.drawable.kakaotalk_20230825_222509794_01)
+
+                    }
+                }
                 root.setOnClickListener {
                     onUserClick(user)
                 }
