@@ -19,6 +19,8 @@ class ChatViewModel : ViewModel() {
     val chatMessages: LiveData<List<ChatMessage>> get() = _chatMessages
     private val _isTyping =MutableLiveData<Boolean>()
     val isTyping :LiveData<Boolean> get() = _isTyping
+    private val _lastMessage = MutableLiveData<ChatMessage?>()
+    val lastMessage: LiveData<ChatMessage?> get() = _lastMessage
     private val database = FirebaseDatabase.getInstance().reference
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -80,5 +82,23 @@ class ChatViewModel : ViewModel() {
     fun setTypingStatus(isTyping:Boolean){
         val currentId = auth.currentUser?.uid ?: return
         database.child("typingStatus").child(currentId).setValue(isTyping)
+    }
+    fun loadLastMessage(userId: String) {
+        database.child("chatMessages")
+            .orderByChild("senderId")
+            .equalTo(userId)
+            .limitToLast(1)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        val message = dataSnapshot.children.first().getValue(ChatMessage::class.java)
+                        _lastMessage.value = message
+                    } else {
+                        _lastMessage.value = null
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {}
+            })
     }
 }
