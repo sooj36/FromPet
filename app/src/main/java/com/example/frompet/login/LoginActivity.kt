@@ -49,6 +49,7 @@ class LoginActivity : AppCompatActivity() {
 
 
 
+
             viewModel.user.observe(this) { firebaseUser ->
                 if (firebaseUser != null) {
                     val uid = firebaseUser.uid

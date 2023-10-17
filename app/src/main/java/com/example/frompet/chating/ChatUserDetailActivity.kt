@@ -27,7 +27,7 @@ class ChatUserDetailActivity : AppCompatActivity() {
         }
         binding.likeBtn.setOnClickListener {
 
-            viewModel.like("CmrOTtczqVMUzuCFpVgIp1zFkOH3")
+            viewModel.like("Td4QjX4JQ2Y0EzUVmkY2JIYz8ML2")
             finish()
         }
         binding.dislikeBtn.setOnClickListener {
