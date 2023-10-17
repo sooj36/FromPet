@@ -12,13 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frompet.chating.adapter.ChatMessageAdapter
 import com.example.frompet.databinding.ActivityChatMessageBinding
 import com.example.frompet.login.data.UserModel
-import com.example.frompet.login.viewmodel.ChatViewModel
 import com.google.firebase.auth.FirebaseAuth
+
 
 class ChatMessageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatMessageBinding
     private val chatViewModel: ChatViewModel by viewModels()
-    private val adapter = ChatMessageAdapter(FirebaseAuth.getInstance().currentUser?.uid ?: "")
+    private val adapter :ChatMessageAdapter by lazy { binding.rvMessage.adapter as ChatMessageAdapter}
     private val auth = FirebaseAuth.getInstance()
     private val typingTimeoutHandler = Handler(Looper.getMainLooper())
     private val typingTimeoutRunnable = Runnable {
@@ -34,8 +34,8 @@ class ChatMessageActivity : AppCompatActivity() {
         binding = ActivityChatMessageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.rvMessage.adapter = adapter
-        binding.rvMessage.layoutManager = LinearLayoutManager(this)
+        binding.apply {  rvMessage.adapter = ChatMessageAdapter()
+        rvMessage.layoutManager = LinearLayoutManager(this@ChatMessageActivity)}
 
         chatViewModel.chatMessages.observe(this) { messages ->
             adapter.submitList(messages) {
