@@ -25,7 +25,7 @@ class ChatListFragment : Fragment() {
     }
     private var _binding: FragmentChatListBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: MatchViewModel by viewModels()
+    private val matchViewModel: MatchViewModel by viewModels()
 
     private val startChatDetailActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -33,10 +33,10 @@ class ChatListFragment : Fragment() {
             val matchedUserId = result.data?.getStringExtra(MATCHED_USERS)
             matchedUserId?.let { userId ->
                 when (action) {
-                    MATCH -> viewModel.matchUser(userId)
-                    DISLIKE -> {val currentLikes = viewModel.likeList.value?.toMutableList() ?: mutableListOf()
+                    MATCH -> matchViewModel.matchUser(userId)
+                    DISLIKE -> {val currentLikes = matchViewModel.likeList.value?.toMutableList() ?: mutableListOf()
                         currentLikes.removeIf { it.uid == userId }
-                        viewModel.likeList.value = currentLikes}
+                        matchViewModel.likeList.value = currentLikes}
                 }
             }
         }
@@ -60,13 +60,13 @@ class ChatListFragment : Fragment() {
             }
             rvChatList.layoutManager = GridLayoutManager(context, 2)
 
-            viewModel.likeList.observe(viewLifecycleOwner) { users ->
+            matchViewModel.likeList.observe(viewLifecycleOwner) { users ->
                 users?.let {
                     (rvChatList.adapter as ChatListAdapter).submitList(it)
                     binding.tvLikeMe.text = "${it.size}명이 나를 좋아해요"
                 }
             }
-            viewModel.loadlike()
+            matchViewModel.loadlike()
 
         }
     }
