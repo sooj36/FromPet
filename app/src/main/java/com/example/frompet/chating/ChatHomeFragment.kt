@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.frompet.R
 import com.example.frompet.chating.adapter.ChatHomeAdapter
 import com.example.frompet.databinding.FragmentChatHomeBinding
 import com.example.frompet.login.viewmodel.MatchViewModel
@@ -38,6 +39,8 @@ class ChatHomeFragment : Fragment() {
         viewModel.matchedList.observe(viewLifecycleOwner) { users ->
             users?.let {
                 adapter.submitList(it)
+                binding.tvPossibleText.text = "${it.size}명과 대화가 가능해요"
+
             }
         }
     }
