@@ -11,7 +11,7 @@ data class UserModel(
     val petGender: String = "",
     val petIntroduction: String = "",
     val petName: String = "",
-    val petProfile: Uri?,
+    /*val petProfile: Uri?= null,*/
     val petType: String = "",
     var uid:String = "Td4QjX4JQ2Y0EzUVmkY2JIYz8ML2"
 

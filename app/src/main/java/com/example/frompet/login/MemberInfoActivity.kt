@@ -54,7 +54,7 @@ class MemberInfoActivity : AppCompatActivity() {
 
                 // User 모델을 생성
                 val userModel = UserModel(
-                    petAge, petDescription, petGender, petIntroduction, petName, petProfile, petType
+                    petAge, petDescription, petGender, petIntroduction, petName, /*petProfile,*/ petType
                 )
                 userModel.uid = currentUser.uid
 

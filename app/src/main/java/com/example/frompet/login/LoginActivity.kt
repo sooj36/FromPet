@@ -46,8 +46,6 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
             viewModel.singIn(email, password)
-            binding.btLogin.progress = 100
-            binding.btLogin.isEnabled = true
 
 
 
