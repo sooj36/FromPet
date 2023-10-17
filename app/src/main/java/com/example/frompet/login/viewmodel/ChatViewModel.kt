@@ -12,21 +12,27 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import org.checkerframework.checker.builder.qual.ReturnsReceiver
 
 class ChatViewModel : ViewModel() {
     private val _chatMessages = MutableLiveData<List<ChatMessage>>()
     val chatMessages: LiveData<List<ChatMessage>> get() = _chatMessages
-    private val _isTyping =MutableLiveData<Boolean>()
-    val isTyping :LiveData<Boolean> get() = _isTyping
-    private val _lastMessage = MutableLiveData<ChatMessage?>()
-    val lastMessage: LiveData<ChatMessage?> get() = _lastMessage
+    private val _isTyping = MutableLiveData<Boolean>()
+    val isTyping: LiveData<Boolean> get() = _isTyping
+    private val _lastMessages = HashMap<String, MutableLiveData<ChatMessage?>>()
+    private val _newMessages = MutableLiveData<HashMap<String, Boolean>>()
+    val newMessages: LiveData<HashMap<String, Boolean>> get() = _newMessages
+
+
     private val database = FirebaseDatabase.getInstance().reference
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
     fun chatRoom(uid1: String, uid2: String): String {
         return if (uid1 > uid2) "$uid1+$uid2" else "$uid2+$uid1" //두 사람 채팅에는 항상 합친 동일한 구분자로 생성함
+    }
+
+    fun getLastMessageLiveData(chatRoomId: String): LiveData<ChatMessage?> {
+        return _lastMessages.getOrPut(chatRoomId) { MutableLiveData<ChatMessage?>() }
     }
 
     fun sendMessage(receiverId: String, message: String) {
@@ -45,16 +51,15 @@ class ChatViewModel : ViewModel() {
                     message = message,
                     timestamp = System.currentTimeMillis()
                 )
-
                 database.child("chatMessages").child(chatRoomId).push().setValue(chatMessage)
+                database.child("lastMessages").child(chatRoomId).setValue(chatMessage)
+                database.child("newMessages").child(chatRoomId).child(receiverId).setValue(true)
                     .addOnSuccessListener {
                         loadPreviousMessages(chatRoomId)
-                    }
-                    .addOnFailureListener { exception ->
+                    }.addOnFailureListener { exception ->
                         Log.d("jun", "메시지전송실패: ${exception.message}")
                     }
-            }
-            .addOnFailureListener { exception ->
+            }.addOnFailureListener { exception ->
                 Log.d("jun", "연결실패: ${exception.message}")
             }
     }
@@ -64,7 +69,8 @@ class ChatViewModel : ViewModel() {
         database.child("chatMessages").child(chatRoomId)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val messages = dataSnapshot.children.mapNotNull { it.getValue(ChatMessage::class.java) }
+                    val messages =
+                        dataSnapshot.children.mapNotNull { it.getValue(ChatMessage::class.java) }
                     _chatMessages.value = messages.sortedBy { it.timestamp }
                 }
 
@@ -73,35 +79,56 @@ class ChatViewModel : ViewModel() {
                 }
             })
     }
-    fun checkTypingStatus(receiverId: String) {
-        database.child("typingStatus").child(receiverId).addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val status = dataSnapshot.getValue(Boolean::class.java)?:false
-                _isTyping.value = status
-            }
-            override fun onCancelled(databaseError: DatabaseError){}
-        })
-    }
-    fun setTypingStatus(isTyping:Boolean){
-        val currentId = auth.currentUser?.uid ?: return
-        database.child("typingStatus").child(currentId).setValue(isTyping)
-    }
-    fun loadLastMessage(userId: String) {
-        database.child("chatMessages")
-            .orderByChild("senderId")
-            .equalTo(userId)
-            .limitToLast(1)
+    fun loadLastMessage(
+        currentUserId: String, otherUserId: String
+    ) { //  리얼타임 베이스의 구조를 최적화하여 필요한 데이터만 읽으려고 라스트메시지 노드 따로 추가함
+        val chatRoomId = chatRoom(currentUserId, otherUserId)
+
+        database.child("lastMessages").child(chatRoomId)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        val message = dataSnapshot.children.first().getValue(ChatMessage::class.java)
-                        _lastMessage.value = message
-                    } else {
-                        _lastMessage.value = null
-                    }
+                    val message = dataSnapshot.getValue(ChatMessage::class.java)
+                    _lastMessages[chatRoomId]?.value = message
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {}
             })
+    }
+
+    fun goneNewMessages(chatRoomId: String){
+        val currentUserId = auth.currentUser?.uid?:return
+        database.child("newMessages").child(chatRoomId).child(currentUserId).setValue(false)
+    }
+    fun loadNewMessages() {
+        val currentUserId = auth.currentUser?.uid ?: return
+        database.child("newMessages")
+            .orderByChild(currentUserId)
+            .equalTo(true)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val newMessageRooms = dataSnapshot.children.mapNotNull {
+                        it.key?.let { key ->
+                            key to (it.child(currentUserId).getValue(Boolean::class.java) ?: false)
+                        }
+                    }.toMap()
+                    _newMessages.value = HashMap(newMessageRooms)
+                }
+                override fun onCancelled(databaseError: DatabaseError) {}
+            })
+    }
+    fun checkTypingStatus(receiverId: String) {
+        database.child("typingStatus").child(receiverId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val status = dataSnapshot.getValue(Boolean::class.java) ?: false
+                    _isTyping.value = status
+                }
+                override fun onCancelled(databaseError: DatabaseError) {}
+            })
+    }
+
+    fun setTypingStatus(isTyping: Boolean) {
+        val currentId = auth.currentUser?.uid ?: return
+        database.child("typingStatus").child(currentId).setValue(isTyping)
     }
 }
