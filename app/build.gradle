@@ -11,12 +11,12 @@ plugins {
 
 android {
     namespace 'com.example.frompet'
-    compileSdk 34
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.frompet"
         minSdk 31
-        targetSdk 34
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -78,7 +78,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
     //activityViewmodel
-    implementation 'androidx.activity:activity-ktx:1.8.0'
+    implementation 'androidx.activity:activity-ktx:1.7.2'
     implementation "androidx.fragment:fragment-ktx:1.6.1"
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:"2.5.1"'
