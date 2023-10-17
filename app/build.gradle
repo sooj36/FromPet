@@ -11,12 +11,12 @@ plugins {
 
 android {
     namespace 'com.example.frompet'
-    compileSdk 34
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.frompet"
         minSdk 31
-        targetSdk 34
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -38,7 +38,6 @@ android {
     }
     buildFeatures {
         viewBinding = true
-        dataBinding = true
         buildConfig = true
     }
 }
@@ -49,6 +48,8 @@ dependencies {
 
     implementation 'io.coil-kt:coil:1.2.0'
     implementation 'io.coil-kt:coil-svg:1.2.0'
+//    implementation "io.coil-kt:coil-transformations:1.3" // 코일이미지원
+
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'//써클이미지뷰 라이브러리
     implementation "androidx.viewpager2:viewpager2:1.0.0" //뷰페이저
@@ -79,7 +80,7 @@ dependencies {
 
 
     //activityViewmodel
-    implementation 'androidx.activity:activity-ktx:1.8.0'
+    implementation 'androidx.activity:activity-ktx:1.7.2'
     implementation "androidx.fragment:fragment-ktx:1.6.1"
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:"2.5.1"'

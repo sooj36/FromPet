@@ -72,7 +72,7 @@ class LoginViewModel : ViewModel() {
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.e("Firestore", "Error fetching Firestore data", exception)
+                    Log.e("lee", "Error", exception)
                 }
         }
     }

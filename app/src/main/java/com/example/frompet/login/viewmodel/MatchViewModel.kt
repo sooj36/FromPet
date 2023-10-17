@@ -2,6 +2,7 @@ package com.example.frompet.login.viewmodel
 
 import android.app.Application
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -15,9 +16,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 
 class MatchViewModel : ViewModel() {
-    val likeList = MutableLiveData<List<UserModel>?>()
-    val disLikeList = MutableLiveData<List<UserModel>>()
-    val matchedList = MutableLiveData<List<UserModel>>()
+    private val _likeList :MutableLiveData<List<UserModel>?> = MutableLiveData()
+    val likeList : MutableLiveData<List<UserModel>?> get() = _likeList
+    private val _disLikeList : MutableLiveData<List<UserModel>> = MutableLiveData()
+    val disLikeList : MutableLiveData<List<UserModel>>  get() =  _disLikeList
+    private val _matchedList : MutableLiveData<List<UserModel>> = MutableLiveData()
+    val matchedList : MutableLiveData<List<UserModel>> get() = _matchedList
     private val database = FirebaseDatabase.getInstance().getReference("likeUsers")
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -59,8 +63,8 @@ class MatchViewModel : ViewModel() {
                                             val user = document.toObject(UserModel::class.java)
                                             user?.let {
                                                 likedUsers.add(it)
-                                                likeList.value = likedUsers.toList()
-                                                Log.d("jun", "매치되기전라이크리스트${likeList.value}")
+                                                _likeList.value = likedUsers.toList()
+                                                Log.d("jun", "매치되기전라이크리스트${_likeList.value}")
                                             }
                                         }
                                 }
@@ -83,10 +87,10 @@ class MatchViewModel : ViewModel() {
         database.child(currentUserId).child("matched").child(otherUserUid).setValue(true)
         database.child(otherUserUid).child("matched").child(currentUserId).setValue(true)
         database.child(currentUserId).child("likedBy").child(otherUserUid).removeValue()
-        val currentLikes = likeList.value?.toMutableList() ?: mutableListOf()
+        val currentLikes = _likeList.value?.toMutableList() ?: mutableListOf()
         currentLikes?.removeIf { it.uid == otherUserUid }
-        likeList.value = currentLikes
-        Log.d("jun", "매치된후라이크리스트:${likeList.value}")
+        _likeList.value = currentLikes
+        Log.d("jun", "매치된후라이크리스트:${_likeList.value}")
         loadlikes()
 
     }
@@ -108,7 +112,7 @@ class MatchViewModel : ViewModel() {
                             val user = document.toObject(UserModel::class.java)
                             user?.let {
                                 matchedUsers.add(it)
-                                matchedList.value = matchedUsers.toList()
+                                _matchedList.value = matchedUsers.toList()
                             }
                         }
                         .addOnFailureListener { exception ->
@@ -120,6 +124,10 @@ class MatchViewModel : ViewModel() {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+
+
+// ... 기존 코드 ...
+
 }
 
 //    fun loadAllUsers() {

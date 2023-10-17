@@ -104,15 +104,20 @@ class MemberInfoActivity : AppCompatActivity() {
                     storageRef.downloadUrl
                 }
                 .addOnSuccessListener { uri ->
+                    val imageUrl = uri.toString()
+                    saveImageUrlToFirestore(imageUrl)
                     showToast("이미지 업로드 성공")
                 }
-                .addOnCanceledListener {
-                    // 업로드 취소 시
-                }
+                .addOnCanceledListener {}
                 .addOnFailureListener {
                     showToast("업로드 실패")
                 }
         }
+    }
+    private fun saveImageUrlToFirestore(imageUrl: String) {
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val userRef = FirebaseFirestore.getInstance().collection("User").document(currentUserId)
+        userRef.update("petProfile", imageUrl)
     }
     private fun cropImage(uri: Uri?){
         CropImage.activity(uri)
