@@ -148,19 +148,13 @@ class ProfileActivity : AppCompatActivity() {
                         // Firestore에 이미지 URL 업데이트
                         userDocRef.update(updateMap)
                             .addOnSuccessListener {
-                                showToast("이미지 업로드 및 프로필 이미지 업데이트 성공")
+                                showToast("이미지 업로드 성공")
                                 onBackPressed()
                             }
                             .addOnFailureListener {
-                                showToast("이미지 업로드 성공, 프로필 이미지 업데이트 실패")
+                                showToast("이미지 업로드 실패")
                             }
-                    } else {
-                        showToast("이미지 업로드 성공, 사용자 ID를 찾을 수 없음")
                     }
-                }
-                .addOnCanceledListener {}
-                .addOnFailureListener {
-                    showToast("업로드 실패")
                 }
         }
     }
