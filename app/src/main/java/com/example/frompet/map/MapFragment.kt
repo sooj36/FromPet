@@ -1,6 +1,6 @@
 package com.example.frompet.map
 
-import android.app.Application
+
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
@@ -9,26 +9,29 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import com.example.frompet.R
 import com.example.frompet.databinding.FragmentMapBinding
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.naver.maps.map.MapView
 import com.example.frompet.map.MapFragment
+import com.naver.maps.map.util.FusedLocationSource
 
 class MapFragment : Fragment() {
-    private var _binding : FragmentMapBinding? = null
+    private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding
     private var mapView: MapView? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    /**전역변수 선언**/
+    private val LOCATION_PERMISSION_REQUEST_CODE : Int = 1000
+    private lateinit var locationSource : FusedLocationSource // 위치 반환 구현체
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
         val rootView = _binding?.root
         mapView = _binding?.mapView
+        mapView?.onCreate(savedInstanceState)
 
-        _binding?.let { binding ->
-            mapView?.onCreate(savedInstanceState)
-        }
 
         return rootView
     }
@@ -75,9 +78,13 @@ class MapFragment : Fragment() {
 
 // 스크롤 가능한 뷰에서 스크롤할 때 지도가 무작위로 움직이지 않도록 하는 역할
 class ScrollAwareMapView : MapView {
-    constructor(context : Context) : super(context)
+    constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
     //  사용자 지정 지도 뷰 만들고, 터치 이벤트 처리 시 상위 뷰 그룹에서 이벤트 가로채지 않도록 함
     // ScrollAwareMapView가 지도 스크롤,확대/축소 할 때, 부모 뷰 그룹의 간섭 방지
