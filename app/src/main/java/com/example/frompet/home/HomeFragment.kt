@@ -28,7 +28,7 @@ class HomeFragment : Fragment() {
 
 
         binding.likeBtn.setOnClickListener {
-            val currentUid = auth.currentUser?.uid?:return@setOnClickListener
+
             viewModel.like("Td4QjX4JQ2Y0EzUVmkY2JIYz8ML2")
             Toast.makeText(requireContext(),"하트뿅뿅",Toast.LENGTH_LONG).show()
         }

@@ -1,5 +1,6 @@
 package com.example.frompet.login.data
 
+import android.net.Uri
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
@@ -10,11 +11,11 @@ data class UserModel(
     val petGender: String = "",
     val petIntroduction: String = "",
     val petName: String = "",
-    val petProfile: String = "",
+    val petProfile: String?= null,
     val petType: String = "",
-    var uid:String = "Td4QjX4JQ2Y0EzUVmkY2JIYz8ML2"
+    var uid:String = ""
 
-
+//CmrOTtczqVMUzuCFpVgIp1zFkOH3
 ): Parcelable
 @Parcelize
 data class ChatMessage(

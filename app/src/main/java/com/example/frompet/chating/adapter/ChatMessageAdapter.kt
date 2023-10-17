@@ -7,15 +7,24 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.frompet.R
 import com.example.frompet.databinding.ItemChatMessageBinding
 import com.example.frompet.login.data.ChatMessage
+import com.example.frompet.login.data.UserModel
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Locale
 
-class ChatMessageAdapter(private val currentUserId: String) : ListAdapter<ChatMessage, ChatMessageAdapter.ChatMessageViewHolder>(DiffCallback()) {
+class ChatMessageAdapter(private val currentUserId: String) :
+    ListAdapter<ChatMessage, ChatMessageAdapter.ChatMessageViewHolder>(DiffCallback()) {
+    private val firestore = FirebaseFirestore.getInstance()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatMessageAdapter.ChatMessageViewHolder {
-        val binding = ItemChatMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ChatMessageAdapter.ChatMessageViewHolder {
+        val binding =
+            ItemChatMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ChatMessageViewHolder(binding)
     }
 
@@ -24,7 +33,8 @@ class ChatMessageAdapter(private val currentUserId: String) : ListAdapter<ChatMe
         holder.bind(chatMessage)
     }
 
-    inner class ChatMessageViewHolder(private val binding: ItemChatMessageBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ChatMessageViewHolder(private val binding: ItemChatMessageBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(chatMessage: ChatMessage) {
             binding.apply {
                 if (chatMessage.senderId == currentUserId) {
@@ -32,21 +42,31 @@ class ChatMessageAdapter(private val currentUserId: String) : ListAdapter<ChatMe
                     tvName.text = "나"
                     tvMessage.text = chatMessage.message
                     tvMessage.setBackgroundResource(R.drawable.rightbubble)
-                    tvTime.text = SimpleDateFormat("MM월dd일 hh:mm", Locale.getDefault()).format(chatMessage.timestamp)
+                    tvTime.text =
+                        SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
                     binding.messageItemLinearlayoutMain.gravity = Gravity.RIGHT
                 } else {
 
                     tvName.text = chatMessage.senderPetName
                     tvMessage.text = chatMessage.message
                     tvMessage.setBackgroundResource(R.drawable.leftbubble)
-                    tvTime.text = SimpleDateFormat("MM월dd일 HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
+                    tvTime.text =
+                        SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
                     binding.messageItemLinearlayoutMain.gravity = Gravity.LEFT
+                    firestore.collection("User").document(chatMessage.senderId)
+                        .get()
+                        .addOnSuccessListener { document ->
+                            val user = document.toObject(UserModel::class.java)
+                            user?.petProfile.let {
+                                binding.ivProfile.load(it) {
+                                    error(R.drawable.kakaotalk_20230825_222509794_01)
+                                }
+                            }
+                        }
                 }
-
             }
         }
     }
-
 
 
     class DiffCallback : DiffUtil.ItemCallback<ChatMessage>() {

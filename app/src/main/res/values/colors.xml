@@ -10,11 +10,12 @@
     <color name="warmBlue">#0F82ED</color>
     <color name="lightPink">#FF88C1</color>
     <color name="lipPink">#FF5794</color>
-    <color name="rightBeige">#DCBAB7</color>
+    <color name="lightBeige">#DCBAB7</color>
     <color name="beige">#DCB8AB</color>
     <color name="peachPuff">#F4D1B1</color>
     <color name="lightOrenge">#F68531</color>
     <color name="lightGray">#F4F5F9</color>
+    <color name="background">#EDEFE4</color>
 
 
 
