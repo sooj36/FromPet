@@ -46,6 +46,8 @@ android {
 dependencies {
 
     implementation 'com.naver.maps:map-sdk:3.17.0' //네이버 지도 SDK
+    implementation "com.google.android.gms:play-services-location:21.0.1"
+//    implementation 'io.github.ParkSangGwon:tedpermission-normal:x.y.z'
 
     implementation 'io.coil-kt:coil:1.2.0'
     implementation 'io.coil-kt:coil-svg:1.2.0'

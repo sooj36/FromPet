@@ -10,48 +10,25 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.example.frompet.R
-import com.example.frompet.databinding.FragmentCommunicationBinding
 import com.example.frompet.databinding.FragmentMapBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.naver.maps.map.MapView
-import com.naver.maps.map.NaverMap
-import com.naver.maps.map.NaverMapSdk
-
+import com.example.frompet.map.MapFragment
 
 class MapFragment : Fragment() {
+    private var _binding : FragmentMapBinding? = null
+    private val binding get() = _binding
+    private var mapView: MapView? = null
 
-    private var _binding: FragmentMapBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var mapView: MapView
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
-        mapView = binding.mapView
-        mapView.onCreate(savedInstanceState)
+        val rootView = _binding?.root
+        mapView = _binding?.mapView
 
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
-}
-
-class MapFragemnt : Fragment() {
-
-    private lateinit var mapView: MapView
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_map, container, false)
-        mapView = rootView.findViewById(R.id.mapFragment) as MapView
-        mapView.onCreate(savedInstanceState)
+        _binding?.let { binding ->
+            mapView?.onCreate(savedInstanceState)
+        }
 
         return rootView
     }
@@ -59,30 +36,41 @@ class MapFragemnt : Fragment() {
     // 생명주기와 싱크 연동
     override fun onStart() {
         super.onStart()
-        mapView.onStart()
+        mapView?.onStart()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView.onResume()
+        mapView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView.onPause()
+        mapView?.onPause()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView?.onSaveInstanceState(outState)
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView.onLowMemory()
+        mapView?.onLowMemory()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView.onDestroy()
+    override fun onStop() {
+        super.onStop()
+        mapView?.onStop()
     }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+        mapView?.onDestroy()
+    }
+
 }
-
 
 
 // 스크롤 가능한 뷰에서 스크롤할 때 지도가 무작위로 움직이지 않도록 하는 역할
