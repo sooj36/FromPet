@@ -55,27 +55,6 @@ class LoginViewModel : ViewModel() {
                 }
             }
     }
-    fun loadUserPetProfile(callback: (String?, String?, String?) -> Unit) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser != null) {
-            val firestore = FirebaseFirestore.getInstance()
-            val usersCollection = firestore.collection("User")
-            val userId = currentUser.uid
-
-            usersCollection.document(userId).get()
-                .addOnSuccessListener { documentSnapshot ->
-                    if (documentSnapshot.exists()) {
-                        val petProfile = documentSnapshot.getString("petProfile")
-                        val petName = documentSnapshot.getString("petName")
-                        val petType = documentSnapshot.getString("petType")
-                        callback(petProfile, petName, petType)
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.e("lee", "Error", exception)
-                }
-        }
-    }
 }
 
 class LoginViewModelFactory(
