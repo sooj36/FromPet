@@ -46,8 +46,10 @@ class MatchViewModel : ViewModel() {
                 val likedUsers = mutableListOf<UserModel>()
 
                 likedUserIds.forEach { userId ->
+
                     database.child(currentUserId).child("matched").child(userId)
                         .addValueEventListener(object : ValueEventListener {
+
                             override fun onDataChange(matchedSnapshot: DataSnapshot) {
                                 if (!matchedSnapshot.exists()) { // 매치된 사용자가 아닌 경우에만 추가
                                     firestore.collection("User").document(userId)
@@ -72,6 +74,7 @@ class MatchViewModel : ViewModel() {
         })
     }
 
+
     fun matchWithUser(otherUserUid: String) {
         val currentUserId = auth.currentUser?.uid ?: return
         // 서로 like한 경우
@@ -84,6 +87,7 @@ class MatchViewModel : ViewModel() {
         likeList.value = currentLikes
         Log.d("jun", "매치된후라이크리스트:${likeList.value}")
         loadlikes()
+
     }
 
 
@@ -116,6 +120,34 @@ class MatchViewModel : ViewModel() {
         })
     }
 }
+
+    fun loadAllUsers() {
+        val allUsersData = mutableListOf<UserModel>()
+        val currentUserId = auth.currentUser?.uid
+        firestore.collection("User")
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                for (document in querySnapshot.documents) {
+                    val userData = document.toObject(UserModel::class.java)
+                    userData?.let {
+                        if (userData.uid != currentUserId) {
+                            allUsersData.add(it)
+                        }
+                    }
+                }
+                likeList.value = allUsersData.toList()
+            }
+            .addOnFailureListener { exception ->
+                Log.e("shsh", "loading 실패 : $exception")
+            }
+    }
+
+
+}
+
+
+
+
 
 
 

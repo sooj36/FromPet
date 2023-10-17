@@ -32,6 +32,7 @@ class ChatUserDetailActivity : AppCompatActivity() {
             displayUserInfo(it)
         }
 
+
         binding.likeBtn.setOnClickListener {
             user?.uid?.let { userId ->
                 viewModel.matchWithUser(userId)
@@ -42,6 +43,7 @@ class ChatUserDetailActivity : AppCompatActivity() {
                 setResult(Activity.RESULT_OK, resultIntent)
                 finish()
             }
+
         }
 
         binding.dislikeBtn.setOnClickListener {
