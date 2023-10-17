@@ -45,8 +45,6 @@ android {
 
 dependencies {
 
-    implementation 'com.naver.maps:map-sdk:3.17.0' //네이버 지도 SDK
-
     implementation 'io.coil-kt:coil:1.2.0'
     implementation 'io.coil-kt:coil-svg:1.2.0'
 
@@ -66,6 +64,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database-ktx:20.2.2'
     implementation 'com.google.firebase:firebase-auth:21.1.0'
     implementation 'com.google.firebase:firebase-firestore-ktx:24.4.1'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.2.1'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.firebase:firebase-storage-ktx:20.2.1'
     testImplementation 'junit:junit:4.13.2'
