@@ -41,6 +41,7 @@ class ChatHomeFragment : Fragment() {
                 adapter.submitList(it)
                 binding.tvPossibleText.text = "${it.size}명과 대화가 가능해요"
 
+
             }
         }
     }
