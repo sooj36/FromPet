@@ -1,5 +1,6 @@
 package com.example.frompet.chating.adapter
 
+import android.content.Context
 import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.view.Gravity
@@ -11,7 +12,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.frompet.R
+import com.example.frompet.chating.ChatClickUserDetailActivity
 import com.example.frompet.chating.ChatPullScreenActivity
+import com.example.frompet.chating.ChatUserDetailActivity
 
 import com.example.frompet.databinding.ItemMyMessageBinding
 import com.example.frompet.databinding.ItemOtherMessageBinding
@@ -21,7 +24,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Locale
 
-class ChatMessageAdapter() :
+
+class ChatMessageAdapter(var context: Context) :
     ListAdapter<ChatMessage, RecyclerView.ViewHolder>(DiffCallback()) {
 
     private val firestore = FirebaseFirestore.getInstance()
@@ -94,6 +98,7 @@ class ChatMessageAdapter() :
                 tvMessage.text = chatMessage.message
                 tvTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
 
+
                 if (!chatMessage.imageUrl.isNullOrEmpty()) {
                     ivMessageImage.visibility = View.VISIBLE
                     tvMessage.visibility = View.GONE
@@ -107,9 +112,11 @@ class ChatMessageAdapter() :
                     .addOnSuccessListener { document ->
                         val user = document.toObject(UserModel::class.java)
                         user?.petProfile?.let {
-                            binding.ivProfile.load(it) {
+                                ivProfile.load(it) {
                                 error(R.drawable.kakaotalk_20230825_222509794_01)
+                                ivProfile.setOnClickListener{userDetail(user)}
                             }
+
                         }
                     }
             }
@@ -130,6 +137,11 @@ class ChatMessageAdapter() :
             intent.putExtra(IMAGE_URL, imageUrl)
             it.context.startActivity(intent)
         }
+    }
+    private fun userDetail(user: UserModel) {
+        val intent = Intent(context, ChatClickUserDetailActivity::class.java)
+        intent.putExtra(ChatClickUserDetailActivity.USER, user)
+        context.startActivity(intent)
     }
 
 }

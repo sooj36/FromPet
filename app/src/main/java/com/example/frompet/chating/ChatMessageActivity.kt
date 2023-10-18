@@ -48,7 +48,7 @@ class ChatMessageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.apply {
-            rvMessage.adapter = ChatMessageAdapter()
+            rvMessage.adapter = ChatMessageAdapter(this@ChatMessageActivity)
             rvMessage.layoutManager = LinearLayoutManager(this@ChatMessageActivity)
         }
 
