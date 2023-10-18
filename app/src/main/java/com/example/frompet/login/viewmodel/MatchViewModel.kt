@@ -35,8 +35,8 @@ class MatchViewModel : ViewModel() {
     fun dislike(targetUserId: String) {
         val currentUserId = auth.currentUser?.uid ?: return
         database.child(currentUserId).child("likedBy").child(targetUserId).removeValue()
-//        database.child(targetUserId).child("matched").child(currentUserId).removeValue()
-        //        database.child(currentUserId).child("matched").child(targetUserId).removeValue()
+        database.child(targetUserId).child("matched").child(currentUserId).removeValue()
+        database.child(currentUserId).child("matched").child(targetUserId).removeValue()
 
     }
 

@@ -15,7 +15,7 @@ data class UserModel(
     val petType: String = "",
     var uid:String = ""
 
-//CmrOTtczqVMUzuCFpVgIp1zFkOH3
+
 ): Parcelable{
     constructor() : this(0, "", "", "", "", null, "", "")
 }
@@ -25,6 +25,7 @@ data class ChatMessage(
     val senderPetName: String = "",
     val receiverId: String = "",
     val message: String = "",
+    val imageUrl: String? = null,
     val timestamp: Long = System.currentTimeMillis()
 ): Parcelable
 
