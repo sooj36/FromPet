@@ -12,27 +12,32 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frompet.chating.adapter.ChatMessageAdapter
 import com.example.frompet.databinding.ActivityChatMessageBinding
 import com.example.frompet.login.data.UserModel
-import com.example.frompet.login.viewmodel.ChatViewModel
 import com.google.firebase.auth.FirebaseAuth
+
 
 class ChatMessageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatMessageBinding
-    private val viewModel: ChatViewModel by viewModels()
-    private val adapter = ChatMessageAdapter(FirebaseAuth.getInstance().currentUser?.uid ?: "")
+    private val chatViewModel: ChatViewModel by viewModels()
+    private val adapter :ChatMessageAdapter by lazy { binding.rvMessage.adapter as ChatMessageAdapter}
+    private val auth = FirebaseAuth.getInstance()
     private val typingTimeoutHandler = Handler(Looper.getMainLooper())
     private val typingTimeoutRunnable = Runnable {
-        viewModel.setTypingStatus(false)
+        chatViewModel.setTypingStatus(false)
     }
+    companion object{
+        const val USER = "user"
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatMessageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.rvMessage.adapter = adapter
-        binding.rvMessage.layoutManager = LinearLayoutManager(this)
+        binding.apply {  rvMessage.adapter = ChatMessageAdapter()
+        rvMessage.layoutManager = LinearLayoutManager(this@ChatMessageActivity)}
 
-        viewModel.chatMessages.observe(this) { messages ->
+        chatViewModel.chatMessages.observe(this) { messages ->
             adapter.submitList(messages) {
                 binding.rvMessage.post {
                     binding.rvMessage.scrollToPosition(messages.size - 1)
@@ -40,19 +45,22 @@ class ChatMessageActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.isTyping.observe(this, Observer { isTyping ->
+        chatViewModel.isTyping.observe(this, Observer { isTyping ->
             binding.tvTyping.text = if (isTyping) "입력중..." else ""
         })
 
-        val user: UserModel? = intent.getParcelableExtra("user")
+        val user: UserModel? = intent.getParcelableExtra(USER)
         user?.let {
             displayInfo(it)
-            viewModel.checkTypingStatus(it.uid)
+            chatViewModel.checkTypingStatus(it.uid)
+
+            val currentUserId = auth.currentUser?.uid ?: return
+            val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
 
             binding.ivSendBtn.setOnClickListener {
                 val message = binding.etMessage.text.toString()
                 if (message.isNotEmpty()) {
-                    viewModel.sendMessage(user.uid, message)
+                    chatViewModel.sendMessage(user.uid, message)
                     binding.etMessage.text.clear()
                 }
             }
@@ -60,9 +68,9 @@ class ChatMessageActivity : AppCompatActivity() {
             binding.etMessage.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
                     if (s.isNullOrEmpty()) {
-                        viewModel.setTypingStatus(false)
+                        chatViewModel.setTypingStatus(false)
                     } else {
-                        viewModel.setTypingStatus(true)
+                        chatViewModel.setTypingStatus(true)
                         typingTimeoutHandler.removeCallbacks(typingTimeoutRunnable)
                         typingTimeoutHandler.postDelayed(typingTimeoutRunnable, 5000)
                     }
@@ -70,9 +78,16 @@ class ChatMessageActivity : AppCompatActivity() {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
+            chatViewModel.loadPreviousMessages(chatRoomId)
         }
-        viewModel.loadPreviousMessages()
+
         binding.backBtn.setOnClickListener {
+            val user: UserModel? = intent.getParcelableExtra(USER)
+            user?.let {
+                val currentUserId = auth.currentUser?.uid ?: return@let
+                val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
+                chatViewModel.goneNewMessages(chatRoomId)
+            }
             finish()
         }
     }

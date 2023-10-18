@@ -22,7 +22,8 @@ class ChatUserDetailActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityChatUserDetailBinding
-    private val viewModel: MatchViewModel by viewModels()
+    private val matchViewModel: MatchViewModel by viewModels()
+    private val chatViewModel: ChatViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +38,7 @@ class ChatUserDetailActivity : AppCompatActivity() {
 
         binding.likeBtn.setOnClickListener {
             user?.uid?.let { userId ->
-                viewModel.matchWithUser(userId)
+                matchViewModel.matchUser(userId)
                 Toast.makeText(this, "${user.petName} 와(과) 매치 되었습니다!", Toast.LENGTH_LONG).show()
                 val resultIntent = Intent()
                 resultIntent.putExtra(MATCHED_USERS, userId)
@@ -45,18 +46,17 @@ class ChatUserDetailActivity : AppCompatActivity() {
                 setResult(Activity.RESULT_OK, resultIntent)
                 finish()
             }
-
         }
 
         binding.dislikeBtn.setOnClickListener {
             user?.uid?.let { userId ->
-                viewModel.dislike(userId)
+                matchViewModel.dislike(userId)
                 Toast.makeText(this, "${user.petName}와(과) 매칭에 실패 했습니다!", Toast.LENGTH_LONG).show()
 
-                val resultIntent = Intent()
-                resultIntent.putExtra(MATCHED_USERS, userId)
-                resultIntent.putExtra(ACTION, DISLIKE)
-                setResult(Activity.RESULT_OK, resultIntent)
+                val result = Intent()
+                result.putExtra(MATCHED_USERS, userId)
+                result.putExtra(ACTION, DISLIKE)
+                setResult(Activity.RESULT_OK, result)
                 finish()
             }
         }
@@ -67,12 +67,12 @@ class ChatUserDetailActivity : AppCompatActivity() {
 
     private fun displayUserInfo(user: UserModel) {
         binding.apply {
-            tvPetName.text = "${user.petName}"
+            tvPetName.text = user.petName
             tvPetAge.text = "${user.petAge.toString()}세"
-            tvPetGender.text = "${user.petGender}"
-            tvPetType.text = "${user.petType}"
-            tvPetDes.text = "${user.petDescription}"
-            tvPetIntro.text = "${user.petIntroduction}"
+            tvPetGender.text = user.petGender
+            tvPetType.text = user.petType
+            tvPetDes.text = user.petDescription
+            tvPetIntro.text = user.petIntroduction
             user.petProfile.let {
                 ivPetProfile.load(user.petProfile){
                     error(R.drawable.kakaotalk_20230825_222509794_01)
