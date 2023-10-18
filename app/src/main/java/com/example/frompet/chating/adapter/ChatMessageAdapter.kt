@@ -43,7 +43,7 @@ class ChatMessageAdapter() :
 
     inner class ChatMessageViewHolder(private val binding: ItemChatMessageBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(chatMessage: ChatMessage) {
+        fun bind(chatMessage: ChatMessage) {//뷰타입을 나누자,시간대같은거는 말풍선 하나에
             binding.apply {
                 val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
                 if (chatMessage.senderId == currentUserId) {
@@ -58,10 +58,11 @@ class ChatMessageAdapter() :
                     tvMessage.setBackgroundResource(R.drawable.leftbubble)
                     ivMessageImage.setBackgroundResource(R.drawable.leftbubble)
                     tvTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
+//                    System.currentTimeMillis() 이걸로 보내자 Long타입으로 사용자에게 보여줄때는 사용자의 현재시간으로
                     messageItemLinearlayoutMain.gravity = Gravity.START
                     ivProfile.visibility = View.VISIBLE
 
-                    firestore.collection("User").document(chatMessage.senderId)
+                    firestore.collection("User").document(chatMessage.senderId)//프로필이미지를 어딘가에 저장해놨다가 if있으면 갖다쓰고 else없으면 다시불러오고
                         .get()
                         .addOnSuccessListener { document ->
                             val user = document.toObject(UserModel::class.java)
