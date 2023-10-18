@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -13,7 +15,9 @@ import com.example.frompet.databinding.ActivityMainBinding
 import com.example.frompet.login.LoginActivity
 import com.example.frompet.login.viewmodel.LoginViewModel
 import com.example.frompet.login.viewmodel.LoginViewModelFactory
+import com.example.frompet.map.NaverMapFragment
 import com.google.firebase.auth.FirebaseAuth
+import com.naver.maps.map.MapFragment
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
