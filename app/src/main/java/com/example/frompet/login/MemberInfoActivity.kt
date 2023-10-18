@@ -108,7 +108,7 @@ class MemberInfoActivity : AppCompatActivity() {
                     petProfile = imageUrl
                     Glide.with(this)
                         .load(imageUrl)
-                        .into(binding.petProfile)
+                        .into(binding.petProfile)//ㅁㄴㅇㅁㄴㅇ
                 }
                 .addOnCanceledListener {
                     // 업로드 취소 시
