@@ -21,17 +21,17 @@ import com.naver.maps.map.NaverMapSdk
 class MapFragment : Fragment() {
 
     private var _binding: FragmentMapBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
     private lateinit var mapView: MapView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
-        mapView = binding.mapView
+        mapView = binding!!.mapView
         mapView.onCreate(savedInstanceState)
 
-        return binding.root
+        return binding?.root
     }
 
     override fun onDestroyView() {

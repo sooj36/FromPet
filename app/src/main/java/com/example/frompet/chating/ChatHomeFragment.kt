@@ -19,7 +19,7 @@ class ChatHomeFragment : Fragment() {
 
     private var _binding: FragmentChatHomeBinding? = null
     private lateinit var  adapter: ChatHomeAdapter
-    private val binding get() = _binding!!
+    private val binding get() = _binding
 
     private val matchViewModel: MatchViewModel by viewModels()
     private val chatViewModel: ChatViewModel by viewModels()
@@ -55,7 +55,7 @@ class ChatHomeFragment : Fragment() {
             }
         }
 
-        _binding?.apply {
+        binding?.apply {
             rvChatHome.adapter = adapter
             rvChatHome.layoutManager = LinearLayoutManager(context)
         }
@@ -63,7 +63,7 @@ class ChatHomeFragment : Fragment() {
         matchViewModel.matchedList.observe(viewLifecycleOwner) { users ->
            chatViewModel.getlastTimeSorted(users){
                 adapter.submitList(it)
-                binding.tvPossibleText.text = "${it.size}명과 대화가 가능해요"
+                binding?.tvPossibleText?.text = "${it.size}명과 대화가 가능해요"
             }
         }
         chatViewModel.loadNewMessages()
