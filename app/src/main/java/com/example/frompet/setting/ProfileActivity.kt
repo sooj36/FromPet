@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -74,43 +75,120 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         binding.btModify2.setOnClickListener {
-            // 사용자가 수정한 정보 가져오기
-            val updatedPetName = binding.etPetName.text.toString()
-            val updatedPetType = binding.etPetType.text.toString()
-            val updatedPetGender = binding.etPetGender.text.toString()
-            val updatedPetAge = binding.etPetAge.text.toString().toInt()
-            val updatedPetIntroduction = binding.etPetIntroduction.text.toString()
-            val updatedPetDescription = binding.etPurpose.text.toString()
-
-            // Firebase Firestore에서 현재 사용자 ID 가져오기
-            val userId = FirebaseAuth.getInstance().currentUser?.uid
-
-            if (userId != null) {
-                val userDocRef = FirebaseFirestore.getInstance().collection("User").document(userId)
-
-                // 정보 업데이트
-                val updateMap: Map<String, Any> = mapOf(
-                    "petName" to updatedPetName,
-                    "petType" to updatedPetType,
-                    "petGender" to updatedPetGender,
-                    "petAge" to updatedPetAge,
-                    "petIntroduction" to updatedPetIntroduction,
-                    "petDescription" to updatedPetDescription
-                )
-
-                userDocRef.update(updateMap)
-                    .addOnSuccessListener {
-                        // 이미지가 선택되었을 때만 업로드하도록 수정
-                        selectedImageUri?.let { uploadAndUpdateImage(it) }
-                    }
-                    .addOnFailureListener { e ->
-                        Log.e("ProfileActivity", "사용자 정보 업데이트 실패", e)
-                        Toast.makeText(this, "사용자 정보 업데이트 실패", Toast.LENGTH_SHORT).show()
-                    }
-            }
+            onProfileUpdateClick()
         }
         binding.ibBackButton.setOnClickListener {
             onBackPressed()
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun updateUserProfileOnly(
+        userId: String,
+        updatedPetName: String,
+        updatedPetType: String,
+        updatedPetGender: String,
+        updatedPetAge: Int,
+        updatedPetIntroduction: String,
+        updatedPetDescription: String
+    ) {
+        val userDocRef = FirebaseFirestore.getInstance().collection("User").document(userId)
+
+        val updateMap: Map<String, Any> = mapOf(
+            "petName" to updatedPetName,
+            "petType" to updatedPetType,
+            "petGender" to updatedPetGender,
+            "petAge" to updatedPetAge,
+            "petIntroduction" to updatedPetIntroduction,
+            "petDescription" to updatedPetDescription
+        )
+
+        userDocRef.update(updateMap)
+            .addOnSuccessListener {
+                showToast("사용자 정보 업데이트 성공")
+            }
+            .addOnFailureListener { e ->
+                Log.e("lee", "사용자 정보 업데이트 실패", e)
+                showToast("사용자 정보 업데이트 실패")
+            }
+    }
+    private fun updateImageUrlInFirestore(userId: String, imageUrl: String) {
+        val userDocRef = FirebaseFirestore.getInstance().collection("User").document(userId)
+
+        // 이미지 URL을 Firestore에 업데이트
+        userDocRef.update("petProfile", imageUrl)
+            .addOnSuccessListener {
+                showToast("이미지 URL 업데이트 성공")
+                onBackPressed()
+            }
+            .addOnFailureListener {
+                showToast("이미지 URL 업데이트 실패")
+            }
+    }
+
+    private fun updateImageOnly(uri: Uri) {
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val fileName = "IMAGE_$timestamp.png"
+        val storageRef: StorageReference = storage.reference.child("images").child(fileName)
+
+        storageRef.putFile(uri)
+            .continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let { throw it }
+                }
+                storageRef.downloadUrl
+            }
+            .addOnSuccessListener { downloadUri ->
+                val imageUrl = downloadUri.toString()
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
+                userId?.let {
+                    // 이미지 URL을 Firestore에 업데이트
+                    updateImageUrlInFirestore(userId, imageUrl)
+                }
+            }
+    }
+
+    private fun updateImageAndUserProfile(
+        userId: String,
+        updatedPetName: String,
+        updatedPetType: String,
+        updatedPetGender: String,
+        updatedPetAge: Int,
+        updatedPetIntroduction: String,
+        updatedPetDescription: String,
+        uri: Uri
+    ) {
+        // 먼저 이미지를 업로드하고 Firestore에 이미지 URL을 업데이트
+        updateImageOnly(uri)
+
+        // 그런 다음 사용자 정보를 업데이트
+        updateUserProfileOnly(userId, updatedPetName, updatedPetType, updatedPetGender, updatedPetAge, updatedPetIntroduction, updatedPetDescription)
+    }
+
+    private fun onProfileUpdateClick() {
+        // 사용자가 수정한 정보 가져오기
+        val updatedPetName = binding.etPetName.text.toString()
+        val updatedPetType = binding.etPetType.text.toString()
+        val updatedPetGender = binding.etPetGender.text.toString()
+        val updatedPetAge = binding.etPetAge.text.toString().toInt()
+        val updatedPetIntroduction = binding.etPetIntroduction.text.toString()
+        val updatedPetDescription = binding.etPurpose.text.toString()
+
+        // Firebase Firestore에서 현재 사용자 ID 가져오기
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+        userId?.let {
+            if (selectedImageUri != null) {
+                // 이미지 선택 시 이미지와 사용자 정보 업데이트
+                updateImageAndUserProfile(it, updatedPetName, updatedPetType, updatedPetGender, updatedPetAge, updatedPetIntroduction, updatedPetDescription, selectedImageUri!!)
+            } else {
+                // 이미지를 선택하지 않았을 때 사용자 정보만 업데이트
+                updateUserProfileOnly(it, updatedPetName, updatedPetType, updatedPetGender, updatedPetAge, updatedPetIntroduction, updatedPetDescription)
+                onBackPressed()
+            }
         }
     }
 
@@ -123,44 +201,5 @@ class ProfileActivity : AppCompatActivity() {
                 .load(selectedImageUri)
                 .into(binding.ivPet2)
         }
-    }
-
-    private fun uploadAndUpdateImage(uri: Uri?) {
-        uri?.let { petProfileUri ->
-            val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-            val fileName = "IMAGE_$timestamp.png"
-            val storageRef: StorageReference = storage.reference.child("images").child(fileName)
-
-            // 이미지를 Firebase Storage에 업로드하고 Firestore에 업데이트하기
-            storageRef.putFile(petProfileUri)
-                .continueWithTask { task ->
-                    if (!task.isSuccessful) {
-                        task.exception?.let { throw it }
-                    }
-                    storageRef.downloadUrl
-                }
-                .addOnSuccessListener { uri ->
-                    val imageUrl = uri.toString()
-                    val userId = FirebaseAuth.getInstance().currentUser?.uid
-                    if (userId != null) {
-                        val userDocRef = FirebaseFirestore.getInstance().collection("User").document(userId)
-                        val updateMap: Map<String, Any> = mapOf("petProfile" to imageUrl)
-                        // Firestore에 이미지 URL 업데이트
-                        userDocRef.update(updateMap)
-                            .addOnSuccessListener {
-                                showToast("이미지 업로드 성공")
-                                onBackPressed()
-                            }
-                            .addOnFailureListener {
-                                showToast("이미지 업로드 실패")
-                            }
-                    }
-                }
-        }
-    }
-
-
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
