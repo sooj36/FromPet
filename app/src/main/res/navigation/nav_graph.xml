@@ -27,7 +27,7 @@
         tools:layout="@layout/fragment_setting" />
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.example.frompet.map.MapFragment"
+        android:name="com.example.frompet.map.NaverMapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" />
 </navigation>
