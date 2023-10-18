@@ -22,6 +22,7 @@
     <string name="message_noti">N</string>
     <string name="last_message">마지막 메세지</string>
     <string name="chatroom_name">방이름</string>
+    <string name="chat_home_last_time">시간</string>
 
     <!--    <string name="like_me_text"> %1$d명이 나를 좋아해요</string>-->
 <!--    <string name="possible_text"> %1$d명과 대화가 가능해요</string>-->

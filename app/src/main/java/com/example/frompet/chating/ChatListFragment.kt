@@ -52,7 +52,7 @@ class ChatListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.apply {
+        _binding?.apply {
             rvChatList.adapter = ChatListAdapter(requireContext()) { user ->
                 val intent = Intent(context, ChatUserDetailActivity::class.java)
                 intent.putExtra(USER, user)

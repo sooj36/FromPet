@@ -3,6 +3,7 @@ package com.example.frompet.login.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.frompet.login.data.ChatMessage
 import com.example.frompet.login.data.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -19,6 +20,7 @@ class MatchViewModel : ViewModel() {
     val disLikeList : MutableLiveData<List<UserModel>>  get() =  _disLikeList
     private val _matchedList : MutableLiveData<List<UserModel>> = MutableLiveData()
     val matchedList : MutableLiveData<List<UserModel>> get() = _matchedList
+
     private val database = FirebaseDatabase.getInstance().getReference("likeUsers")
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -121,9 +123,6 @@ class MatchViewModel : ViewModel() {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
-
-
-// ... 기존 코드 ...
 
 }
 

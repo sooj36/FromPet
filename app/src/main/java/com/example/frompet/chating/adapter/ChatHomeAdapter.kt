@@ -12,7 +12,7 @@ import coil.load
 import com.example.frompet.R
 import com.example.frompet.databinding.ItemChathomeBinding
 import com.example.frompet.login.data.UserModel
-import com.example.frompet.login.viewmodel.ChatViewModel
+import com.example.frompet.chating.ChatViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class ChatHomeAdapter(var context: Context, private val chatViewModel: ChatViewModel, private val lifecycleOwner: LifecycleOwner,) :

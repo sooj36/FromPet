@@ -10,7 +10,6 @@ import coil.load
 import com.example.frompet.R
 import com.example.frompet.databinding.ActivityChatUserDetailBinding
 import com.example.frompet.login.data.UserModel
-import com.example.frompet.login.viewmodel.ChatViewModel
 import com.example.frompet.login.viewmodel.MatchViewModel
 
 class ChatUserDetailActivity : AppCompatActivity() {
