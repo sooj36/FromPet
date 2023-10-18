@@ -3,18 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mapFragment"
-    android:background="#69F0AE"
-    tools:context="com.example.frompet.map.MapFragment">
-
-    <com.naver.maps.map.MapView
-        android:id="@+id/map_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.example.frompet.map.ScrollAwareMapView
-        android:id="@+id/map_scroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    android:id="@+id/naver_map_fragment"
+    android:background="#69F0AE">
 
 </FrameLayout>
