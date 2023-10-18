@@ -75,7 +75,7 @@ class HomeFragment : Fragment() {
                     Direction.Left -> {
                         // 오른쪽으로 스와이프 (Like) 했을 때의 처리
 
-                        val user  = homeAdapter.currentList[manager.topPosition]
+                        val user  = homeAdapter.currentList[manager.topPosition-1]
                         user?.let {
                             // user를 이용하여 원하는 작업 수행
                             viewModel.like(user.uid)
@@ -127,6 +127,7 @@ class HomeFragment : Fragment() {
         Log.e("shshsh","Adapter set to cardStackCiew")
 
     }
+
 
     private fun getDataFromFirestore() {
         val allUsersData = mutableListOf<UserModel>()

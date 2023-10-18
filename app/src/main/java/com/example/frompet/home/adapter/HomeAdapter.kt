@@ -33,12 +33,7 @@ class HomeAdapter : ListAdapter<UserModel, HomeAdapter.HomeViewHolder>(
     }
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
-        try {
-            val item = getItem(position)
-            holder.bind(item)
-        } catch (e: Exception) {
-            Log.e("shshshs", "Error in onBindViewHolder: $e")
-        }
+        holder.bind(currentList[position])
     }
 
     class HomeViewHolder(

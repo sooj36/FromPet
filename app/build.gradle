@@ -100,5 +100,7 @@ dependencies {
 
     implementation 'com.github.yuyakaido:CardStackView:v2.3.4'
 
+    implementation 'androidx.palette:palette:1.0.0'
+
 
 }
