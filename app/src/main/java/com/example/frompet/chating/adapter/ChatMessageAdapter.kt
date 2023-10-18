@@ -22,6 +22,7 @@ import com.example.frompet.login.data.ChatMessage
 import com.example.frompet.login.data.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Date
 import java.util.Locale
 
 
@@ -74,7 +75,7 @@ class ChatMessageAdapter(var context: Context) :
                 tvMessage.setBackgroundResource(R.drawable.chat2)
                 ivMessageImage.setBackgroundResource(R.drawable.chat2)
                 tvMessage.text = chatMessage.message
-                tvTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
+                tvTime.text = SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
 
                 if (!chatMessage.imageUrl.isNullOrEmpty()) {
                     ivMessageImage.visibility = View.VISIBLE
@@ -96,8 +97,7 @@ class ChatMessageAdapter(var context: Context) :
                 tvMessage.setBackgroundResource(R.drawable.chat1)
                 ivMessageImage.setBackgroundResource(R.drawable.chat1)
                 tvMessage.text = chatMessage.message
-                tvTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
-
+                tvTime.text = SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
 
                 if (!chatMessage.imageUrl.isNullOrEmpty()) {
                     ivMessageImage.visibility = View.VISIBLE
