@@ -124,6 +124,9 @@ class MatchViewModel : ViewModel() {
         })
     }
 
+    fun resetLikeList() {
+        _likeList.value = null
+    }
 
 // ... 기존 코드 ...
 

@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.bumptech.glide.Glide.init
+import com.example.frompet.chating.ChatUserDetailActivity
 import com.example.frompet.home.adapter.HomeAdapter
 import com.example.frompet.databinding.FragmentHomeBinding
 import com.example.frompet.login.data.UserModel
@@ -26,6 +27,16 @@ import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
 
 class HomeFragment : Fragment() {
+
+    companion object {
+        const val MATCHED_USERS = "matchedUser"
+        const val USER = "user"
+        const val ACTION = "action"
+        const val MATCH = "match"
+        const val DISLIKE = "dislike"
+        const val USER_ARG = "user_arg"
+    }
+
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -47,6 +58,12 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         init()
+        getDataFromFirestore()
+
+        val user: UserModel? = arguments?.getParcelable(USER_ARG)
+        user?.let {
+
+        }
         return binding.root
     }
 
@@ -56,11 +73,33 @@ class HomeFragment : Fragment() {
 
             }
 
-            override fun onCardSwiped(direction: Direction?) {
-                if(manager!!.topPosition == homeAdapter.currentList.size){
-                    Toast.makeText(requireContext(),"this is last card", Toast.LENGTH_SHORT).show()
+            override fun onCardSwiped(direction: Direction?)  {
+                when (direction) {
+                    Direction.Right -> {
+                        // 오른쪽으로 스와이프 (Like) 했을 때의 처리
+                        Toast.makeText(requireContext(), "Liked", Toast.LENGTH_SHORT).show()
+                        val user: UserModel? = arguments?.getParcelable(USER_ARG)
+                        user?.let {
+                            // user를 이용하여 원하는 작업 수행
+                            viewModel.like(user.uid)
+                        }
+
+                    }
+                    Direction.Left -> {
+                        // 왼쪽으로 스와이프 (Dislike) 했을 때의 처리
+                        Toast.makeText(requireContext(), "Disliked", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        // 다른 방향으로 스와이프한 경우
+                    }
+                }
+
+                if (manager!!.topPosition == homeAdapter.currentList.size) {
+                    // 이것이 마지막 카드인 경우 추가 처리 가능
+                    Toast.makeText(requireContext(), "This is the last card", Toast.LENGTH_SHORT).show()
                 }
             }
+
 
             override fun onCardRewound() {
 
@@ -88,7 +127,7 @@ class HomeFragment : Fragment() {
         binding.cardStackView.itemAnimator = DefaultItemAnimator()
         binding.cardStackView.adapter = homeAdapter
         Log.e("shshsh","Adapter set to cardStackCiew")
-        getDataFromFirestore()
+
     }
 
     private fun getDataFromFirestore() {
@@ -120,5 +159,6 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+        viewModel.resetLikeList()
     }
 }
