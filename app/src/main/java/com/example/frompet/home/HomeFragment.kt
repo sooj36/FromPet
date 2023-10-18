@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
         const val ACTION = "action"
         const val MATCH = "match"
         const val DISLIKE = "dislike"
-        const val USER_ARG = "user_arg"
+
     }
 
 
@@ -60,10 +60,7 @@ class HomeFragment : Fragment() {
         init()
         getDataFromFirestore()
 
-        val user: UserModel? = arguments?.getParcelable(USER_ARG)
-        user?.let {
 
-        }
         return binding.root
     }
 
@@ -75,17 +72,18 @@ class HomeFragment : Fragment() {
 
             override fun onCardSwiped(direction: Direction?)  {
                 when (direction) {
-                    Direction.Right -> {
+                    Direction.Left -> {
                         // 오른쪽으로 스와이프 (Like) 했을 때의 처리
-                        Toast.makeText(requireContext(), "Liked", Toast.LENGTH_SHORT).show()
-                        val user: UserModel? = arguments?.getParcelable(USER_ARG)
+
+                        val user  = homeAdapter.currentList[manager.topPosition]
                         user?.let {
                             // user를 이용하여 원하는 작업 수행
                             viewModel.like(user.uid)
+                            Toast.makeText(requireContext(), "${user.petName}에게 좋아요를 보냈습니다", Toast.LENGTH_SHORT).show()
                         }
 
                     }
-                    Direction.Left -> {
+                    Direction.Right -> {
                         // 왼쪽으로 스와이프 (Dislike) 했을 때의 처리
                         Toast.makeText(requireContext(), "Disliked", Toast.LENGTH_SHORT).show()
                     }
