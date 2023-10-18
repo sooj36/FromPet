@@ -94,6 +94,10 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         // 위치를 추적하면서 카메라도 같이 움직임
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
         Log.d("sooj", "onmapready")
+
+        // 줌
+        naverMap.maxZoom = 21.0 //(최대 21)
+        naverMap.minZoom = 10.0
     }
 
 }
