@@ -16,7 +16,9 @@ data class UserModel(
     var uid:String = ""
 
 //CmrOTtczqVMUzuCFpVgIp1zFkOH3
-): Parcelable
+): Parcelable{
+    constructor() : this(0, "", "", "", "", null, "", "")
+}
 @Parcelize
 data class ChatMessage(
     val senderId: String = "",

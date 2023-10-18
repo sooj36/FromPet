@@ -97,6 +97,8 @@ dependencies {
     //로그인 프로그래스바
     implementation 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
 
-    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
-    implementation "com.yuyakaido.android:card-stack-view:2.3.4"
+
+    implementation 'com.github.yuyakaido:CardStackView:v2.3.4'
+
+
 }
