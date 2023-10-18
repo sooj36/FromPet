@@ -5,14 +5,15 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.example.frompet.databinding.ActivityMemberInfoBinding
 import com.example.frompet.login.data.UserModel
 import com.example.frompet.main.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -23,7 +24,7 @@ class MemberInfoActivity : AppCompatActivity() {
     private val PICK_IMAGE_FROM_ALBUM = 1
     // FirebaseStorage 초기화
     val storage = FirebaseStorage.getInstance()
-    private var petProfile: Uri? = null
+    private var petProfile: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,14 +83,12 @@ class MemberInfoActivity : AppCompatActivity() {
         if (requestCode == PICK_IMAGE_FROM_ALBUM && resultCode == RESULT_OK) {
             val uri = data?.data
             if (uri != null) {
-                petProfile = uri
-
-                binding.petProfile.setImageURI(uri)
+                contentUpload(uri.toString())
             }
         }
     }
     // contentUpload() 함수 내부에서 이미지를 Firebase Storage에 업로드할 수 있습니다.
-    private fun contentUpload(uri: Uri?) {
+    private fun contentUpload(uri: String?) {
         uri?.let { petProfileUri ->
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val fileName = "IMAGE_$timestamp.png"
@@ -104,23 +103,19 @@ class MemberInfoActivity : AppCompatActivity() {
                     storageRef.downloadUrl
                 }
                 .addOnSuccessListener { uri ->
+                    val imageUrl = uri.toString()
                     showToast("이미지 업로드 성공")
+                    petProfile = imageUrl
+                    Glide.with(this)
+                        .load(imageUrl)
+                        .into(binding.petProfile)//ㅁㄴㅇㅁㄴㅇ
                 }
                 .addOnCanceledListener {
                     // 업로드 취소 시
                 }
-                .addOnFailureListener {
-                    showToast("업로드 실패")
-                }
+
         }
     }
-    private fun cropImage(uri: Uri?){
-        CropImage.activity(uri)
-            .setGuidelines(CropImageView.Guidelines.ON)
-            .setCropShape(CropImageView.CropShape.RECTANGLE)
-            .start(this)
-    }
-
     private fun goGallery(){
         val galleryIntent = Intent(Intent.ACTION_PICK)
         galleryIntent.type = "image/*"
@@ -129,4 +124,9 @@ class MemberInfoActivity : AppCompatActivity() {
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
+}
+
+private fun StorageReference.putFile(petProfileUri: String): UploadTask {
+    val file = Uri.parse(petProfileUri) // 문자열 URI를 Uri 객체로 변환
+    return putFile(file)
 }

@@ -24,7 +24,7 @@ class ChatListFragment : Fragment() {
         const val DISLIKE = "dislike"
     }
     private var _binding: FragmentChatListBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
     private val matchViewModel: MatchViewModel by viewModels()
 
     private val startChatDetailActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -46,7 +46,7 @@ class ChatListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentChatListBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,7 +63,7 @@ class ChatListFragment : Fragment() {
             matchViewModel.likeList.observe(viewLifecycleOwner) { users ->
                 users?.let {
                     (rvChatList.adapter as ChatListAdapter).submitList(it)
-                    binding.tvLikeMe.text = "${it.size}명이 나를 좋아해요"
+                    binding?.tvLikeMe?.text = "${it.size}명이 나를 좋아해요"
                 }
             }
             matchViewModel.loadlike()
