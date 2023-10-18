@@ -108,6 +108,7 @@ class ProfileActivity : AppCompatActivity() {
                         Toast.makeText(this, "사용자 정보 업데이트 실패", Toast.LENGTH_SHORT).show()
                     }
             }
+            onBackPressed()
         }
         binding.ibBackButton.setOnClickListener {
             onBackPressed()
