@@ -116,6 +116,7 @@ class MemberInfoActivity : AppCompatActivity() {
 
         }
     }
+
     private fun goGallery(){
         val galleryIntent = Intent(Intent.ACTION_PICK)
         galleryIntent.type = "image/*"
@@ -126,7 +127,7 @@ class MemberInfoActivity : AppCompatActivity() {
     }
 }
 
-private fun StorageReference.putFile(petProfileUri: String): UploadTask {
+fun StorageReference.putFile(petProfileUri: String): UploadTask {
     val file = Uri.parse(petProfileUri) // 문자열 URI를 Uri 객체로 변환
     return putFile(file)
 }

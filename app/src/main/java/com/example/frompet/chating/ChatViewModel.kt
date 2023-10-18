@@ -64,6 +64,13 @@ class ChatViewModel : ViewModel() {
                 Log.d("jun", "연결실패: ${exception.message}")
             }
     }
+    fun sendImage(chatMessage: ChatMessage) {
+        val chatRoomId = chatRoom(chatMessage.senderId, chatMessage.receiverId)
+
+        database.child("chatMessages").child(chatRoomId).push().setValue(chatMessage)
+        database.child("lastMessages").child(chatRoomId).setValue(chatMessage)
+        database.child("newMessages").child(chatRoomId).child(chatMessage.receiverId).setValue(true)
+    }
 
 
     fun loadPreviousMessages(chatRoomId: String) {

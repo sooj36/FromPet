@@ -10,7 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import coil.load
 import com.bumptech.glide.Glide
+import com.example.frompet.R
 import com.google.firebase.firestore.FirebaseFirestore
 import com.example.frompet.databinding.FragmentSettingBinding
 import com.example.frompet.login.LoginActivity
@@ -36,9 +38,7 @@ class SettingFragment : Fragment() {
 
         viewModel.petProfile.observe(viewLifecycleOwner) { petProfile ->
             petProfile?.let {
-                Glide.with(this)
-                    .load(it)
-                    .into(binding.ivPet)
+               binding.ivPet.load(it)//혹시모르니 코일로 바꿔놨습니다 승현님.
             }
         }
 
