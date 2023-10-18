@@ -3,6 +3,7 @@ package com.example.frompet.chating.adapter
 import android.icu.text.SimpleDateFormat
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -12,10 +13,11 @@ import com.example.frompet.R
 import com.example.frompet.databinding.ItemChatMessageBinding
 import com.example.frompet.login.data.ChatMessage
 import com.example.frompet.login.data.UserModel
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Locale
 
-class ChatMessageAdapter(private val currentUserId: String) :
+class ChatMessageAdapter() :
     ListAdapter<ChatMessage, ChatMessageAdapter.ChatMessageViewHolder>(DiffCallback()) {
     private val firestore = FirebaseFirestore.getInstance()
 
@@ -37,6 +39,7 @@ class ChatMessageAdapter(private val currentUserId: String) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chatMessage: ChatMessage) {
             binding.apply {
+                val  currentUserId = FirebaseAuth.getInstance().currentUser?.uid?:return
                 if (chatMessage.senderId == currentUserId) {
 
                     tvName.text = "나"
@@ -44,7 +47,8 @@ class ChatMessageAdapter(private val currentUserId: String) :
                     tvMessage.setBackgroundResource(R.drawable.rightbubble)
                     tvTime.text =
                         SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
-                    binding.messageItemLinearlayoutMain.gravity = Gravity.RIGHT
+                    binding.apply {  messageItemLinearlayoutMain.gravity = Gravity.RIGHT
+                    ivProfile.visibility= View.GONE}
                 } else {
 
                     tvName.text = chatMessage.senderPetName
