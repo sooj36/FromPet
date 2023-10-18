@@ -23,7 +23,7 @@ class ChatUserDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatUserDetailBinding
     private val matchViewModel: MatchViewModel by viewModels()
-    private val chatViewModel: ChatViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

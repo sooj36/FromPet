@@ -1,5 +1,6 @@
 package com.example.frompet.chating.adapter
 
+import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.util.Log
 import android.view.Gravity
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.frompet.R
+import com.example.frompet.chating.ChatPullScreenActivity
 import com.example.frompet.databinding.ItemChatMessageBinding
 import com.example.frompet.login.data.ChatMessage
 import com.example.frompet.login.data.UserModel
@@ -21,6 +23,9 @@ import java.util.Locale
 class ChatMessageAdapter() :
     ListAdapter<ChatMessage, ChatMessageAdapter.ChatMessageViewHolder>(DiffCallback()) {
     private val firestore = FirebaseFirestore.getInstance()
+    companion object{
+        const val IMAGE_URL = "image_url"
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -43,15 +48,15 @@ class ChatMessageAdapter() :
                 val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
                 if (chatMessage.senderId == currentUserId) {
                     tvName.text = "나"
-                    tvMessage.text = chatMessage.message
                     tvMessage.setBackgroundResource(R.drawable.rightbubble)
+                    ivMessageImage.setBackgroundResource(R.drawable.rightbubble)
                     tvTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
                     messageItemLinearlayoutMain.gravity = Gravity.END
                     ivProfile.visibility = View.GONE
                 } else {
                     tvName.text = chatMessage.senderPetName
-                    tvMessage.text = chatMessage.message
                     tvMessage.setBackgroundResource(R.drawable.leftbubble)
+                    ivMessageImage.setBackgroundResource(R.drawable.leftbubble)
                     tvTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
                     messageItemLinearlayoutMain.gravity = Gravity.START
                     ivProfile.visibility = View.VISIBLE
@@ -66,10 +71,26 @@ class ChatMessageAdapter() :
                                 }
                             }
                         }
-                        .addOnFailureListener {
-                            // 에러 발생 시 프로필 사진을 기본 이미지로 설정
-                            binding.ivProfile.setImageResource(R.drawable.kakaotalk_20230825_222509794_01)
-                        }
+                }
+                if (!chatMessage.imageUrl.isNullOrEmpty()) {
+                    ivMessageImage.visibility = View.VISIBLE
+                    tvMessage.visibility = View.GONE
+                    ivMessageImage.load(chatMessage.imageUrl) {
+                        error(R.drawable.kakaotalk_20230825_222509794_01)
+                    }
+
+
+                    ivMessageImage.setOnClickListener {
+                        val intent = Intent(it.context, ChatPullScreenActivity::class.java)
+                        intent.putExtra(IMAGE_URL, chatMessage.imageUrl)
+                        it.context.startActivity(intent)
+                    }
+
+                } else {
+                    ivMessageImage.visibility = View.GONE
+                    tvMessage.visibility = View.VISIBLE
+                    tvMessage.text = chatMessage.message
+
                 }
             }
         }

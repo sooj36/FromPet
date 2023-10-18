@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FromPet"
         tools:targetApi="31">
+        <activity
+            android:name=".chating.ChatPullScreenActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
@@ -30,7 +33,6 @@
             android:name=".chating.ChatMessageActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".login.SingUpActivity"
             android:exported="false" />
