@@ -111,7 +111,7 @@ class ProfileActivity : AppCompatActivity() {
                 showToast("사용자 정보 업데이트 성공")
             }
             .addOnFailureListener { e ->
-                Log.e("ProfileActivity", "사용자 정보 업데이트 실패", e)
+                Log.e("lee", "사용자 정보 업데이트 실패", e)
                 showToast("사용자 정보 업데이트 실패")
             }
     }
