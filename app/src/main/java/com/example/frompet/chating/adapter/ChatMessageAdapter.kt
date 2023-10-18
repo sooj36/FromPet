@@ -1,6 +1,7 @@
 package com.example.frompet.chating.adapter
 
 import android.icu.text.SimpleDateFormat
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -39,38 +40,41 @@ class ChatMessageAdapter() :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chatMessage: ChatMessage) {
             binding.apply {
-                val  currentUserId = FirebaseAuth.getInstance().currentUser?.uid?:return
+                val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
                 if (chatMessage.senderId == currentUserId) {
-
                     tvName.text = "나"
                     tvMessage.text = chatMessage.message
                     tvMessage.setBackgroundResource(R.drawable.rightbubble)
-                    tvTime.text =
-                        SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
-                    binding.apply {  messageItemLinearlayoutMain.gravity = Gravity.RIGHT
-                    ivProfile.visibility= View.GONE}
+                    tvTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
+                    messageItemLinearlayoutMain.gravity = Gravity.END
+                    ivProfile.visibility = View.GONE
                 } else {
-
                     tvName.text = chatMessage.senderPetName
                     tvMessage.text = chatMessage.message
                     tvMessage.setBackgroundResource(R.drawable.leftbubble)
-                    tvTime.text =
-                        SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
-                    binding.messageItemLinearlayoutMain.gravity = Gravity.LEFT
+                    tvTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(chatMessage.timestamp)
+                    messageItemLinearlayoutMain.gravity = Gravity.START
+                    ivProfile.visibility = View.VISIBLE
+
                     firestore.collection("User").document(chatMessage.senderId)
                         .get()
                         .addOnSuccessListener { document ->
                             val user = document.toObject(UserModel::class.java)
-                            user?.petProfile.let {
+                            user?.petProfile?.let {
                                 binding.ivProfile.load(it) {
                                     error(R.drawable.kakaotalk_20230825_222509794_01)
                                 }
                             }
                         }
+                        .addOnFailureListener {
+                            // 에러 발생 시 프로필 사진을 기본 이미지로 설정
+                            binding.ivProfile.setImageResource(R.drawable.kakaotalk_20230825_222509794_01)
+                        }
                 }
             }
         }
     }
+
 
 
     class DiffCallback : DiffUtil.ItemCallback<ChatMessage>() {

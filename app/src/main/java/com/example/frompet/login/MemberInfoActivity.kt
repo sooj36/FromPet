@@ -116,6 +116,7 @@ class MemberInfoActivity : AppCompatActivity() {
 
         }
     }
+
     private fun goGallery(){
         val galleryIntent = Intent(Intent.ACTION_PICK)
         galleryIntent.type = "image/*"
