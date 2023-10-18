@@ -105,12 +105,7 @@ class ChatMessageActivity : AppCompatActivity() {
         }
 
         binding.backBtn.setOnClickListener {
-            val user: UserModel? = intent.getParcelableExtra(USER)
-            user?.let {
-                val currentUserId = auth.currentUser?.uid ?: return@let
-                val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
-                chatViewModel.goneNewMessages(chatRoomId)
-            }
+            goneNewMessage()
             finish()
         }
         binding.ivSendImage.setOnClickListener {
@@ -118,6 +113,24 @@ class ChatMessageActivity : AppCompatActivity() {
         }
 
     }
+    override fun onBackPressed() {
+        goneNewMessage()
+        super.onBackPressed()
+    }
+    override fun onDestroy() {
+        goneNewMessage()
+        super.onDestroy()
+    }
+    private fun goneNewMessage() {
+        val user: UserModel? = intent.getParcelableExtra(USER)
+        user?.let {
+            val currentUserId = auth.currentUser?.uid ?: return
+            val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
+            chatViewModel.goneNewMessages(chatRoomId)
+        }
+    }
+
+
 
     private fun goGallery() {
         val galleryIntent = Intent(Intent.ACTION_PICK)
