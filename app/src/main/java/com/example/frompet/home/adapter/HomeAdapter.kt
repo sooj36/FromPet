@@ -23,9 +23,6 @@ class HomeAdapter : ListAdapter<UserModel, HomeAdapter.HomeViewHolder>(
         }
     }
 ) {
-    init {
-        Log.d("shshshsh", "Adapter initialized")
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
         val binding = ItemHomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -39,8 +36,7 @@ class HomeAdapter : ListAdapter<UserModel, HomeAdapter.HomeViewHolder>(
     class HomeViewHolder(
         private val binding: ItemHomeBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(item: UserModel) = with(binding){
+        fun bind(item: UserModel) = with(binding) {
             ivPetImage.load(item.petProfile)
             tvNamePet.text = item.petName
             tvTypePet.text = item.petType
