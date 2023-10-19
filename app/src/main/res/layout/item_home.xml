@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="10dp"
     android:padding="20dp"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="10dp">
+    app:cardCornerRadius="10dp"
+    app:cardElevation="4dp">
+
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,15 +28,12 @@
         <ImageView
             android:id="@+id/iv_pet_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
+            android:layout_height="550dp"
             android:paddingVertical="@dimen/cardview_compat_inset_shadow"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -49,17 +48,19 @@
                 android:id="@+id/bt_unlike"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:padding="5dp"
                 android:layout_marginHorizontal="90dp"
-                app:srcCompat="@drawable/hate"
-                app:tint="@color/white" />
+                android:padding="5dp"
+                app:srcCompat="@drawable/heart"
+                />
+
             <ImageView
                 android:id="@+id/bt_like"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginHorizontal="24dp"
                 android:padding="5dp"
-                app:srcCompat="@drawable/heart" />
+                app:srcCompat="@drawable/hate"
+                app:tint="@color/white"/>
         </LinearLayout>
 
         <TextView
@@ -77,20 +78,40 @@
             android:id="@+id/tv_name_pet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
             android:layout_marginStart="12dp"
             android:layout_marginBottom="12dp"
+            android:text="TextView"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tv_type_pet"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <FrameLayout
+            android:id="@+id/left_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:src="@drawable/heart" />
+        </FrameLayout>
 
+        <FrameLayout
+            android:id="@+id/right_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:src="@drawable/hate"
+                app:tint="@color/white"/>
+        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
 </androidx.cardview.widget.CardView>
