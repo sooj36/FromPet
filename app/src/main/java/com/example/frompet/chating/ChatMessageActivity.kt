@@ -19,6 +19,7 @@ import com.example.frompet.login.data.ChatMessage
 import com.example.frompet.login.data.UserModel
 import com.example.frompet.login.putFile
 import com.example.frompet.util.showToast
+
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
@@ -178,6 +179,7 @@ class ChatMessageActivity : AppCompatActivity() {
                         val message = ChatMessage(
                             senderId = auth.currentUser?.uid ?: return@addOnSuccessListener,
                             receiverId = user.uid,
+                            senderPetName = user.petName,
                             message = "",
                             imageUrl = imageUrl,
                             timestamp = System.currentTimeMillis()

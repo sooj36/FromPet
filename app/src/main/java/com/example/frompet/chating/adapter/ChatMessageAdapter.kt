@@ -142,7 +142,7 @@ class ChatMessageAdapter(var context: Context) :
 
     class DiffCallback : DiffUtil.ItemCallback<ChatMessage>() {
         override fun areItemsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
-            return oldItem.timestamp == newItem.timestamp
+            return oldItem.senderPetName == newItem.senderPetName
         }
 
         override fun areContentsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
