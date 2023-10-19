@@ -7,27 +7,27 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.frompet.home.HomeFragment"
+        android:name="com.example.frompet.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.example.frompet.chating.ChatFragment"
+        android:name="com.example.frompet.ui.chat.ChatFragment"
         android:label="fragment_chating"
         tools:layout="@layout/fragment_chat" />
     <fragment
         android:id="@+id/communityFragment"
-        android:name="com.example.frompet.commutiy.CommunicationFragment"
+        android:name="com.example.frompet.ui.commnunity.CommunicationFragment"
         android:label="fragment_communication"
         tools:layout="@layout/fragment_communication" />
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.example.frompet.setting.SettingFragment"
+        android:name="com.example.frompet.ui.setting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.example.frompet.map.NaverMapFragment"
+        android:name="com.example.frompet.ui.map.NaverMapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" />
 </navigation>

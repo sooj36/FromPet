@@ -1,9 +1,9 @@
 package com.example.frompet.di
 
-import com.example.frompet.login.repository.AuthRepository
-import com.example.frompet.login.repository.BaseAuthRepository
-import com.example.frompet.login.repository.firebase.BaseAuthenticator
-import com.example.frompet.login.repository.firebase.FirebaseAuthenticator
+import com.example.frompet.data.repository.AuthRepository
+import com.example.frompet.data.repository.BaseAuthRepository
+import com.example.frompet.data.repository.firebase.BaseAuthenticator
+import com.example.frompet.data.repository.firebase.FirebaseAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,14 +15,14 @@ import javax.inject.Singleton
 object AppModule {
     @Singleton
     @Provides
-    fun provideAuthenticator():BaseAuthenticator{
+    fun provideAuthenticator(): BaseAuthenticator {
         return FirebaseAuthenticator()
     }
     @Singleton
     @Provides
     fun provideRepository(
         authenticator: BaseAuthenticator
-    ):BaseAuthRepository{
+    ): BaseAuthRepository {
         return AuthRepository(authenticator)
     }
 
