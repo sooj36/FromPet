@@ -19,6 +19,11 @@ class SettingFragment : Fragment() {
 
     private val viewModel: SettingViewModel by viewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.loadUserPetProfile()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -26,7 +31,6 @@ class SettingFragment : Fragment() {
 
         _binding = FragmentSettingBinding.inflate(inflater, container, false)
 
-        viewModel.loadUserPetProfile()
 
         viewModel.petProfile.observe(viewLifecycleOwner) { petProfile ->
             petProfile?.let {

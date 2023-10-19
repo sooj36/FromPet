@@ -105,7 +105,7 @@ class ProfileActivity : AppCompatActivity() {
 
         userDocRef.update(updateMap)
             .addOnSuccessListener {
-                showToast("사용자 정보 업데이트 성공")
+                showToast("사용자 정보 업데이트 성공!")
             }
             .addOnFailureListener { e ->
                 Log.e("lee", "사용자 정보 업데이트 실패", e)
