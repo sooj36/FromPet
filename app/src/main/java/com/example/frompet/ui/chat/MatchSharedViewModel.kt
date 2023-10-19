@@ -26,7 +26,7 @@ class MatchSharedViewModel : ViewModel() {
 
 
     private val database = FirebaseDatabase.getInstance().getReference("likeUsers")
-    private val unlikedb = FirebaseDatabase.getInstance().getReference("dislike")
+    private val disLikeDb = FirebaseDatabase.getInstance().getReference("dislike")
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
@@ -42,7 +42,7 @@ class MatchSharedViewModel : ViewModel() {
         database.child(currentUserId).child("likedBy").child(targetUserId).removeValue()
         database.child(targetUserId).child("matched").child(currentUserId).removeValue()
         database.child(currentUserId).child("matched").child(targetUserId).removeValue()
-        unlikedb.child(targetUserId).child("dislike").child(currentUserId).setValue(true)
+        disLikeDb.child(targetUserId).child("dislike").child(currentUserId).setValue(true)
         _dislikedUserIds.add(targetUserId)
     }
 
@@ -89,7 +89,7 @@ class MatchSharedViewModel : ViewModel() {
         val likedUsers = mutableListOf<UserModel>()
 
         // 사용자가 dislike한 대상들을 가져와서 필터링합니다.
-        unlikedb.child(currentUserId).child("dislike").addListenerForSingleValueEvent(object :
+        disLikeDb.child(currentUserId).child("dislike").addListenerForSingleValueEvent(object :
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val dislikedUserIds = snapshot.children.mapNotNull { it.key }

@@ -13,7 +13,7 @@ class ChatFragment : Fragment() {
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding
     private val chatHomeFrag: ChatHomeFragment by lazy { ChatHomeFragment() }
-    private val chatListFrag: ChatListFragment by lazy { ChatListFragment() }
+    private val chatListFrag: ChatLikeListFragment by lazy { ChatLikeListFragment() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

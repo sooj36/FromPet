@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.frompet.ui.chat.ChatFragment
 import com.example.frompet.ui.chat.ChatHomeFragment
-import com.example.frompet.ui.chat.ChatListFragment
+import com.example.frompet.ui.chat.ChatLikeListFragment
 
 class ViewPagerAdapter(private val fragmentActivity: ChatFragment, private val fragments:List<Fragment>):FragmentStateAdapter(fragmentActivity) {
     override fun getItemCount(): Int {
@@ -14,7 +14,7 @@ class ViewPagerAdapter(private val fragmentActivity: ChatFragment, private val f
     override fun createFragment(position: Int): Fragment {
        return when(position){
            0 ->return ChatHomeFragment()
-           1 ->return ChatListFragment()
+           1 ->return ChatLikeListFragment()
            else ->return ChatHomeFragment()
        }
     }
