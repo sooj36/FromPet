@@ -1,26 +1,35 @@
 package com.example.frompet.map
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.frompet.R
 import com.example.frompet.databinding.FragmentMapBinding
+import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MarkerIcons
 
 
 class NaverMapFragment : Fragment(), OnMapReadyCallback {
+
+    private val marker = Marker()
 
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
@@ -98,6 +107,39 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         // 줌
         naverMap.maxZoom = 21.0 //(최대 21)
         naverMap.minZoom = 10.0
+
+//        // 현재 위치 마커
+//        marker.position = LatLng(37.5665, 126.9780)
+//        marker.map = naverMap
+//        marker.icon = MarkerIcons.BLUE
+////        marker.iconTintColor = Color.RED // 마커 색상 변경
+
+        //경도 위도
+        naverMap.addOnLocationChangeListener { location ->
+            Toast.makeText(
+                requireContext(), "${location.latitude}, ${location.longitude}",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            Log.d(TAG, "${location.latitude}, ${location.longitude}")
+        }
+
     }
 
+
+
+    private fun setMark(marker: Marker, lat: Double, lng: Double, resourceID: Int) {
+        // 원근감 표시
+//        marker.iconPerspectiveEnabled = true
+        // 아이콘 지정
+        marker.icon = OverlayImage.fromResource(resourceID)
+        // 마커의 투명도
+        marker.alpha = 0.8f
+        // 마커 위치
+        marker.position = LatLng(lat, lng)
+        // 마커 우선순위
+        marker.zIndex = 10
+        // 마커 표시
+        marker.map = naverMap
+    }
 }
