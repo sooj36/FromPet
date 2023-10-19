@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/lightGray"
     app:layoutDescription="@xml/fragment_chat_home_scene"
-    tools:context=".chating.ChatHomeFragment">
+    tools:context=".ui.chat.ChatHomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"

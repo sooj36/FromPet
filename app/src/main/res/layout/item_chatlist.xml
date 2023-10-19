@@ -8,7 +8,7 @@
     app:cardUseCompatPadding="true"
     app:cardCornerRadius="13dp"
     app:cardElevation="10dp"
-    tools:context=".chating.ChatListFragment">
+    tools:context=".ui.chat.ChatListFragment">
     <LinearLayout
         android:orientation="vertical"
         android:padding="13dp"
