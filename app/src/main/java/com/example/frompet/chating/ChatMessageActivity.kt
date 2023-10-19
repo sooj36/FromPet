@@ -18,6 +18,7 @@ import com.example.frompet.databinding.ActivityChatMessageBinding
 import com.example.frompet.login.data.ChatMessage
 import com.example.frompet.login.data.UserModel
 import com.example.frompet.login.putFile
+import com.example.frompet.util.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
@@ -48,7 +49,7 @@ class ChatMessageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.apply {
-            rvMessage.adapter = ChatMessageAdapter()
+            rvMessage.adapter = ChatMessageAdapter(this@ChatMessageActivity)
             rvMessage.layoutManager = LinearLayoutManager(this@ChatMessageActivity)
         }
 
@@ -105,12 +106,7 @@ class ChatMessageActivity : AppCompatActivity() {
         }
 
         binding.backBtn.setOnClickListener {
-            val user: UserModel? = intent.getParcelableExtra(USER)
-            user?.let {
-                val currentUserId = auth.currentUser?.uid ?: return@let
-                val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
-                chatViewModel.goneNewMessages(chatRoomId)
-            }
+            goneNewMessage()
             finish()
         }
         binding.ivSendImage.setOnClickListener {
@@ -118,6 +114,24 @@ class ChatMessageActivity : AppCompatActivity() {
         }
 
     }
+    override fun onBackPressed() {
+        goneNewMessage()
+        super.onBackPressed()
+    }
+    override fun onDestroy() {
+        goneNewMessage()
+        super.onDestroy()
+    }
+    private fun goneNewMessage() {
+        val user: UserModel? = intent.getParcelableExtra(USER)
+        user?.let {
+            val currentUserId = auth.currentUser?.uid ?: return
+            val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
+            chatViewModel.goneNewMessages(chatRoomId)
+        }
+    }
+
+
 
     private fun goGallery() {
         val galleryIntent = Intent(Intent.ACTION_PICK)
@@ -158,7 +172,7 @@ class ChatMessageActivity : AppCompatActivity() {
                 }
                 .addOnSuccessListener { uri ->
                     val imageUrl = uri.toString()
-                    Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show()
+                   showToast("이미지 업로드 성공",Toast.LENGTH_LONG)
                     val user: UserModel? = intent.getParcelableExtra(USER)
                     user?.let {
                         val message = ChatMessage(
