@@ -39,7 +39,7 @@
         <activity
             android:name=".chating.ChatMessageActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".login.SingUpActivity"
             android:exported="false" />
