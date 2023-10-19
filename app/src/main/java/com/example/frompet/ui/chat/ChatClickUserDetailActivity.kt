@@ -5,7 +5,7 @@ import android.os.Bundle
 import coil.load
 import com.example.frompet.R
 import com.example.frompet.databinding.ActivityChatClickUserDetailBinding
-import com.example.frompet.data.model.UserModel
+import com.example.frompet.data.model.User
 
 class ChatClickUserDetailActivity : AppCompatActivity() {
     companion object {
@@ -23,7 +23,7 @@ class ChatClickUserDetailActivity : AppCompatActivity() {
         binding = ActivityChatClickUserDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val user: UserModel? = intent.getParcelableExtra(USER)
+        val user: User? = intent.getParcelableExtra(USER)
         user?.let {
             displayUserInfo(it)
         }
@@ -33,7 +33,7 @@ class ChatClickUserDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayUserInfo(user: UserModel) {
+    private fun displayUserInfo(user: User) {
         binding.apply {
             tvPetName.text = user.petName
             tvPetAge.text = "${user.petAge.toString()}세"

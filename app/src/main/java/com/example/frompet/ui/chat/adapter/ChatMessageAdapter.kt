@@ -18,7 +18,7 @@ import com.example.frompet.ui.chat.ChatPullScreenActivity
 import com.example.frompet.databinding.ItemMyMessageBinding
 import com.example.frompet.databinding.ItemOtherMessageBinding
 import com.example.frompet.data.model.ChatMessage
-import com.example.frompet.data.model.UserModel
+import com.example.frompet.data.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Date
@@ -111,7 +111,7 @@ class ChatMessageAdapter(var context: Context) :
             }
                                                                             //보내는사람=현재 uid
             firestore.collection("User").document(chatMessage.senderId ).get().addOnSuccessListener { document ->
-                val user = document.toObject(UserModel::class.java)
+                val user = document.toObject(User::class.java)
                 user?.petProfile?.let {
                     ivProfile.load(it) {
                         error(R.drawable.kakaotalk_20230825_222509794_01)
@@ -140,7 +140,7 @@ class ChatMessageAdapter(var context: Context) :
         }
     }
 
-    private fun userDetail(user: UserModel) {
+    private fun userDetail(user: User) {
         val intent = Intent(context, ChatClickUserDetailActivity::class.java)
         intent.putExtra(ChatClickUserDetailActivity.USER, user)
         context.startActivity(intent)
