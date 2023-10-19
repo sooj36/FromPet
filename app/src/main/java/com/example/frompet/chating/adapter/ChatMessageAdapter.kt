@@ -111,8 +111,8 @@ class ChatMessageAdapter(var context: Context) :
             } else {
                 ivMessageImage.isVisible = false
             }
-
-            firestore.collection("User").document(chatMessage.senderId).get().addOnSuccessListener { document ->
+                                                                            //보내는사람=현재 uid
+            firestore.collection("User").document(chatMessage.senderId ).get().addOnSuccessListener { document ->
                 val user = document.toObject(UserModel::class.java)
                 user?.petProfile?.let {
                     ivProfile.load(it) {
