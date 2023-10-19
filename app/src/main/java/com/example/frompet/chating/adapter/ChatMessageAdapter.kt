@@ -122,7 +122,7 @@ class ChatMessageAdapter(var context: Context) :
                     }
                     clickListener(ivMessageImage, chatMessage.imageUrl)
                 } else {
-                    ivMessageImage.isVisible = true
+                    ivMessageImage.isVisible = false
                 }
                 firestore.collection("User").document(chatMessage.senderId)
                     .get()
