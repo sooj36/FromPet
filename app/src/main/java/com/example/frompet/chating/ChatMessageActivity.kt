@@ -19,7 +19,9 @@ import com.example.frompet.login.data.ChatMessage
 import com.example.frompet.login.data.UserModel
 import com.example.frompet.login.putFile
 import com.example.frompet.util.showToast
+
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -31,6 +33,7 @@ class ChatMessageActivity : AppCompatActivity() {
     private val chatViewModel: ChatViewModel by viewModels()
     private val adapter: ChatMessageAdapter by lazy { binding.rvMessage.adapter as ChatMessageAdapter }
     private val auth = FirebaseAuth.getInstance()
+    private val firestore = FirebaseFirestore.getInstance()
     val storage = FirebaseStorage.getInstance()
     private val typingTimeoutHandler = Handler(Looper.getMainLooper())
     private val typingTimeoutRunnable = Runnable {
@@ -172,19 +175,27 @@ class ChatMessageActivity : AppCompatActivity() {
                 }
                 .addOnSuccessListener { uri ->
                     val imageUrl = uri.toString()
+                    val currentUserId = auth.currentUser?.uid
                    showToast("이미지 업로드 성공",Toast.LENGTH_LONG)
+                    firestore.collection("User").document(currentUserId!!)
+                        .get()
+                        .addOnSuccessListener { document ->
+                            val currentUser = document.toObject(UserModel::class.java)
+                            val currentUserPetName = currentUser?.petName
+
                     val user: UserModel? = intent.getParcelableExtra(USER)
                     user?.let {
                         val message = ChatMessage(
-                            senderId = auth.currentUser?.uid ?: return@addOnSuccessListener,
+                            senderId = currentUserId,
                             receiverId = user.uid,
+                            senderPetName = currentUserPetName?:return@let,
                             message = "",
                             imageUrl = imageUrl,
                             timestamp = System.currentTimeMillis()
                         )
                         chatViewModel.sendImage(message)
                     }
-                }
+                }}
         }
     }
 }
