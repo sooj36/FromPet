@@ -16,7 +16,7 @@
         <ImageView
             android:id="@+id/imageView5"
             android:layout_width="0dp"
-            android:layout_height="350dp"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,8 +26,9 @@
         <ImageView
             android:id="@+id/iv_pet_image"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:scaleType="centerInside"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:paddingVertical="@dimen/cardview_compat_inset_shadow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
