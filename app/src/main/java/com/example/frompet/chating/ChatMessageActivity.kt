@@ -53,7 +53,9 @@ class ChatMessageActivity : AppCompatActivity() {
 
         binding.apply {
             rvMessage.adapter = ChatMessageAdapter(this@ChatMessageActivity)
-            rvMessage.layoutManager = LinearLayoutManager(this@ChatMessageActivity)
+            val layoutManager = LinearLayoutManager(this@ChatMessageActivity)
+            layoutManager.stackFromEnd = true
+            rvMessage.layoutManager = layoutManager //53~55 자동 스크롤 기능 추가-이승현-
         }
 
         chatViewModel.chatMessages.observe(this) { messages ->
