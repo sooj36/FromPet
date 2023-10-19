@@ -3,7 +3,6 @@ package com.example.frompet.login.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.frompet.login.data.ChatMessage
 import com.example.frompet.login.data.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -13,7 +12,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 
 
-class MatchViewModel : ViewModel() {
+class MatchSharedViewModel : ViewModel() {
     private val _likeList :MutableLiveData<List<UserModel>?> = MutableLiveData()
     val likeList : MutableLiveData<List<UserModel>?> get() = _likeList
     private val _disLikeList : MutableLiveData<List<UserModel>> = MutableLiveData()

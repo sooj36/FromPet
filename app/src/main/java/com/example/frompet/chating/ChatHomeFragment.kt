@@ -12,8 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frompet.chating.adapter.ChatHomeAdapter
 import com.example.frompet.databinding.FragmentChatHomeBinding
-import com.example.frompet.login.viewmodel.MatchViewModel
-import com.google.firebase.auth.FirebaseAuth
+import com.example.frompet.login.viewmodel.MatchSharedViewModel
 
 class ChatHomeFragment : Fragment() {
 
@@ -21,7 +20,7 @@ class ChatHomeFragment : Fragment() {
     private lateinit var  adapter: ChatHomeAdapter
     private val binding get() = _binding
 
-    private val matchViewModel: MatchViewModel by viewModels()
+    private val matchSharedViewModel: MatchSharedViewModel by viewModels()
     private val chatViewModel: ChatViewModel by viewModels()
     private val chatMessageActivityResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -59,8 +58,8 @@ class ChatHomeFragment : Fragment() {
             rvChatHome.adapter = adapter
             rvChatHome.layoutManager = LinearLayoutManager(context)
         }
-        matchViewModel.loadMatchedUsers()
-        matchViewModel.matchedList.observe(viewLifecycleOwner) { users ->
+        matchSharedViewModel.loadMatchedUsers()
+        matchSharedViewModel.matchedList.observe(viewLifecycleOwner) { users ->
            chatViewModel.getlastTimeSorted(users){
                 adapter.submitList(it)
                 binding?.tvPossibleText?.text = "${it.size}명과 대화가 가능해요"
