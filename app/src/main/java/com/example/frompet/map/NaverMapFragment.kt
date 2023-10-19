@@ -114,7 +114,10 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 //        marker.icon = MarkerIcons.BLUE
 ////        marker.iconTintColor = Color.RED // 마커 색상 변경
 
-        //경도 위도
+
+    }
+
+    private fun LatLng() { //경도 위도
         naverMap.addOnLocationChangeListener { location ->
             Toast.makeText(
                 requireContext(), "${location.latitude}, ${location.longitude}",
@@ -123,7 +126,6 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
             Log.d(TAG, "${location.latitude}, ${location.longitude}")
         }
-
     }
 
 

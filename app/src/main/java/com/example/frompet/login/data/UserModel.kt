@@ -13,7 +13,9 @@ data class UserModel(
     val petName: String = "",
     val petProfile: String?= null,
     val petType: String = "",
-    var uid:String = ""
+    var uid:String = "",
+    val latitude : Int = 0,
+    val longtitude : Int = 0
 
 
 ): Parcelable{
