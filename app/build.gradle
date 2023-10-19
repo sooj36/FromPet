@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.frompet"
-        minSdk 31
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -101,6 +101,8 @@ dependencies {
 
 
     implementation 'com.github.yuyakaido:CardStackView:v2.3.4'
+
+    implementation 'androidx.palette:palette:1.0.0'
 
 
 }
