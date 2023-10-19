@@ -76,7 +76,7 @@ class ChatMessageAdapter(var context: Context) :
     inner class MyMessageViewHolder(private val binding: ItemMyMessageBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chatMessage: ChatMessage) = with(binding) {
             tvMessage.setBackgroundResource(R.drawable.chat2)
-            ivMessageImage.setBackgroundResource(R.drawable.chat2)
+//            ivMessageImage.setBackgroundResource(R.drawable.chat2)
             tvMessage.text = chatMessage.message
             tvTime.text =
                 SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
@@ -97,7 +97,7 @@ class ChatMessageAdapter(var context: Context) :
         fun bind(chatMessage: ChatMessage) = with(binding) {
             tvName.text = chatMessage.senderPetName
             tvMessage.setBackgroundResource(R.drawable.chat1)
-            ivMessageImage.setBackgroundResource(R.drawable.chat1)
+//            ivMessageImage.setBackgroundResource(R.drawable.chat1)
             tvMessage.text = chatMessage.message
             tvTime.text = SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
 
@@ -111,7 +111,7 @@ class ChatMessageAdapter(var context: Context) :
             } else {
                 ivMessageImage.isVisible = false
             }
-                                                                            //보내는사람=현재 uid
+            //보내는사람=현재 uid
             firestore.collection("User").document(chatMessage.senderId ).get().addOnSuccessListener { document ->
                 val user = document.toObject(UserModel::class.java)
                 user?.petProfile?.let {

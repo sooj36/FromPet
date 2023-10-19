@@ -7,6 +7,7 @@ import android.widget.ImageView
 import coil.load
 import com.example.frompet.R
 import com.example.frompet.databinding.ActivityChatMessageBinding
+import com.example.frompet.databinding.ActivityChatPullScreenBinding
 
 class ChatPullScreenActivity : AppCompatActivity() {
     companion object {
@@ -14,6 +15,7 @@ class ChatPullScreenActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityChatMessageBinding
+
     // 현재 툴바가 보이는지
     private var isToolbarVisible = true
     override fun onCreate(savedInstanceState: Bundle?) {
