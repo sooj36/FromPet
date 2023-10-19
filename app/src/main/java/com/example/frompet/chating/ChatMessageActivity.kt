@@ -18,6 +18,7 @@ import com.example.frompet.databinding.ActivityChatMessageBinding
 import com.example.frompet.login.data.ChatMessage
 import com.example.frompet.login.data.UserModel
 import com.example.frompet.login.putFile
+import com.example.frompet.util.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
@@ -171,7 +172,7 @@ class ChatMessageActivity : AppCompatActivity() {
                 }
                 .addOnSuccessListener { uri ->
                     val imageUrl = uri.toString()
-                    Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show()
+                   showToast("이미지 업로드 성공",Toast.LENGTH_LONG)
                     val user: UserModel? = intent.getParcelableExtra(USER)
                     user?.let {
                         val message = ChatMessage(

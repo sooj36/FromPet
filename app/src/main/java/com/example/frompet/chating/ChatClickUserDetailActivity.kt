@@ -1,17 +1,11 @@
 package com.example.frompet.chating
 
-import android.app.Activity
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.viewModels
 import coil.load
 import com.example.frompet.R
 import com.example.frompet.databinding.ActivityChatClickUserDetailBinding
-import com.example.frompet.databinding.ActivityChatUserDetailBinding
 import com.example.frompet.login.data.UserModel
-import com.example.frompet.login.viewmodel.MatchViewModel
 
 class ChatClickUserDetailActivity : AppCompatActivity() {
     companion object {
