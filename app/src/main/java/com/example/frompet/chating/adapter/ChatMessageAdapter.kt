@@ -74,60 +74,55 @@ class ChatMessageAdapter(var context: Context) :
     }
 
     inner class MyMessageViewHolder(private val binding: ItemMyMessageBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(chatMessage: ChatMessage) {
-            with(binding) {
-                tvMessage.setBackgroundResource(R.drawable.chat2)
-                ivMessageImage.setBackgroundResource(R.drawable.chat2)
-                tvMessage.text = chatMessage.message
-                tvTime.text = SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
+        fun bind(chatMessage: ChatMessage) = with(binding) {
+            tvMessage.setBackgroundResource(R.drawable.chat2)
+            ivMessageImage.setBackgroundResource(R.drawable.chat2)
+            tvMessage.text = chatMessage.message
+            tvTime.text =
+                SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
 
-                if (chatMessage.imageUrl.isNullOrEmpty().not()) {
-                    ivMessageImage.isVisible = true
-                    tvMessage.isVisible = false
-                    ivMessageImage.load(chatMessage.imageUrl) {
-                        error(R.drawable.kakaotalk_20230825_222509794_01)
-                    }
-                    clickListener(ivMessageImage, chatMessage.imageUrl)
-                } else {
-                    ivMessageImage.isVisible = false
+            if (chatMessage.imageUrl.isNullOrEmpty().not()) {
+                ivMessageImage.isVisible = true
+                tvMessage.isVisible = false
+                ivMessageImage.load(chatMessage.imageUrl) {
+                    error(R.drawable.kakaotalk_20230825_222509794_01)
                 }
+                clickListener(ivMessageImage, chatMessage.imageUrl)
+            } else {
+                ivMessageImage.isVisible = false
             }
         }
     }
-
     inner class OtherMessageViewHolder(private val binding: ItemOtherMessageBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(chatMessage: ChatMessage) {
-            with(binding) {
-                tvName.text = chatMessage.senderPetName
-                tvMessage.setBackgroundResource(R.drawable.chat1)
-                ivMessageImage.setBackgroundResource(R.drawable.chat1)
-                tvMessage.text = chatMessage.message
-                tvTime.text = SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
+        fun bind(chatMessage: ChatMessage) = with(binding) {
+            tvName.text = chatMessage.senderPetName
+            tvMessage.setBackgroundResource(R.drawable.chat1)
+            ivMessageImage.setBackgroundResource(R.drawable.chat1)
+            tvMessage.text = chatMessage.message
+            tvTime.text = SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
 
-                if (chatMessage.imageUrl.isNullOrEmpty().not()) {
-                    ivMessageImage.isVisible = true
-                    tvMessage.isVisible = false
-                    ivMessageImage.load(chatMessage.imageUrl) {
+            if (chatMessage.imageUrl.isNullOrEmpty().not()) {
+                ivMessageImage.isVisible = true
+                tvMessage.isVisible = false
+                ivMessageImage.load(chatMessage.imageUrl) {
+                    error(R.drawable.kakaotalk_20230825_222509794_01)
+                }
+                clickListener(ivMessageImage, chatMessage.imageUrl)
+            } else {
+                ivMessageImage.isVisible = false
+            }
+
+            firestore.collection("User").document(chatMessage.senderId).get().addOnSuccessListener { document ->
+                val user = document.toObject(UserModel::class.java)
+                user?.petProfile?.let {
+                    ivProfile.load(it) {
                         error(R.drawable.kakaotalk_20230825_222509794_01)
                     }
-                    clickListener(ivMessageImage, chatMessage.imageUrl)
-                } else {
-                    ivMessageImage.isVisible = false
-                }
-
-                firestore.collection("User").document(chatMessage.senderId).get().addOnSuccessListener { document ->
-                    val user = document.toObject(UserModel::class.java)
-                    user?.petProfile?.let {
-                        ivProfile.load(it) {
-                            error(R.drawable.kakaotalk_20230825_222509794_01)
-                        }
-                        ivProfile.setOnClickListener { userDetail(user) }
-                    }
+                    ivProfile.setOnClickListener { userDetail(user) }
                 }
             }
         }
     }
-
 
     class DiffCallback : DiffUtil.ItemCallback<ChatMessage>() {
         override fun areItemsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
@@ -152,5 +147,4 @@ class ChatMessageAdapter(var context: Context) :
         intent.putExtra(ChatClickUserDetailActivity.USER, user)
         context.startActivity(intent)
     }
-
 }
