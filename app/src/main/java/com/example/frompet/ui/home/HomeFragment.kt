@@ -37,7 +37,7 @@ class HomeFragment : Fragment() {
     private val firestore = FirebaseFirestore.getInstance()
 
     private val homeAdapter by lazy {
-        HomeAdapter()
+        HomeAdapter(this@HomeFragment)
     }
 
 

@@ -10,7 +10,7 @@ import com.example.frompet.databinding.ItemHomeBinding
 import com.example.frompet.data.model.User
 
 
-class HomeAdapter : ListAdapter<User, HomeAdapter.HomeViewHolder>(
+class HomeAdapter(homeFragment: HomeFragment) : ListAdapter<User, HomeAdapter.HomeViewHolder>(
     object : DiffUtil.ItemCallback<User>() {
         override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
             return oldItem == newItem
