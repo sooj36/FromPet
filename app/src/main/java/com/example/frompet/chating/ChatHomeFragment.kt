@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frompet.chating.adapter.ChatHomeAdapter
@@ -20,7 +21,7 @@ class ChatHomeFragment : Fragment() {
     private lateinit var  adapter: ChatHomeAdapter
     private val binding get() = _binding
 
-    private val matchSharedViewModel: MatchSharedViewModel by viewModels()
+    private val matchSharedViewModel: MatchSharedViewModel by activityViewModels()
     private val chatViewModel: ChatViewModel by viewModels()
     private val chatMessageActivityResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->

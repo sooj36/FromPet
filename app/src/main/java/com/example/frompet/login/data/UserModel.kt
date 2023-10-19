@@ -17,7 +17,7 @@ data class UserModel(
 
 
 ): Parcelable{
-    constructor() : this(0, "", "", "", "", null, "", "")
+
 }
 @Parcelize
 data class ChatMessage(
