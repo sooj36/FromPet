@@ -1,13 +1,11 @@
 package com.example.frompet.chating
 
-import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import coil.load
 import com.example.frompet.R
 import com.example.frompet.databinding.ActivityChatMessageBinding
-import com.example.frompet.databinding.ActivityChatPullScreenBinding
 
 class ChatPullScreenActivity : AppCompatActivity() {
     companion object{

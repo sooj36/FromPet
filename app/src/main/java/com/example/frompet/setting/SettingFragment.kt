@@ -2,22 +2,15 @@ package com.example.frompet.setting
 
 import SettingViewModel
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import coil.load
-import com.bumptech.glide.Glide
-import com.example.frompet.R
-import com.google.firebase.firestore.FirebaseFirestore
 import com.example.frompet.databinding.FragmentSettingBinding
 import com.example.frompet.login.LoginActivity
-import com.example.frompet.login.viewmodel.LoginViewModel
-import com.example.frompet.login.viewmodel.MatchViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class SettingFragment : Fragment() {

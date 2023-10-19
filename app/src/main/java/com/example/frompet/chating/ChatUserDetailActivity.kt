@@ -8,9 +8,10 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import coil.load
 import com.example.frompet.R
+import com.example.frompet.util.showToast
 import com.example.frompet.databinding.ActivityChatUserDetailBinding
 import com.example.frompet.login.data.UserModel
-import com.example.frompet.login.viewmodel.MatchViewModel
+import com.example.frompet.login.viewmodel.MatchSharedViewModel
 
 class ChatUserDetailActivity : AppCompatActivity() {
     companion object {
@@ -22,7 +23,7 @@ class ChatUserDetailActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityChatUserDetailBinding
-    private val matchViewModel: MatchViewModel by viewModels()
+    private val matchSharedViewModel: MatchSharedViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,36 +35,37 @@ class ChatUserDetailActivity : AppCompatActivity() {
         user?.let {
             displayUserInfo(it)
         }
+        setClickListeners(user)
+    }
 
-
+    private fun setClickListeners(user: UserModel?) {
         binding.likeBtn.setOnClickListener {
             user?.uid?.let { userId ->
-                matchViewModel.matchUser(userId)
-                Toast.makeText(this, "${user.petName} 와(과) 매치 되었습니다!", Toast.LENGTH_LONG).show()
-                val resultIntent = Intent()
-                resultIntent.putExtra(MATCHED_USERS, userId)
-                resultIntent.putExtra(ACTION, MATCH)
-                setResult(Activity.RESULT_OK, resultIntent)
-                finish()
+                matchSharedViewModel.matchUser(userId)
+                showToast("${user.petName}님과 매치 되었습니다\n대화방이 생성되었습니다!",Toast.LENGTH_LONG)
+                setResultAndFinish(userId, MATCH)
             }
         }
 
         binding.dislikeBtn.setOnClickListener {
             user?.uid?.let { userId ->
-                matchViewModel.dislike(userId)
-                Toast.makeText(this, "${user.petName}와(과) 매칭에 실패 했습니다!", Toast.LENGTH_LONG).show()
-
-                val result = Intent()
-                result.putExtra(MATCHED_USERS, userId)
-                result.putExtra(ACTION, DISLIKE)
-                setResult(Activity.RESULT_OK, result)
-                finish()
+                matchSharedViewModel.dislike(userId)
+                showToast("${user.petName}님과 매칭에 실패 했습니다!",Toast.LENGTH_LONG)
+                setResultAndFinish(userId, DISLIKE)
             }
         }
         binding.backBtn.setOnClickListener {
             finish()
         }
     }
+    private fun setResultAndFinish(userId: String, action: String) {
+        val resultIntent = Intent()
+        resultIntent.putExtra(MATCHED_USERS, userId)
+        resultIntent.putExtra(ACTION, action)
+        setResult(Activity.RESULT_OK, resultIntent)
+        finish()
+    }
+
 
     private fun displayUserInfo(user: UserModel) {
         binding.apply {
