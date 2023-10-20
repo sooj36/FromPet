@@ -61,12 +61,12 @@ class ChatHomeFragment : Fragment() {
         }
         matchSharedViewModel.loadMatchedUsers()
         matchSharedViewModel.matchedList.observe(viewLifecycleOwner) { users ->
-           chatViewModel.getlastTimeSorted(users){
+           chatViewModel.getLastTimeSorted(users){
                 adapter.submitList(it)
                 binding?.tvPossibleText?.text = "${it.size}명과 대화가 가능해요"
             }
         }
-        chatViewModel.loadNewChats()
+
     }
 
     override fun onDestroyView() {

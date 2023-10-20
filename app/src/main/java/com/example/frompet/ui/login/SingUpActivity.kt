@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.example.frompet.R
 import com.example.frompet.databinding.ActivitySingUpBinding
 
 class SingUpActivity : AppCompatActivity() {
@@ -40,7 +41,7 @@ class SingUpActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
     private fun showSignUpResultToast(isSuccess: Boolean) {
-        val message = if (isSuccess) "회원가입 성공" else "회원가입 실패"
+        val message = if (isSuccess) getString(R.string.signup_success) else getString(R.string.signup_failure)
         showToast(message)
     }
 }

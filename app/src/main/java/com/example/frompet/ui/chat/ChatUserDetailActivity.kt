@@ -42,7 +42,7 @@ class ChatUserDetailActivity : AppCompatActivity() {
         binding.likeBtn.setOnClickListener {
             user?.uid?.let { userId ->
                 matchSharedViewModel.matchUser(userId)
-                showToast("${user.petName}님과 매치 되었습니다\n대화방이 생성되었습니다!",Toast.LENGTH_LONG)
+                showToast("${user.petName}님과 매치 되었습니다\n 대화방이 생성되었습니다!",Toast.LENGTH_LONG)
                 setResultAndFinish(userId, MATCH)
             }
         }

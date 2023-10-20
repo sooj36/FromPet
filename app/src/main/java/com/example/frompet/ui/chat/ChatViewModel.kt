@@ -1,95 +1,31 @@
 package com.example.frompet.ui.chat
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+
 import androidx.lifecycle.ViewModel
-import com.example.frompet.data.model.ChatMessage
+import androidx.lifecycle.viewModelScope
+
 import com.example.frompet.data.model.User
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.frompet.data.repository.chat.ChatRepository
+import com.example.frompet.data.repository.chat.ChatRepositoryImpl
+import kotlinx.coroutines.launch
+
 
 class ChatViewModel : ViewModel() {
 
-    private val _lastChats = HashMap<String, MutableLiveData<ChatMessage?>>()
-    private val _newChats = MutableLiveData<HashMap<String, Boolean>>()
-    val newChats: LiveData<HashMap<String, Boolean>> get() = _newChats
+        private val repository: ChatRepository = ChatRepositoryImpl()
+        fun chatRoom(uid1: String, uid2: String) =   repository.chatRoom(uid1, uid2)
 
+        fun lastChatLiveData(chatRoomId: String) = repository.getLastChatLiveData(chatRoomId)
 
-    private val database = FirebaseDatabase.getInstance().reference
-    private val auth = FirebaseAuth.getInstance()
+        fun loadLastChats(currentUserId: String, otherUserId: String) = viewModelScope.launch { repository.loadLastChats(currentUserId, otherUserId)}
 
-    fun chatRoom(uid1: String, uid2: String): String {
-        return if (uid1 > uid2) "$uid1+$uid2" else "$uid2+$uid1" //두 사람 채팅에는 항상 합친 동일한 구분자로 생성함
+        fun goneNewMessages(chatRoomId: String) = viewModelScope.launch {  repository.goneNewMessages(chatRoomId)}
+
+        val newChats: LiveData<HashMap<String, Boolean>> get() = repository.loadNewChats()
+
+        fun getLastTimeSorted(user: List<User>, onUpdate: (List<User>) -> Unit) = viewModelScope.launch {  repository.getLastTimeSorted(user, onUpdate)}
     }
 
-    fun lastChatLiveData(chatRoomId: String): LiveData<ChatMessage?> {
-        return _lastChats.getOrPut(chatRoomId) { MutableLiveData<ChatMessage?>() }
-    }
 
-    fun loadLastChats(currentUserId: String, otherUserId: String) { //  리얼타임 베이스의 구조를 최적화하여 필요한 데이터만 읽으려고 라스트메시지 노드 따로 추가함
-        val chatRoomId = chatRoom(currentUserId, otherUserId)
 
-        database.child("lastMessages").child(chatRoomId)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val message = snapshot.getValue(ChatMessage::class.java)
-                    _lastChats[chatRoomId]?.value = message
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {}
-            })
-    }
-
-    fun goneNewMessages(chatRoomId: String) {
-        val currentUserId = auth.currentUser?.uid ?: return
-        database.child("newMessages").child(chatRoomId).child(currentUserId).setValue(false)
-    }
-
-    fun loadNewChats() {
-        val currentUserId = auth.currentUser?.uid ?: return
-        database.child("newMessages")
-            .orderByChild(currentUserId)
-            .equalTo(true)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val newMessageRooms = snapshot.children.mapNotNull {
-                        it.key?.let { key ->
-                            key to (it.child(currentUserId).getValue(Boolean::class.java) ?: false)
-                        }
-                    }.toMap()
-                    _newChats.value = HashMap(newMessageRooms)
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {}
-            })
-    }
-
-    fun getlastTimeSorted(user: List<User>, onUpdate: (List<User>) -> Unit) {
-        val currentUserId = auth.currentUser?.uid ?: return
-        val chatRoomIds = user.map { user -> chatRoom(currentUserId, user.uid) }
-
-        database.child("lastMessages").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val lastMessagesMap = mutableMapOf<String, Long>()
-
-                chatRoomIds.forEach { chatRoomId ->
-                    val message = snapshot.child(chatRoomId).getValue(ChatMessage::class.java)
-                    lastMessagesMap[chatRoomId] = message?.timestamp ?: 0
-                }
-
-                val sortedUsers = user.sortedByDescending { user ->
-                    val roomId = chatRoom(currentUserId, user.uid)
-                    lastMessagesMap[roomId] ?: 0
-                }
-                onUpdate(sortedUsers)
-            }
-            override fun onCancelled(error: DatabaseError) {
-            }
-        })
-    }
-
-}

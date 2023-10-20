@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.frompet.databinding.ActivityLoginBinding
 import com.example.frompet.MainActivity
+import com.example.frompet.R
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -85,7 +86,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showLoginResultToast(isSuccess: Boolean) {
-        val message = if (isSuccess) "로그인 성공" else "로그인 실패"
+        val message = if (isSuccess) getString(R.string.login_success_ac) else getString(R.string.login_failure_ac)
         showToast(message)
     }
 

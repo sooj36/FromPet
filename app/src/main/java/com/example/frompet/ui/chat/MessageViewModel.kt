@@ -1,5 +1,6 @@
 package com.example.frompet.ui.chat
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,7 +34,7 @@ class MessageViewModel : ViewModel() {
 
     fun sendMessage(receiverId: String, message: String) {
         viewModelScope.launch {
-            val currentUserId = auth.currentUser?.uid ?: return@launch
+            val currentUserId = repository.getCurrentUserId()?:return@launch
             val chatRoomId = chatRoom(currentUserId, receiverId)
 
             val document = firestore.collection("User").document(currentUserId).get().await()
@@ -51,9 +52,6 @@ class MessageViewModel : ViewModel() {
         }
     }
 
-    fun sendImage(chatMessage: ChatMessage) = viewModelScope.launch {
-        repository.sendImage(chatMessage)
-    }
 
     fun goneNewMessages(chatRoomId: String) = viewModelScope.launch {
         repository.goneNewMessages(chatRoomId)
@@ -74,6 +72,41 @@ class MessageViewModel : ViewModel() {
     fun setTypingStatus(isTyping: Boolean) = viewModelScope.launch {
         repository.setTypingStatus(isTyping)
     }
+       fun uploadImage(uri: Uri, user: User) {
+        viewModelScope.launch {
+            val imageUrl = repository.uploadImage(uri)
+            imageUrl?.let {
+                val currentUserId = repository.getCurrentUserId()
+                val currentUser = repository.getUserProfile(currentUserId!!)
+                val message = ChatMessage(
+                    senderId = currentUserId,
+                    receiverId = user.uid,
+                    senderPetName = currentUser?.petName ?: return@let,
+                    message = "",
+                    imageUrl = imageUrl,
+                    timestamp = System.currentTimeMillis()
+                )
+                repository.sendImage(message)
+            }
+        }
+    }
+    fun getCurrentUserId(): LiveData<String?> {
+        val userId = MutableLiveData<String?>()
+        viewModelScope.launch {
+            userId.value = repository.getCurrentUserId()
+        }
+        return userId
+    }
+
+    fun getUserProfile(userId: String): LiveData<User?> {
+        val userProfile = MutableLiveData<User?>()
+        viewModelScope.launch {
+            userProfile.value = repository.getUserProfile(userId)
+        }
+        return userProfile
+    }
+
+
     fun observeChatMessages(chatRoomId: String) {
         repository.addChatMessagesListener(chatRoomId) { messages ->
             _chatMessages.postValue(messages)
@@ -89,5 +122,6 @@ class MessageViewModel : ViewModel() {
             _userProfile.postValue(user)
         }
     }
+
 
 }
