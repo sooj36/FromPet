@@ -31,7 +31,7 @@
             android:value="7u1n9emjag" />
 
         <activity
-            android:name=".ui.setting.ProfileActivity"
+            android:name=".ui.setting.SettingProfileActivity"
             android:exported="false" />
         <activity
             android:name=".ui.chat.ChatUserDetailActivity"

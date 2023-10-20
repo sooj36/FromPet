@@ -3,7 +3,7 @@ package com.example.frompet.ui.chat
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.frompet.data.model.UserModel
+import com.example.frompet.data.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -13,12 +13,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 
 class MatchSharedViewModel : ViewModel() {
+
     private val _likeList :MutableLiveData<List<UserModel>?> = MutableLiveData()
     val likeList : MutableLiveData<List<UserModel>?> get() = _likeList
 //    private val _disLikeList : MutableLiveData<List<UserModel>> = MutableLiveData()
 //    val disLikeList : MutableLiveData<List<UserModel>>  get() =  _disLikeList
     private val _matchedList : MutableLiveData<List<UserModel>> = MutableLiveData()
     val matchedList : MutableLiveData<List<UserModel>> get() = _matchedList
+
 
 
 
@@ -51,7 +53,7 @@ class MatchSharedViewModel : ViewModel() {
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val likedUserIds = snapshot.children.mapNotNull { it.key }
-                val likedUsers = mutableListOf<UserModel>()
+                val likedUsers = mutableListOf<User>()
 
                 likedUserIds.forEach { userId ->
 
@@ -63,7 +65,7 @@ class MatchSharedViewModel : ViewModel() {
                                     firestore.collection("User").document(userId)
                                         .get()
                                         .addOnSuccessListener { document ->
-                                            val user = document.toObject(UserModel::class.java)
+                                            val user = document.toObject(User::class.java)
                                             user?.let {
                                                 likedUsers.add(it)
                                                 _likeList.value = likedUsers.toList()
@@ -85,9 +87,9 @@ class MatchSharedViewModel : ViewModel() {
         val currentUserId = auth.currentUser?.uid ?: return
         val exceptIds = mutableListOf<String>()
 
-
         disLikeDb.child(currentUserId).addListenerForSingleValueEvent(object : ValueEventListener {  //디스라이크유저 불러오기
             override fun onDataChange(snapshot: DataSnapshot) {
+
                 snapshot.children.forEach { childSnapshot ->
                     val userId = childSnapshot.key
                     userId?.let { exceptIds.add(it) }
@@ -98,6 +100,7 @@ class MatchSharedViewModel : ViewModel() {
                             val userId = userSnapshot.key
                             if (userSnapshot.child("likedBy").hasChild(currentUserId)) {
                                 userId?.let { exceptIds.add(it) }
+
                             }
                         }
                         database.child(currentUserId).child("matched").addListenerForSingleValueEvent(object : ValueEventListener { //매치된유저불러오기
@@ -149,11 +152,6 @@ class MatchSharedViewModel : ViewModel() {
         }
     }
 
-
-
-
-
-
     fun matchUser(otherUserUid: String) {
         val currentUserId = auth.currentUser?.uid ?: return
         // 서로 like한 경우
@@ -177,13 +175,13 @@ class MatchSharedViewModel : ViewModel() {
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val matchedUserIds = snapshot.children.mapNotNull { it.key }
-                val matchedUsers = mutableListOf<UserModel>()
+                val matchedUsers = mutableListOf<User>()
 
                 matchedUserIds.forEach { userId ->
                     firestore.collection("User").document(userId)
                         .get()
                         .addOnSuccessListener { document ->
-                            val user = document.toObject(UserModel::class.java)
+                            val user = document.toObject(User::class.java)
                             user?.let {
                                 matchedUsers.add(it)
                                 _matchedList.value = matchedUsers.toList()

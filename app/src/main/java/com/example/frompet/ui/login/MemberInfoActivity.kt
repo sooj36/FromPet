@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.frompet.databinding.ActivityMemberInfoBinding
-import com.example.frompet.data.model.UserModel
+import com.example.frompet.data.model.User
 import com.example.frompet.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -54,16 +54,16 @@ class MemberInfoActivity : AppCompatActivity() {
                 }
 
                 // User 모델을 생성
-                val userModel = UserModel(
+                val user = User(
                     petAge, petDescription, petGender, petIntroduction, petName, petProfile?.toString(), petType
                 )
-                userModel.uid = currentUser.uid
+                user.uid = currentUser.uid
 
 
                 // Firestore의 "User" 컬렉션에 사용자 정보 저장
                 FirebaseFirestore.getInstance().collection("User")
                     .document(currentUser.uid)
-                    .set(userModel)
+                    .set(user)
                     .addOnSuccessListener {
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)

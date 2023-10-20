@@ -55,7 +55,7 @@ class SettingFragment : Fragment() {
         }
 
         binding.btModify.setOnClickListener {
-            val intent = Intent(requireActivity(), ProfileActivity::class.java)
+            val intent = Intent(requireActivity(), SettingProfileActivity::class.java)
             startActivity(intent)
         }
 
