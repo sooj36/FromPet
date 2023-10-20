@@ -1,102 +1,93 @@
 package com.example.frompet.ui.chat
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.frompet.data.model.ChatMessage
 import com.example.frompet.data.model.User
+import com.example.frompet.data.repository.message.MessageRepository
+import com.example.frompet.data.repository.message.MessageRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
-class MessageViewModel:ViewModel() {
+class MessageViewModel : ViewModel() {
+    private val repository: MessageRepository = MessageRepositoryImpl()
     private val _chatMessages = MutableLiveData<List<ChatMessage>>()
     val chatMessages: LiveData<List<ChatMessage>> get() = _chatMessages
+
     private val _isTyping = MutableLiveData<Boolean>()
     val isTyping: LiveData<Boolean> get() = _isTyping
 
+    private val _userProfile = MutableLiveData<User>()
+    val userProfile: LiveData<User> get() = _userProfile
 
-    private val database = FirebaseDatabase.getInstance().reference
-    private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+    private val firestore = FirebaseFirestore.getInstance()
 
     fun chatRoom(uid1: String, uid2: String): String {
-        return if (uid1 > uid2) "$uid1+$uid2" else "$uid2+$uid1" //두 사람 채팅에는 항상 합친 동일한 구분자로 생성함
+        return if (uid1 > uid2) "$uid1+$uid2" else "$uid2+$uid1"
     }
 
     fun sendMessage(receiverId: String, message: String) {
-        val currentUserId = auth.currentUser?.uid ?: return
-        val chatRoomId = chatRoom(currentUserId, receiverId)
+        viewModelScope.launch {
+            val currentUserId = auth.currentUser?.uid ?: return@launch
+            val chatRoomId = chatRoom(currentUserId, receiverId)
 
-        firestore.collection("User").document(currentUserId).get()
-            .addOnSuccessListener { document ->
-                val currentUser = document.toObject(User::class.java)
-                val senderPetName = currentUser?.petName ?: "오류"
+            val document = firestore.collection("User").document(currentUserId).get().await()
+            val currentUser = document.toObject(User::class.java)
+            val senderPetName = currentUser?.petName ?: "오류"
 
-                val chatMessage = ChatMessage(
-                    senderId = currentUserId,
-                    senderPetName = senderPetName,
-                    receiverId = receiverId,
-                    message = message,
-                    timestamp = System.currentTimeMillis()
-                )
-                database.child("chatMessages").child(chatRoomId).push().setValue(chatMessage)
-                database.child("lastMessages").child(chatRoomId).setValue(chatMessage)
-                database.child("newMessages").child(chatRoomId).child(receiverId).setValue(true)
-                    .addOnSuccessListener {
-                        loadPreviousMessages(chatRoomId)
-                    }.addOnFailureListener { exception ->
-                        Log.d("jun", "메시지전송실패: ${exception.message}")
-                    }
-            }.addOnFailureListener { exception ->
-                Log.d("jun", "연결실패: ${exception.message}")
-            }
-    }
-    fun sendImage(chatMessage: ChatMessage) {
-        val chatRoomId = chatRoom(chatMessage.senderId, chatMessage.receiverId)
-
-        database.child("chatMessages").child(chatRoomId).push().setValue(chatMessage)
-        database.child("lastMessages").child(chatRoomId).setValue(chatMessage)
-        database.child("newMessages").child(chatRoomId).child(chatMessage.receiverId).setValue(true)
-    }
-    fun goneNewMessages(chatRoomId: String) { //챗홈프래그먼트랑,챗메시지액티비 둘다 쓰이는데 어케 분류하지..?
-        val currentUserId = auth.currentUser?.uid ?: return
-        database.child("newMessages").child(chatRoomId).child(currentUserId).setValue(false)
+            val chatMessage = ChatMessage(
+                senderId = currentUserId,
+                senderPetName = senderPetName,
+                receiverId = receiverId,
+                message = message,
+                timestamp = System.currentTimeMillis()
+            )
+            repository.sendMessage(chatRoomId, chatMessage)
+        }
     }
 
+    fun sendImage(chatMessage: ChatMessage) = viewModelScope.launch {
+        repository.sendImage(chatMessage)
+    }
+
+    fun goneNewMessages(chatRoomId: String) = viewModelScope.launch {
+        repository.goneNewMessages(chatRoomId)
+    }
 
     fun loadPreviousMessages(chatRoomId: String) {
-        database.child("chatMessages").child(chatRoomId)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val messages =
-                        snapshot.children.mapNotNull { it.getValue(ChatMessage::class.java) }
-                    _chatMessages.postValue(messages)
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.d("jun", "불러오기실패: ${databaseError.message}")
-                }
-            })
-    }
-    fun checkTypingStatus(receiverId: String) {
-        database.child("typingStatus").child(receiverId)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val status = snapshot.getValue(Boolean::class.java) ?: false
-                    _isTyping.value = status
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {}
-            })
+        viewModelScope.launch {
+            val messages = repository.loadPreviousMessages(chatRoomId)
+            _chatMessages.postValue(messages)
+        }
     }
 
-    fun setTypingStatus(isTyping: Boolean) {
-        val currentId = auth.currentUser?.uid ?: return
-        database.child("typingStatus").child(currentId).setValue(isTyping)
+    fun checkTypingStatus(receiverId: String) = viewModelScope.launch {
+        val isTyping = repository.checkTypingStatus(receiverId)
+        _isTyping.postValue(isTyping)
     }
+
+    fun setTypingStatus(isTyping: Boolean) = viewModelScope.launch {
+        repository.setTypingStatus(isTyping)
+    }
+    fun observeChatMessages(chatRoomId: String) {
+        repository.addChatMessagesListener(chatRoomId) { messages ->
+            _chatMessages.postValue(messages)
+        }
+    }
+    fun observeTypingStatus(receiverId: String) {
+        repository.addTypingStatusListener(receiverId) { isTyping ->
+            _isTyping.postValue(isTyping)
+        }
+    }
+    fun observeUserProfile(userId: String) {
+        repository.addUserProfileListener(userId) { user ->
+            _userProfile.postValue(user)
+        }
+    }
+
 }

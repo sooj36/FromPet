@@ -10,8 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.frompet.databinding.FragmentHomeBinding
-import com.example.frompet.data.model.User
-import com.example.frompet.ui.chat.MatchSharedViewModel
+import com.example.frompet.MatchSharedViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import coil.load
+import com.example.frompet.MatchSharedViewModel
 import com.example.frompet.R
 import com.example.frompet.util.showToast
 import com.example.frompet.databinding.ActivityChatUserDetailBinding

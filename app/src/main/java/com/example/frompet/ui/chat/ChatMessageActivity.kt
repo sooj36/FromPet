@@ -77,6 +77,9 @@ class ChatMessageActivity : AppCompatActivity() {
 
             val currentUserId = auth.currentUser?.uid ?: return
             val chatRoomId = messageViewModel.chatRoom(currentUserId, user.uid)
+            messageViewModel.observeChatMessages(chatRoomId)
+            messageViewModel.observeTypingStatus(user.uid)
+            messageViewModel.observeUserProfile(it.uid)
 
             binding.ivSendBtn.setOnClickListener {
                 val message = binding.etMessage.text.toString()
