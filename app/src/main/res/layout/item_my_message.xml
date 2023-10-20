@@ -50,7 +50,7 @@
                 android:scaleType="fitXY"
                 android:visibility="gone"
                 />
-        </androidx.cardview.widget.CardView>
+</androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/tv_message"

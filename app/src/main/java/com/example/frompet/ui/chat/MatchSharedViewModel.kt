@@ -13,20 +13,21 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 
 class MatchSharedViewModel : ViewModel() {
-    private val _likeList :MutableLiveData<List<User>?> = MutableLiveData()
-    val likeList : MutableLiveData<List<User>?> get() = _likeList
-    private val _disLikeList : MutableLiveData<List<User>> = MutableLiveData()
-    val disLikeList : MutableLiveData<List<User>>  get() =  _disLikeList
-    private val _matchedList : MutableLiveData<List<User>> = MutableLiveData()
-    val matchedList : MutableLiveData<List<User>> get() = _matchedList
 
-    private val _dislikedUserIds = mutableListOf<String>()
-    val dislikedUserIds: List<String>
-        get() = _dislikedUserIds
+    private val _likeList :MutableLiveData<List<UserModel>?> = MutableLiveData()
+    val likeList : MutableLiveData<List<UserModel>?> get() = _likeList
+//    private val _disLikeList : MutableLiveData<List<UserModel>> = MutableLiveData()
+//    val disLikeList : MutableLiveData<List<UserModel>>  get() =  _disLikeList
+    private val _matchedList : MutableLiveData<List<UserModel>> = MutableLiveData()
+    val matchedList : MutableLiveData<List<UserModel>> get() = _matchedList
+
+
+
 
 
     private val database = FirebaseDatabase.getInstance().getReference("likeUsers")
-    private val unlikedb = FirebaseDatabase.getInstance().getReference("dislike")
+    private val disLikeDb = FirebaseDatabase.getInstance().getReference("dislikeList")
+
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
@@ -40,10 +41,9 @@ class MatchSharedViewModel : ViewModel() {
     fun dislike(targetUserId: String) {
         val currentUserId = auth.currentUser?.uid ?: return
         database.child(currentUserId).child("likedBy").child(targetUserId).removeValue()
-        database.child(targetUserId).child("matched").child(currentUserId).removeValue()
-        database.child(currentUserId).child("matched").child(targetUserId).removeValue()
-        unlikedb.child(targetUserId).child("dislike").child(currentUserId).setValue(true)
-        _dislikedUserIds.add(targetUserId)
+//        database.child(targetUserId).child("matched").child(currentUserId).removeValue()
+//        database.child(currentUserId).child("matched").child(targetUserId).removeValue()
+        disLikeDb.child(currentUserId).child(targetUserId).setValue(true)
     }
 
     fun loadlike() {
@@ -83,47 +83,74 @@ class MatchSharedViewModel : ViewModel() {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
-    fun loadunlike() {
+    fun loadAlreadyActionUsers(load: (List<String>) -> Unit) {
         val currentUserId = auth.currentUser?.uid ?: return
+        val exceptIds = mutableListOf<String>()
 
-        val likedUsers = mutableListOf<User>()
-
-        // 사용자가 dislike한 대상들을 가져와서 필터링합니다.
-        unlikedb.child(currentUserId).child("dislike").addListenerForSingleValueEvent(object :
-            ValueEventListener {
+        disLikeDb.child(currentUserId).addListenerForSingleValueEvent(object : ValueEventListener {  //디스라이크유저 불러오기
             override fun onDataChange(snapshot: DataSnapshot) {
-                val dislikedUserIds = snapshot.children.mapNotNull { it.key }
 
-                // 이후, 데이터베이스에서 사용자들을 가져오고 dislike 대상을 필터링하여 likedUsers 목록에 추가합니다.
-                database.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        dataSnapshot.children.forEach { userSnapshot ->
-                            val user = userSnapshot.getValue(User::class.java)
-                            user?.let {
-                                if (it.uid != currentUserId && it.uid !in dislikedUserIds) {
-                                    likedUsers.add(it)
-                                }
+                snapshot.children.forEach { childSnapshot ->
+                    val userId = childSnapshot.key
+                    userId?.let { exceptIds.add(it) }
+                }
+                database.addListenerForSingleValueEvent(object : ValueEventListener { //likeby노드에 내유아디가 들어가서 전체순회
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        snapshot.children.forEach { userSnapshot ->
+                            val userId = userSnapshot.key
+                            if (userSnapshot.child("likedBy").hasChild(currentUserId)) {
+                                userId?.let { exceptIds.add(it) }
+
                             }
                         }
+                        database.child(currentUserId).child("matched").addListenerForSingleValueEvent(object : ValueEventListener { //매치된유저불러오기
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                snapshot.children.forEach { childSnapshot ->
+                                    val userId = childSnapshot.key
+                                    userId?.let { exceptIds.add(it) }
+                                }
+                                load(exceptIds)
+                            }
 
-                        // 화면에 표시할 사용자 중 dislike한 사용자를 필터링합니다.
-                        _likeList.value = likedUsers.toList()
+                            override fun onCancelled(error: DatabaseError) {}
+                        })
                     }
 
-                    override fun onCancelled(error: DatabaseError) {
-                        // 에러 처리 로직 추가
-                    }
+                    override fun onCancelled(error: DatabaseError) {}
                 })
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                // 에러 처리 로직 추가
-            }
+            override fun onCancelled(error: DatabaseError) {}
         })
-
-        // 나머지 코드는 변경하지 않습니다.
     }
 
+
+    fun getExceptDislikeAndMe(onSuccess: (List<UserModel>) -> Unit, onFailure: (Exception) -> Unit) {
+        val allUsersData = mutableListOf<UserModel>()
+        val currentUserId = auth.currentUser?.uid
+
+        loadAlreadyActionUsers { exceptionUsers ->
+
+            firestore.collection("User")
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (querySnapshot.isEmpty.not()) {
+                        for (document in querySnapshot.documents) {
+                            val user = document.toObject(UserModel::class.java)
+                            user?.let {
+                                if (it.uid != currentUserId && it.uid !in exceptionUsers) {
+                                    allUsersData.add(it)
+                                }
+                            }
+                        }
+                        onSuccess(allUsersData)
+                    }
+                }
+                .addOnFailureListener { e ->
+                    onFailure(e)
+                }
+        }
+    }
 
     fun matchUser(otherUserUid: String) {
         val currentUserId = auth.currentUser?.uid ?: return
