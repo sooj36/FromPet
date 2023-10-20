@@ -1,41 +1,53 @@
 package com.example.frompet.data.repository.user
 
 import com.example.frompet.data.model.User
+import com.example.frompet.data.repository.firebase.BaseAuthenticator
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestoreSettings
+import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class UserRepositoryImp : UserRepository {
-
-    private val firestore = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
-
-    override suspend fun saveUser(user: User, callback: (Boolean) -> Unit): List<User>? {
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            val usersCollection = firestore.collection("User")
-            usersCollection.document(currentUser.uid).set(user)
-                .addOnSuccessListener {
-                    callback(true) // 성공
-                }
-                .addOnFailureListener {
-                    callback(false) // 실패
-                }
-        } else {
-            callback(false) // 현재 사용자가 로그인되어 있지 않음
-        }
-        return null // 무엇을 반환해도 상관 없음
+class UserRepositoryImp @Inject constructor(
+    private val authenticator: BaseAuthenticator,
+    private val firestore: FirebaseFirestore
+):BaseAuthRepository {
+    override suspend fun signInWithEmailPassword(email: String, password: String): FirebaseUser? {
+        return authenticator.signInWithEmailPassword(email, password)
     }
 
-    override fun getUser(userId: String, callback: (User?) -> Unit) {
-        val usersCollection = firestore.collection("User")
-        usersCollection.document(userId).get()
-            .addOnSuccessListener { documentSnapshot ->
-                val user = documentSnapshot.toObject(User::class.java)
-                callback(user)
+    override suspend fun signUpWithEmailPassword(email: String, password: String): FirebaseUser? {
+        return authenticator.signUpWithEmailPassword(email, password)
+    }
+
+    override fun signOut(): FirebaseUser? {
+        return authenticator.signOut()
+    }
+
+    override fun getCurrentUser(): FirebaseUser? {
+        return authenticator.getUser()
+    }
+    override suspend fun sendResetPassword(email: String): Boolean {
+        authenticator.sendPasswordReset(email)
+        return true
+    }
+
+    suspend fun saveUserProfile(user:User){
+        val userDocument = firestore.collection("User").document(user.uid)
+        userDocument.set(user)
+            .addOnSuccessListener {
             }
             .addOnFailureListener {
-                callback(null)
+
             }
     }
+
+    suspend fun getUserProfile(uid: String): User?{
+        val userDocument = firestore.collection("User").document(uid)
+        val doucumentSnapshot = userDocument.get().await()
+        return doucumentSnapshot.toObject(User::class.java)
+    }
+
 }
 
