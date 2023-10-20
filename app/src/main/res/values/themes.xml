@@ -3,6 +3,7 @@
     <style name="Base.Theme.FromPet" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimaryDark">@color/black</item>
     </style>
 
     <style name="Theme.FromPet" parent="Base.Theme.FromPet" />
