@@ -13,14 +13,14 @@ import coil.load
 import com.example.frompet.R
 import com.example.frompet.ui.chat.ChatClickUserDetailActivity
 import com.example.frompet.databinding.ItemChathomeBinding
-import com.example.frompet.data.model.UserModel
+import com.example.frompet.data.model.User
 import com.example.frompet.ui.chat.ChatViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class ChatHomeAdapter(var context: Context, private val chatViewModel: ChatViewModel, private val lifecycleOwner: LifecycleOwner,) :
-    ListAdapter<UserModel, ChatHomeAdapter.ChatHomeViewHolder>(DiffCallback()) {
+    ListAdapter<User, ChatHomeAdapter.ChatHomeViewHolder>(DiffCallback()) {
 
-    var onChatItemClick: ((UserModel) -> Unit)? = null
+    var onChatItemClick: ((User) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatHomeViewHolder {
         val binding = ItemChathomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -34,7 +34,7 @@ class ChatHomeAdapter(var context: Context, private val chatViewModel: ChatViewM
 
     inner class ChatHomeViewHolder(private val binding: ItemChathomeBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindItems(user: UserModel) {
+        fun bindItems(user: User) {
             binding.apply {
                 tvChatTitle.text = user.petName
                 user.petProfile.let {
@@ -69,15 +69,15 @@ class ChatHomeAdapter(var context: Context, private val chatViewModel: ChatViewM
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<UserModel>() {
-        override fun areItemsTheSame(oldItem: UserModel, newItem: UserModel): Boolean {
+    class DiffCallback : DiffUtil.ItemCallback<User>() {
+        override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
             return oldItem == newItem
         }
-        override fun areContentsTheSame(oldItem: UserModel, newItem: UserModel): Boolean {
+        override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
             return oldItem == newItem
         }
     }
-    private fun userDetail(user: UserModel) {
+    private fun userDetail(user: User) {
         val intent = Intent(context, ChatClickUserDetailActivity::class.java)
         intent.putExtra(ChatClickUserDetailActivity.USER, user)
         context.startActivity(intent)

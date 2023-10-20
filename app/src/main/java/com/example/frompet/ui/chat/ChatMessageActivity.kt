@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frompet.ui.chat.adapter.ChatMessageAdapter
 import com.example.frompet.databinding.ActivityChatMessageBinding
 import com.example.frompet.data.model.ChatMessage
-import com.example.frompet.data.model.UserModel
+import com.example.frompet.data.model.User
 import com.example.frompet.ui.login.putFile
 import com.example.frompet.util.showToast
 
@@ -70,7 +70,7 @@ class ChatMessageActivity : AppCompatActivity() {
             binding.tvTyping.text = if (isTyping) "입력중..." else ""
         })
 
-        val user: UserModel? = intent.getParcelableExtra(USER)
+        val user: User? = intent.getParcelableExtra(USER)
         user?.let {
             displayInfo(it)
             chatViewModel.checkTypingStatus(it.uid)
@@ -128,7 +128,7 @@ class ChatMessageActivity : AppCompatActivity() {
         super.onDestroy()
     }
     private fun goneNewMessage() {
-        val user: UserModel? = intent.getParcelableExtra(USER)
+        val user: User? = intent.getParcelableExtra(USER)
         user?.let {
             val currentUserId = auth.currentUser?.uid ?: return
             val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
@@ -144,7 +144,7 @@ class ChatMessageActivity : AppCompatActivity() {
         startActivityForResult(galleryIntent, PICK_IMAGE_FROM_ALBUM)
     }
 
-    private fun displayInfo(user: UserModel) {
+    private fun displayInfo(user: User) {
         binding.tvFriendName.text = user.petName
     }
 
@@ -182,10 +182,10 @@ class ChatMessageActivity : AppCompatActivity() {
                     firestore.collection("User").document(currentUserId!!)
                         .get()
                         .addOnSuccessListener { document ->
-                            val currentUser = document.toObject(UserModel::class.java)
+                            val currentUser = document.toObject(User::class.java)
                             val currentUserPetName = currentUser?.petName
 
-                    val user: UserModel? = intent.getParcelableExtra(USER)
+                    val user: User? = intent.getParcelableExtra(USER)
                     user?.let {
                         val message = ChatMessage(
                             senderId = currentUserId,

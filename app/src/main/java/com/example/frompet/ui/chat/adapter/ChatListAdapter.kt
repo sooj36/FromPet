@@ -10,10 +10,10 @@ import coil.load
 import com.example.frompet.R
 
 import com.example.frompet.databinding.ItemChatlistBinding
-import com.example.frompet.data.model.UserModel
+import com.example.frompet.data.model.User
 
-class ChatListAdapter(private val context: Context, private val onUserClick: (UserModel) -> Unit) :
-    ListAdapter<UserModel, ChatListAdapter.ChatListViewHoler>(DiffCallback()) {
+class ChatListAdapter(private val context: Context, private val onUserClick: (User) -> Unit) :
+    ListAdapter<User, ChatListAdapter.ChatListViewHoler>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatListViewHoler {
         val binding = ItemChatlistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -27,7 +27,7 @@ class ChatListAdapter(private val context: Context, private val onUserClick: (Us
 
     inner class ChatListViewHoler(private val binding: ItemChatlistBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindItems(user: UserModel) {
+        fun bindItems(user: User) {
             binding.apply {
                 tvUserName.text = user.petName
                 tvUserType.text = user.petType
@@ -44,12 +44,12 @@ class ChatListAdapter(private val context: Context, private val onUserClick: (Us
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<UserModel>() {
-        override fun areItemsTheSame(oldItem: UserModel, newItem: UserModel): Boolean {
+    class DiffCallback : DiffUtil.ItemCallback<User>() {
+        override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
             return oldItem.uid == newItem.uid
         }
 
-        override fun areContentsTheSame(oldItem: UserModel, newItem: UserModel): Boolean {
+        override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
             return oldItem == newItem
         }
     }

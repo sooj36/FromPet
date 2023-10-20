@@ -10,7 +10,7 @@ import coil.load
 import com.example.frompet.R
 import com.example.frompet.util.showToast
 import com.example.frompet.databinding.ActivityChatUserDetailBinding
-import com.example.frompet.data.model.UserModel
+import com.example.frompet.data.model.User
 
 class ChatUserDetailActivity : AppCompatActivity() {
     companion object {
@@ -30,14 +30,14 @@ class ChatUserDetailActivity : AppCompatActivity() {
         binding = ActivityChatUserDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val user: UserModel? = intent.getParcelableExtra(USER)
+        val user: User? = intent.getParcelableExtra(USER)
         user?.let {
             displayUserInfo(it)
         }
         setClickListeners(user)
     }
 
-    private fun setClickListeners(user: UserModel?) {
+    private fun setClickListeners(user: User?) {
         binding.likeBtn.setOnClickListener {
             user?.uid?.let { userId ->
                 matchSharedViewModel.matchUser(userId)
@@ -66,7 +66,7 @@ class ChatUserDetailActivity : AppCompatActivity() {
     }
 
 
-    private fun displayUserInfo(user: UserModel) {
+    private fun displayUserInfo(user: User) {
         binding.apply {
             tvPetName.text = user.petName
             tvPetAge.text = "${user.petAge.toString()}세"

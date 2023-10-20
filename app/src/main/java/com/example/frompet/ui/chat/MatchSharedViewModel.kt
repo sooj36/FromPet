@@ -3,7 +3,7 @@ package com.example.frompet.ui.chat
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.frompet.data.model.UserModel
+import com.example.frompet.data.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -13,12 +13,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 
 class MatchSharedViewModel : ViewModel() {
-    private val _likeList :MutableLiveData<List<UserModel>?> = MutableLiveData()
-    val likeList : MutableLiveData<List<UserModel>?> get() = _likeList
-    private val _disLikeList : MutableLiveData<List<UserModel>> = MutableLiveData()
-    val disLikeList : MutableLiveData<List<UserModel>>  get() =  _disLikeList
-    private val _matchedList : MutableLiveData<List<UserModel>> = MutableLiveData()
-    val matchedList : MutableLiveData<List<UserModel>> get() = _matchedList
+    private val _likeList :MutableLiveData<List<User>?> = MutableLiveData()
+    val likeList : MutableLiveData<List<User>?> get() = _likeList
+    private val _disLikeList : MutableLiveData<List<User>> = MutableLiveData()
+    val disLikeList : MutableLiveData<List<User>>  get() =  _disLikeList
+    private val _matchedList : MutableLiveData<List<User>> = MutableLiveData()
+    val matchedList : MutableLiveData<List<User>> get() = _matchedList
 
     private val _dislikedUserIds = mutableListOf<String>()
     val dislikedUserIds: List<String>
@@ -53,7 +53,7 @@ class MatchSharedViewModel : ViewModel() {
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val likedUserIds = snapshot.children.mapNotNull { it.key }
-                val likedUsers = mutableListOf<UserModel>()
+                val likedUsers = mutableListOf<User>()
 
                 likedUserIds.forEach { userId ->
 
@@ -65,7 +65,7 @@ class MatchSharedViewModel : ViewModel() {
                                     firestore.collection("User").document(userId)
                                         .get()
                                         .addOnSuccessListener { document ->
-                                            val user = document.toObject(UserModel::class.java)
+                                            val user = document.toObject(User::class.java)
                                             user?.let {
                                                 likedUsers.add(it)
                                                 _likeList.value = likedUsers.toList()
@@ -86,7 +86,7 @@ class MatchSharedViewModel : ViewModel() {
     fun loadunlike() {
         val currentUserId = auth.currentUser?.uid ?: return
 
-        val likedUsers = mutableListOf<UserModel>()
+        val likedUsers = mutableListOf<User>()
 
         // 사용자가 dislike한 대상들을 가져와서 필터링합니다.
         unlikedb.child(currentUserId).child("dislike").addListenerForSingleValueEvent(object :
@@ -98,7 +98,7 @@ class MatchSharedViewModel : ViewModel() {
                 database.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         dataSnapshot.children.forEach { userSnapshot ->
-                            val user = userSnapshot.getValue(UserModel::class.java)
+                            val user = userSnapshot.getValue(User::class.java)
                             user?.let {
                                 if (it.uid != currentUserId && it.uid !in dislikedUserIds) {
                                     likedUsers.add(it)
@@ -148,13 +148,13 @@ class MatchSharedViewModel : ViewModel() {
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val matchedUserIds = snapshot.children.mapNotNull { it.key }
-                val matchedUsers = mutableListOf<UserModel>()
+                val matchedUsers = mutableListOf<User>()
 
                 matchedUserIds.forEach { userId ->
                     firestore.collection("User").document(userId)
                         .get()
                         .addOnSuccessListener { document ->
-                            val user = document.toObject(UserModel::class.java)
+                            val user = document.toObject(User::class.java)
                             user?.let {
                                 matchedUsers.add(it)
                                 _matchedList.value = matchedUsers.toList()

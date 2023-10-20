@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.frompet.databinding.FragmentHomeBinding
-import com.example.frompet.data.model.UserModel
+import com.example.frompet.data.model.User
 import com.example.frompet.ui.chat.MatchSharedViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -37,7 +37,7 @@ class HomeFragment : Fragment() {
     private val firestore = FirebaseFirestore.getInstance()
 
     private val homeAdapter by lazy {
-        HomeAdapter()
+        HomeAdapter(this@HomeFragment)
     }
 
 
@@ -132,7 +132,7 @@ class HomeFragment : Fragment() {
 
 
     private fun getDataFromFirestore() {
-        val allUsersData = mutableListOf<UserModel>()
+        val allUsersData = mutableListOf<User>()
         val currentUserId = auth.currentUser?.uid
         val dislikedUserIds = viewModel.dislikedUserIds
 
@@ -141,7 +141,7 @@ class HomeFragment : Fragment() {
             .addOnSuccessListener { querySnapshot ->
                 if (!querySnapshot.isEmpty) {
                     for (document in querySnapshot.documents) {
-                        val user = document.toObject(UserModel::class.java)
+                        val user = document.toObject(User::class.java)
                         user?.let {
                             if (it.uid != currentUserId && it.uid !in dislikedUserIds) {
                                 allUsersData.add(it)

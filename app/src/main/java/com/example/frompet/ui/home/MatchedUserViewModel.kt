@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.frompet.data.model.UserModel
+import com.example.frompet.data.model.User
 import java.lang.IllegalArgumentException
 
 class MatchedUserViewModel : ViewModel() {
-    private val _matchedUsers = MutableLiveData<List<UserModel>>()
-    val matchedUsers: LiveData<List<UserModel>> = _matchedUsers
+    private val _matchedUsers = MutableLiveData<List<User>>()
+    val matchedUsers: LiveData<List<User>> = _matchedUsers
 
-    fun updateMatchedUsers(users: List<UserModel>){
+    fun updateMatchedUsers(users: List<User>){
         _matchedUsers.value = users
     }
 }
