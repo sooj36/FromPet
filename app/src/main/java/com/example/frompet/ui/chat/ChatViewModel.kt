@@ -41,7 +41,7 @@ class ChatViewModel : ViewModel() {
 
         firestore.collection("User").document(currentUserId).get()
             .addOnSuccessListener { document ->
-                val currentUser = document.toObject(UserModel::class.java)
+                val currentUser = document.toObject(User::class.java)
                 val senderPetName = currentUser?.petName ?: "Unknown"
 
                 val chatMessage = ChatMessage(
@@ -125,7 +125,7 @@ class ChatViewModel : ViewModel() {
             })
     }
 
-    fun getlastTimeSorted(user: List<UserModel>, onUpdate: (List<UserModel>) -> Unit) {
+    fun getlastTimeSorted(user: List<User>, onUpdate: (List<User>) -> Unit) {
         val currentUserId = auth.currentUser?.uid ?: return
         val chatRoomIds = user.map { user -> chatRoom(currentUserId, user.uid) }
 
