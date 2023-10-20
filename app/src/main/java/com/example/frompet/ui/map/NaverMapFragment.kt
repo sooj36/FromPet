@@ -15,12 +15,14 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import coil.load
 import com.example.frompet.R
 import com.example.frompet.data.model.User
 import com.example.frompet.data.model.UserLocation
 import com.example.frompet.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -34,15 +36,14 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
-import com.naver.maps.map.util.MarkerIcons
 
 class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private val marker = Marker()
+
+
 
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
@@ -170,12 +171,12 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
                     // 다른 사용자 위치 마커 표시
                     if (location != null && userUid != null && userUid != currentUserId) {
-                        setMark(marker, location)
+                        setMark(location)
+                        Log.d("sooj", "$location")
                     }
 
                 }
             }
-
 
             override fun onCancelled(error: DatabaseError) {}
         })
@@ -193,11 +194,16 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun setMark(marker: Marker,location : UserLocation) {
+    private fun setMark(location: UserLocation) {
+        val marker = Marker()
+
         // 원근감 표시
         // marker.iconPerspectiveEnabled = true
         // 마커의 투명도
         marker.alpha = 0.8f
+
+
+//        marker.icon = OverlayImage.fromFile()
         // 마커 위치
         if (location != null) {
             marker.position = LatLng(location.latitude, location.longitude)
@@ -206,5 +212,6 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         marker.zIndex = 10
         // 마커 표시
         marker.map = naverMap
+
     }
 }
