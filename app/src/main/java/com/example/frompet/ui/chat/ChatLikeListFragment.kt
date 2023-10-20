@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.frompet.MatchSharedViewModel
 import com.example.frompet.ui.chat.adapter.ChatListAdapter
 import com.example.frompet.databinding.FragmentChatListBinding
 

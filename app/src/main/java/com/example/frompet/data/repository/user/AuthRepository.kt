@@ -1,4 +1,4 @@
-package com.example.frompet.data.repository
+package com.example.frompet.data.repository.user
 
 import com.example.frompet.data.repository.firebase.BaseAuthenticator
 import com.google.firebase.auth.FirebaseUser

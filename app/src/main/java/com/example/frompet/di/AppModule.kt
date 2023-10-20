@@ -1,7 +1,7 @@
 package com.example.frompet.di
 
-import com.example.frompet.data.repository.AuthRepository
-import com.example.frompet.data.repository.BaseAuthRepository
+import com.example.frompet.data.repository.user.AuthRepository
+import com.example.frompet.data.repository.user.BaseAuthRepository
 import com.example.frompet.data.repository.firebase.BaseAuthenticator
 import com.example.frompet.data.repository.firebase.FirebaseAuthenticator
 import com.google.firebase.auth.FirebaseAuth

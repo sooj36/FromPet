@@ -47,13 +47,13 @@ class ChatHomeAdapter(var context: Context, private val chatViewModel: ChatViewM
                 }
                 val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
                 val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
-                chatViewModel.loadLastMessage(currentUserId, user.uid)
+                chatViewModel.loadLastChats(currentUserId, user.uid)
 
-                val liveData = chatViewModel.getLastMessageLiveData(chatRoomId)
+                val liveData = chatViewModel.lastChatLiveData(chatRoomId)
                 liveData.observe(lifecycleOwner) { lastMessage ->
                     binding.tvLastmessage.text = lastMessage?.message ?: ""
                 }
-                chatViewModel.newMessages.observe(lifecycleOwner) { newMessages ->
+                chatViewModel.newChats.observe(lifecycleOwner) { newMessages ->
                     val hasNewMessage = newMessages[chatRoomId] ?: false
                     if (hasNewMessage) {
                         tvNewMessage.visibility = View.VISIBLE

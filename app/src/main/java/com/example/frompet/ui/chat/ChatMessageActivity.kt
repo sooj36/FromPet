@@ -8,13 +8,12 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.KeyEvent
-import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.frompet.R
 import com.example.frompet.ui.chat.adapter.ChatMessageAdapter
 import com.example.frompet.databinding.ActivityChatMessageBinding
 import com.example.frompet.data.model.ChatMessage
@@ -32,14 +31,12 @@ import java.util.Locale
 
 class ChatMessageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatMessageBinding
-    private val chatViewModel: ChatViewModel by viewModels()
-    private val adapter: ChatMessageAdapter by lazy { binding.rvMessage.adapter as ChatMessageAdapter }
+    private val messageViewModel: MessageViewModel by viewModels()
+    private lateinit var adapter: ChatMessageAdapter
     private val auth = FirebaseAuth.getInstance()
-    private val firestore = FirebaseFirestore.getInstance()
-    val storage = FirebaseStorage.getInstance()
     private val typingTimeoutHandler = Handler(Looper.getMainLooper())
     private val typingTimeoutRunnable = Runnable {
-        chatViewModel.setTypingStatus(false)
+        messageViewModel.setTypingStatus(false)
     }
 
     companion object {
@@ -53,14 +50,40 @@ class ChatMessageActivity : AppCompatActivity() {
         binding = ActivityChatMessageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.apply {
-            rvMessage.adapter = ChatMessageAdapter(this@ChatMessageActivity)
-            val layoutManager = LinearLayoutManager(this@ChatMessageActivity)
-            layoutManager.stackFromEnd = true
-            rvMessage.layoutManager = layoutManager //53~55 자동 스크롤 기능 추가-이승현-
+        setupRecyclerView()
+        observeViewModels()
+
+        val user: User? = intent.getParcelableExtra(USER)
+        user?.let { handleChatActions(it) }
+
+        binding.backBtn.setOnClickListener {
+            goneNewMessage()
+            finish()
         }
 
-        chatViewModel.chatMessages.observe(this) { messages ->
+        binding.ivSendImage.setOnClickListener { goGallery() }
+    }
+      override fun onBackPressed() {
+        goneNewMessage()
+        super.onBackPressed()
+    }
+
+    override fun onDestroy() {
+        goneNewMessage()
+        super.onDestroy()
+    }
+    private fun setupRecyclerView() {
+        adapter = ChatMessageAdapter(this@ChatMessageActivity)
+        binding.apply {
+            rvMessage.adapter = adapter
+            val layoutManager = LinearLayoutManager(this@ChatMessageActivity)
+            layoutManager.stackFromEnd = true
+            rvMessage.layoutManager = layoutManager
+        }
+    }
+
+    private fun observeViewModels() {
+        messageViewModel.chatMessages.observe(this) { messages ->
             adapter.submitList(messages) {
                 binding.rvMessage.post {
                     binding.rvMessage.scrollToPosition(messages.size - 1)
@@ -68,88 +91,56 @@ class ChatMessageActivity : AppCompatActivity() {
             }
         }
 
-        chatViewModel.isTyping.observe(this, Observer { isTyping ->
+        messageViewModel.isTyping.observe(this, Observer { isTyping ->
             binding.tvTyping.text = if (isTyping) "입력중..." else ""
         })
+    }
 
-        val user: User? = intent.getParcelableExtra(USER)
-        user?.let {
-            displayInfo(it)
-            chatViewModel.checkTypingStatus(it.uid)
+    private fun handleChatActions(user: User) {
+        displayInfo(user)
+        messageViewModel.checkTypingStatus(user.uid)
 
-            val currentUserId = auth.currentUser?.uid ?: return
-            val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
+        val currentUserId = auth.currentUser?.uid ?: return
+        val chatRoomId = messageViewModel.chatRoom(currentUserId, user.uid)
+        messageViewModel.observeChatMessages(chatRoomId)
+        messageViewModel.observeTypingStatus(user.uid)
+        messageViewModel.observeUserProfile(user.uid)
 
-            binding.etMessage.setOnEditorActionListener { v, actionId, event ->
-                if (actionId == EditorInfo.IME_ACTION_SEND || (event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    val message = binding.etMessage.text.toString()
-                    if (message.isNotEmpty()) {
-                        chatViewModel.sendMessage(user.uid, message)
-                        binding.etMessage.text.clear()
-                    }
-                    return@setOnEditorActionListener true
-                }
-                false
+        binding.ivSendBtn.setOnClickListener {
+            val message = binding.etMessage.text.toString()
+            if (message.isNotEmpty()) {
+                messageViewModel.sendMessage(user.uid, message)
+                binding.etMessage.text.clear()
             }
-            binding.ivSendBtn.setOnClickListener {
-                val message = binding.etMessage.text.toString()
-                if (message.isNotEmpty()) {
-                    chatViewModel.sendMessage(user.uid, message)
-                    binding.etMessage.text.clear()
+        }
+
+        binding.etMessage.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (s.isNullOrEmpty()) {
+                    messageViewModel.setTypingStatus(false)
+                } else {
+                    messageViewModel.setTypingStatus(true)
+                    typingTimeoutHandler.removeCallbacks(typingTimeoutRunnable)
+                    typingTimeoutHandler.postDelayed(typingTimeoutRunnable, 5000)
                 }
             }
 
-            binding.etMessage.addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(s: Editable?) {
-                    if (s.isNullOrEmpty()) {
-                        chatViewModel.setTypingStatus(false)
-                    } else {
-                        chatViewModel.setTypingStatus(true)
-                        typingTimeoutHandler.removeCallbacks(typingTimeoutRunnable)
-                        typingTimeoutHandler.postDelayed(typingTimeoutRunnable, 5000)
-                    }
-                }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            })
-            chatViewModel.loadPreviousMessages(chatRoomId)
-        }
-
-        binding.backBtn.setOnClickListener {
-            goneNewMessage()
-            finish()
-        }
-        binding.ivSendImage.setOnClickListener {
-            goGallery()
-        }
-
+        messageViewModel.loadPreviousMessages(chatRoomId)
     }
-    override fun onBackPressed() {
-        goneNewMessage()
-        super.onBackPressed()
-    }
-    override fun onDestroy() {
-        goneNewMessage()
-        super.onDestroy()
-    }
+
     private fun goneNewMessage() {
         val user: User? = intent.getParcelableExtra(USER)
         user?.let {
             val currentUserId = auth.currentUser?.uid ?: return
-            val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
-            chatViewModel.goneNewMessages(chatRoomId)
+            val chatRoomId = messageViewModel.chatRoom(currentUserId, user.uid)
+            messageViewModel.goneNewMessages(chatRoomId)
         }
     }
-
-
 
     private fun goGallery() {
         val galleryIntent = Intent(Intent.ACTION_PICK)
@@ -166,51 +157,12 @@ class ChatMessageActivity : AppCompatActivity() {
 
         if (requestCode == PICK_IMAGE_FROM_ALBUM && resultCode == Activity.RESULT_OK) {
             val photoUri = data?.data
-            uploadImageToStroge(photoUri)
-        }
-    }
-
-    private fun uploadImageToStroge(photoUri: Uri?) {
-        contentUpload(photoUri.toString())
-    }
-
-    private fun contentUpload(uri: String?) {
-        uri?.let { petProfileUri ->
-            val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-            val fileName = "IMAGE_$timestamp.png"
-            // 서버 스토리지에 접근하기
-            val storageRef = storage.reference.child("images").child(fileName)
-            // 서버 스토리지에 파일 업로드하기
-            storageRef.putFile(petProfileUri)
-                .continueWithTask { task ->
-                    if (!task.isSuccessful) {
-                        task.exception?.let { throw it }
-                    }
-                    storageRef.downloadUrl
+            photoUri?.let {
+                val user: User? = intent.getParcelableExtra(USER)
+                user?.let { selectedUser ->
+                    messageViewModel.uploadImage(it, selectedUser)
                 }
-                .addOnSuccessListener { uri ->
-                    val imageUrl = uri.toString()
-                    val currentUserId = auth.currentUser?.uid
-                   showToast("이미지 업로드 성공",Toast.LENGTH_SHORT)
-                    firestore.collection("User").document(currentUserId!!)
-                        .get()
-                        .addOnSuccessListener { document ->
-                            val currentUser = document.toObject(User::class.java)
-                            val currentUserPetName = currentUser?.petName
-
-                    val user: User? = intent.getParcelableExtra(USER)
-                    user?.let {
-                        val message = ChatMessage(
-                            senderId = currentUserId,
-                            receiverId = user.uid,
-                            senderPetName = currentUserPetName?:return@let,
-                            message = "",
-                            imageUrl = imageUrl,
-                            timestamp = System.currentTimeMillis()
-                        )
-                        chatViewModel.sendImage(message)
-                    }
-                }}
+            }
         }
     }
 }
