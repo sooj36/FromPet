@@ -14,7 +14,7 @@ import com.example.frompet.ui.chat.adapter.ChatListAdapter
 import com.example.frompet.databinding.FragmentChatListBinding
 
 
-class ChatListFragment : Fragment() {
+class ChatLikeListFragment : Fragment() {
     companion object{
         const val MATCHED_USERS = "matchedUser"
         const val USER = "user"

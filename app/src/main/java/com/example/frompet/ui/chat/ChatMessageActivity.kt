@@ -184,7 +184,7 @@ class ChatMessageActivity : AppCompatActivity() {
                 .addOnSuccessListener { uri ->
                     val imageUrl = uri.toString()
                     val currentUserId = auth.currentUser?.uid
-                   showToast("이미지 업로드 성공",Toast.LENGTH_LONG)
+                   showToast("이미지 업로드 성공",Toast.LENGTH_SHORT)
                     firestore.collection("User").document(currentUserId!!)
                         .get()
                         .addOnSuccessListener { document ->
