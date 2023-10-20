@@ -8,6 +8,8 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -78,6 +80,17 @@ class ChatMessageActivity : AppCompatActivity() {
             val currentUserId = auth.currentUser?.uid ?: return
             val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
 
+            binding.etMessage.setOnEditorActionListener { v, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_SEND || (event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    val message = binding.etMessage.text.toString()
+                    if (message.isNotEmpty()) {
+                        chatViewModel.sendMessage(user.uid, message)
+                        binding.etMessage.text.clear()
+                    }
+                    return@setOnEditorActionListener true
+                }
+                false
+            }
             binding.ivSendBtn.setOnClickListener {
                 val message = binding.etMessage.text.toString()
                 if (message.isNotEmpty()) {
