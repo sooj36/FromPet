@@ -36,7 +36,6 @@ class MessageViewModel : ViewModel() {
         viewModelScope.launch {
             val currentUserId = repository.getCurrentUserId()?:return@launch
             val chatRoomId = chatRoom(currentUserId, receiverId)
-
             val document = firestore.collection("User").document(currentUserId).get().await()
             val currentUser = document.toObject(User::class.java)
             val senderPetName = currentUser?.petName ?: "오류"
@@ -90,6 +89,22 @@ class MessageViewModel : ViewModel() {
             }
         }
     }
+    fun observeChatMessages(chatRoomId: String) {
+        repository.addChatMessagesListener(chatRoomId) { messages ->
+            _chatMessages.postValue(messages)
+        }
+
+    }
+    fun observeTypingStatus(receiverId: String) {
+        repository.addTypingStatusListener(receiverId) { isTyping ->
+            _isTyping.postValue(isTyping)
+        }
+    }
+    fun observeUserProfile(userId: String) {
+        repository.addUserProfileListener(userId) { user ->
+            _userProfile.postValue(user)
+        }
+    }
     fun getCurrentUserId(): LiveData<String?> {
         val userId = MutableLiveData<String?>()
         viewModelScope.launch {
@@ -104,23 +119,6 @@ class MessageViewModel : ViewModel() {
             userProfile.value = repository.getUserProfile(userId)
         }
         return userProfile
-    }
-
-
-    fun observeChatMessages(chatRoomId: String) {
-        repository.addChatMessagesListener(chatRoomId) { messages ->
-            _chatMessages.postValue(messages)
-        }
-    }
-    fun observeTypingStatus(receiverId: String) {
-        repository.addTypingStatusListener(receiverId) { isTyping ->
-            _isTyping.postValue(isTyping)
-        }
-    }
-    fun observeUserProfile(userId: String) {
-        repository.addUserProfileListener(userId) { user ->
-            _userProfile.postValue(user)
-        }
     }
 
 

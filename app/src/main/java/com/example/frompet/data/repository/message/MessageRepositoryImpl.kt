@@ -75,8 +75,11 @@ class MessageRepositoryImpl : MessageRepository {
         val fileName = "IMAGE_$timestamp.png"
         val storageRef = storage.reference.child("images").child(fileName)
         storageRef.putFile(uri).await()
-        return storageRef.downloadUrl.await().toString()
+        val imageUrl = storageRef.downloadUrl.await().toString()
+        Log.d("jun", "Image URL: $imageUrl")
+        return imageUrl
     }
+
 
 
 
@@ -90,6 +93,7 @@ class MessageRepositoryImpl : MessageRepository {
                 val messages = snapshot.children.mapNotNull { it.getValue(ChatMessage::class.java) }
 
                 onMessagesUpdated(messages)
+
             }
 
             override fun onCancelled(error: DatabaseError) {

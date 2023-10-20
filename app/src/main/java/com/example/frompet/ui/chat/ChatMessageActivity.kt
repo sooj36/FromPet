@@ -32,7 +32,7 @@ import java.util.Locale
 class ChatMessageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatMessageBinding
     private val messageViewModel: MessageViewModel by viewModels()
-    private val adapter: ChatMessageAdapter by lazy { binding.rvMessage.adapter as ChatMessageAdapter }
+    private lateinit var adapter: ChatMessageAdapter
     private val auth = FirebaseAuth.getInstance()
     private val typingTimeoutHandler = Handler(Looper.getMainLooper())
     private val typingTimeoutRunnable = Runnable {
@@ -73,8 +73,9 @@ class ChatMessageActivity : AppCompatActivity() {
         super.onDestroy()
     }
     private fun setupRecyclerView() {
+        adapter = ChatMessageAdapter(this@ChatMessageActivity)
         binding.apply {
-            rvMessage.adapter = ChatMessageAdapter(this@ChatMessageActivity)
+            rvMessage.adapter = adapter
             val layoutManager = LinearLayoutManager(this@ChatMessageActivity)
             layoutManager.stackFromEnd = true
             rvMessage.layoutManager = layoutManager
