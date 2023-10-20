@@ -107,6 +107,8 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         naverMap.maxZoom = 21.0 //(최대 21)
         naverMap.minZoom = 10.0
 
+        //
+
 //        // 현재 위치 마커
 //        marker.position = LatLng(37.5665, 126.9780)
 //        marker.map = naverMap
