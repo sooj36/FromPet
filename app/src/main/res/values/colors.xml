@@ -2,19 +2,19 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="hotPink">#F61D5D</color>
+    <color name="hot_pink">#F61D5D</color>
     <color name="orenge">#F35C50</color>
     <color name="navy">#1B273F</color>
     <color name="green">#799468</color>
-    <color name="darkPink">#946872</color>
-    <color name="warmBlue">#0F82ED</color>
-    <color name="lightPink">#FF88C1</color>
-    <color name="lipPink">#FF5794</color>
-    <color name="lightBeige">#DCBAB7</color>
+    <color name="dark_pink">#946872</color>
+    <color name="warm_blue">#0F82ED</color>
+    <color name="light_pink">#FF88C1</color>
+    <color name="lip_pink">#FF5794</color>
+    <color name="light_beige">#DCBAB7</color>
     <color name="beige">#DCB8AB</color>
-    <color name="peachPuff">#F4D1B1</color>
-    <color name="lightOrenge">#F68531</color>
-    <color name="lightGray">#F4F5F9</color>
+    <color name="peach_puff">#F4D1B1</color>
+    <color name="light_orenge">#F68531</color>
+    <color name="light_gray">#F4F5F9</color>
     <color name="background">#FEE48D</color>
 
 
