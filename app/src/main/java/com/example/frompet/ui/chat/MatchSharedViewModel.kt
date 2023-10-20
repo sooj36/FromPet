@@ -14,12 +14,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class MatchSharedViewModel : ViewModel() {
 
-    private val _likeList :MutableLiveData<List<UserModel>?> = MutableLiveData()
-    val likeList : MutableLiveData<List<UserModel>?> get() = _likeList
+    private val _likeList :MutableLiveData<List<User>?> = MutableLiveData()
+    val likeList : MutableLiveData<List<User>?> get() = _likeList
 //    private val _disLikeList : MutableLiveData<List<UserModel>> = MutableLiveData()
 //    val disLikeList : MutableLiveData<List<UserModel>>  get() =  _disLikeList
-    private val _matchedList : MutableLiveData<List<UserModel>> = MutableLiveData()
-    val matchedList : MutableLiveData<List<UserModel>> get() = _matchedList
+    private val _matchedList : MutableLiveData<List<User>> = MutableLiveData()
+    val matchedList : MutableLiveData<List<User>> get() = _matchedList
 
 
 
@@ -125,8 +125,8 @@ class MatchSharedViewModel : ViewModel() {
     }
 
 
-    fun getExceptDislikeAndMe(onSuccess: (List<UserModel>) -> Unit, onFailure: (Exception) -> Unit) {
-        val allUsersData = mutableListOf<UserModel>()
+    fun getExceptDislikeAndMe(onSuccess: (List<User>) -> Unit, onFailure: (Exception) -> Unit) {
+        val allUsersData = mutableListOf<User>()
         val currentUserId = auth.currentUser?.uid
 
         loadAlreadyActionUsers { exceptionUsers ->
@@ -136,7 +136,7 @@ class MatchSharedViewModel : ViewModel() {
                 .addOnSuccessListener { querySnapshot ->
                     if (querySnapshot.isEmpty.not()) {
                         for (document in querySnapshot.documents) {
-                            val user = document.toObject(UserModel::class.java)
+                            val user = document.toObject(User::class.java)
                             user?.let {
                                 if (it.uid != currentUserId && it.uid !in exceptionUsers) {
                                     allUsersData.add(it)
