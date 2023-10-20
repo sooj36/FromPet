@@ -91,6 +91,13 @@ class ChatMessageActivity : AppCompatActivity() {
                 }
                 false
             }
+            binding.ivSendBtn.setOnClickListener {
+                val message = binding.etMessage.text.toString()
+                if (message.isNotEmpty()) {
+                    chatViewModel.sendMessage(user.uid, message)
+                    binding.etMessage.text.clear()
+                }
+            }
 
             binding.etMessage.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
