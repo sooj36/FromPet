@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.chat.ChatFragment"
-    android:background="@color/lightGray">
+    android:background="@color/light_gray">
 
         <androidx.viewpager2.widget.ViewPager2
             android:layout_width="match_parent"
@@ -28,8 +28,8 @@
             app:dotsCornerRadius="8dp"
             app:dotsSize="16dp"
             app:dotsSpacing="4dp"
-            app:dotsColor="@color/peachPuff"
-            app:selectedDotColor="@color/warmBlue"
+            app:dotsColor="@color/peach_puff"
+            app:selectedDotColor="@color/warm_blue"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
