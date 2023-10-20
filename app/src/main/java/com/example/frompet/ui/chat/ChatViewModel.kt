@@ -78,7 +78,7 @@ class ChatViewModel : ViewModel() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val messages =
                         snapshot.children.mapNotNull { it.getValue(ChatMessage::class.java) }
-                    _chatMessages.postValue(messages.sortedBy { it.timestamp })
+                    _chatMessages.postValue(messages)
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {

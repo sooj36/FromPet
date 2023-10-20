@@ -131,31 +131,22 @@ class HomeFragment : Fragment() {
     }
 
 
+
     private fun getDataFromFirestore() {
-        val allUsersData = mutableListOf<UserModel>()
-        val currentUserId = auth.currentUser?.uid
-        val dislikedUserIds = viewModel.dislikedUserIds
-
-        firestore.collection("User")
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                if (!querySnapshot.isEmpty) {
-                    for (document in querySnapshot.documents) {
-                        val user = document.toObject(UserModel::class.java)
-                        user?.let {
-                            if (it.uid != currentUserId && it.uid !in dislikedUserIds) {
-                                allUsersData.add(it)
-                            }
-                        }
-                    }
-
-                    homeAdapter.submitList(allUsersData)
-                }
-            }
-            .addOnFailureListener { e ->
+        viewModel.getExceptDislikeAndMe(
+            onSuccess = { users ->
+                homeAdapter.submitList(users)
+            },
+            onFailure = { e ->
                 Log.e("shsh", "Error getting documents: ", e)
             }
+        )
     }
+
+
+
+
+
 
 
 
