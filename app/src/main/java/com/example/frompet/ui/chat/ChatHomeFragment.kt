@@ -65,7 +65,7 @@ class ChatHomeFragment : Fragment() {
                 binding?.tvPossibleText?.text = "${it.size}명과 대화가 가능해요"
             }
         }
-        chatViewModel.loadNewMessages()
+        chatViewModel.loadNewChats()
     }
 
     override fun onDestroyView() {

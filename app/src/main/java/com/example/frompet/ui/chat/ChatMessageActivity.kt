@@ -30,14 +30,14 @@ import java.util.Locale
 
 class ChatMessageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatMessageBinding
-    private val chatViewModel: ChatViewModel by viewModels()
+    private val messageViewModel: MessageViewModel by viewModels()
     private val adapter: ChatMessageAdapter by lazy { binding.rvMessage.adapter as ChatMessageAdapter }
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
     val storage = FirebaseStorage.getInstance()
     private val typingTimeoutHandler = Handler(Looper.getMainLooper())
     private val typingTimeoutRunnable = Runnable {
-        chatViewModel.setTypingStatus(false)
+        messageViewModel.setTypingStatus(false)
     }
 
     companion object {
@@ -58,7 +58,7 @@ class ChatMessageActivity : AppCompatActivity() {
             rvMessage.layoutManager = layoutManager //53~55 자동 스크롤 기능 추가-이승현-
         }
 
-        chatViewModel.chatMessages.observe(this) { messages ->
+        messageViewModel.chatMessages.observe(this) { messages ->
             adapter.submitList(messages) {
                 binding.rvMessage.post {
                     binding.rvMessage.scrollToPosition(messages.size - 1)
@@ -66,22 +66,22 @@ class ChatMessageActivity : AppCompatActivity() {
             }
         }
 
-        chatViewModel.isTyping.observe(this, Observer { isTyping ->
+        messageViewModel.isTyping.observe(this, Observer { isTyping ->
             binding.tvTyping.text = if (isTyping) "입력중..." else ""
         })
 
         val user: User? = intent.getParcelableExtra(USER)
         user?.let {
             displayInfo(it)
-            chatViewModel.checkTypingStatus(it.uid)
+            messageViewModel.checkTypingStatus(it.uid)
 
             val currentUserId = auth.currentUser?.uid ?: return
-            val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
+            val chatRoomId = messageViewModel.chatRoom(currentUserId, user.uid)
 
             binding.ivSendBtn.setOnClickListener {
                 val message = binding.etMessage.text.toString()
                 if (message.isNotEmpty()) {
-                    chatViewModel.sendMessage(user.uid, message)
+                    messageViewModel.sendMessage(user.uid, message)
                     binding.etMessage.text.clear()
                 }
             }
@@ -89,9 +89,9 @@ class ChatMessageActivity : AppCompatActivity() {
             binding.etMessage.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
                     if (s.isNullOrEmpty()) {
-                        chatViewModel.setTypingStatus(false)
+                        messageViewModel.setTypingStatus(false)
                     } else {
-                        chatViewModel.setTypingStatus(true)
+                        messageViewModel.setTypingStatus(true)
                         typingTimeoutHandler.removeCallbacks(typingTimeoutRunnable)
                         typingTimeoutHandler.postDelayed(typingTimeoutRunnable, 5000)
                     }
@@ -107,7 +107,7 @@ class ChatMessageActivity : AppCompatActivity() {
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
-            chatViewModel.loadPreviousMessages(chatRoomId)
+            messageViewModel.loadPreviousMessages(chatRoomId)
         }
 
         binding.backBtn.setOnClickListener {
@@ -131,8 +131,8 @@ class ChatMessageActivity : AppCompatActivity() {
         val user: User? = intent.getParcelableExtra(USER)
         user?.let {
             val currentUserId = auth.currentUser?.uid ?: return
-            val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
-            chatViewModel.goneNewMessages(chatRoomId)
+            val chatRoomId = messageViewModel.chatRoom(currentUserId, user.uid)
+            messageViewModel.goneNewMessages(chatRoomId)
         }
     }
 
@@ -195,7 +195,7 @@ class ChatMessageActivity : AppCompatActivity() {
                             imageUrl = imageUrl,
                             timestamp = System.currentTimeMillis()
                         )
-                        chatViewModel.sendImage(message)
+                        messageViewModel.sendImage(message)
                     }
                 }}
         }
