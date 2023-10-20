@@ -7,16 +7,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.frompet.databinding.ItemHomeBinding
-import com.example.frompet.data.model.UserModel
+import com.example.frompet.data.model.User
 
 
-class HomeAdapter : ListAdapter<UserModel, HomeAdapter.HomeViewHolder>(
-    object : DiffUtil.ItemCallback<UserModel>() {
-        override fun areItemsTheSame(oldItem: UserModel, newItem: UserModel): Boolean {
+class HomeAdapter(homeFragment: HomeFragment) : ListAdapter<User, HomeAdapter.HomeViewHolder>(
+    object : DiffUtil.ItemCallback<User>() {
+        override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: UserModel, newItem: UserModel): Boolean {
+        override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
             return oldItem == newItem
         }
     }
@@ -34,7 +34,7 @@ class HomeAdapter : ListAdapter<UserModel, HomeAdapter.HomeViewHolder>(
     class HomeViewHolder(
         private val binding: ItemHomeBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: UserModel) = with(binding) {
+        fun bind(item: User) = with(binding) {
             ivPetImage.load(item.petProfile)
             tvNamePet.text = item.petName
             tvTypePet.text = item.petType
