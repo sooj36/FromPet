@@ -58,10 +58,10 @@ class ChatUserDetailActivity : AppCompatActivity() {
         }
     }
     private fun setResultAndFinish(userId: String, action: String) {
-        val resultIntent = Intent()
-        resultIntent.putExtra(MATCHED_USERS, userId)
-        resultIntent.putExtra(ACTION, action)
-        setResult(Activity.RESULT_OK, resultIntent)
+        val result = Intent().apply {
+         putExtra(MATCHED_USERS, userId)
+        putExtra(ACTION, action)}
+        setResult(Activity.RESULT_OK, result)
         finish()
     }
 
