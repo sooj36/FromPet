@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.frompet.MatchSharedViewModel
 import com.example.frompet.ui.chat.adapter.ChatHomeAdapter
 import com.example.frompet.databinding.FragmentChatHomeBinding
 
@@ -60,12 +61,12 @@ class ChatHomeFragment : Fragment() {
         }
         matchSharedViewModel.loadMatchedUsers()
         matchSharedViewModel.matchedList.observe(viewLifecycleOwner) { users ->
-           chatViewModel.getlastTimeSorted(users){
+           chatViewModel.getLastTimeSorted(users){
                 adapter.submitList(it)
                 binding?.tvPossibleText?.text = "${it.size}명과 대화가 가능해요"
             }
         }
-        chatViewModel.loadNewMessages()
+
     }
 
     override fun onDestroyView() {

@@ -1,4 +1,4 @@
-package com.example.frompet.ui.chat
+package com.example.frompet
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -20,10 +20,6 @@ class MatchSharedViewModel : ViewModel() {
 //    val disLikeList : MutableLiveData<List<UserModel>>  get() =  _disLikeList
     private val _matchedList : MutableLiveData<List<User>> = MutableLiveData()
     val matchedList : MutableLiveData<List<User>> get() = _matchedList
-
-
-
-
 
     private val database = FirebaseDatabase.getInstance().getReference("likeUsers")
     private val disLikeDb = FirebaseDatabase.getInstance().getReference("dislikeList")
