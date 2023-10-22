@@ -23,6 +23,7 @@ import com.example.frompet.data.model.UserLocation
 import com.example.frompet.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.MarkerOptions
@@ -49,7 +50,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private val ONE_MEGABYTE = 1024 * 1024
+//    private val ONE_MEGABYTE = 1024 * 1024
 
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
@@ -212,14 +213,18 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         // 마커 표시
         marker.map = naverMap
         // 원근감 표시
-        // marker.iconPerspectiveEnabled = true
+         marker.isIconPerspectiveEnabled = true
         // 마커의 투명도
         marker.alpha = 0.8f
+
+        // 마커 이미지
+        marker.icon = OverlayImage.fromResource(R.drawable.heart)
+
+        marker.width = 90
+        marker.height = 90
+
 
 
 
     }
 }
-
-//        val storageRef = FirebaseStorage.getInstance().reference
-//        val imageRef = storageRef.child("images/IMAGE_20231016_214525.png") // 이미지 파일 경로
