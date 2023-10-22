@@ -32,13 +32,13 @@ class MatchSharedViewModel : ViewModel() {
         Log.d("jun", "현재유저 ID: $currentUserId, 타겟유저 ID: $targetUserId")
         database.child(targetUserId).child("likedBy").child(currentUserId).setValue(true)
 
+
+
     }
 
     fun dislike(targetUserId: String) {
         val currentUserId = auth.currentUser?.uid ?: return
         database.child(currentUserId).child("likedBy").child(targetUserId).removeValue()
-//        database.child(targetUserId).child("matched").child(currentUserId).removeValue()
-//        database.child(currentUserId).child("matched").child(targetUserId).removeValue()
         disLikeDb.child(currentUserId).child(targetUserId).setValue(true)
     }
 
@@ -175,6 +175,10 @@ class MatchSharedViewModel : ViewModel() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val matchedUserIds = snapshot.children.mapNotNull { it.key }
                 val matchedUsers = mutableListOf<User>()
+                if (matchedUserIds.isEmpty()) {
+                    _matchedList.value = listOf()
+                    return //이 부분 추가해서 매치리스트가 빈null일때도 ui업뎃하게함..
+                }
 
                 matchedUserIds.forEach { userId ->
                     firestore.collection("User").document(userId)
@@ -199,9 +203,11 @@ class MatchSharedViewModel : ViewModel() {
         val currentUserId = auth.currentUser?.uid ?: return
         database.child(currentUserId).child("matched").child(targetUserId).removeValue()
         database.child(targetUserId).child("matched").child(currentUserId).removeValue()
-        val currentMatchList = _matchedList.value?.toMutableList() ?: mutableListOf()
-        currentMatchList?.removeIf { it.uid == targetUserId }
-        _matchedList.value = currentMatchList
+        database.child(targetUserId).child("likeBy").child(currentUserId).removeValue()
+        database.child(currentUserId).child("likeBy").child(targetUserId).removeValue()
+        loadMatchedUsers()
+        loadlike()
+
         Log.d("jun", "삭제한 후 매치리스트  : ${_matchedList.value}")
     }
 

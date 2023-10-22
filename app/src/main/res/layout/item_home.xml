@@ -35,33 +35,39 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/linearLayout2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
 
-            <ImageView
-                android:id="@+id/bt_unlike"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginHorizontal="90dp"
-                android:padding="5dp"
-                app:srcCompat="@drawable/heart"
-                />
+            app:layout_constraintStart_toStartOf="parent">
 
             <ImageView
                 android:id="@+id/bt_like"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginHorizontal="24dp"
+                android:layout_marginStart="140dp"
                 android:padding="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/hate"
-                app:tint="@color/white"/>
-        </LinearLayout>
+                app:tint="@color/white" />
+
+            <ImageView
+                android:id="@+id/bt_unlike"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="140dp"
+                android:padding="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/heart" />
+
+            
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tv_type_pet"

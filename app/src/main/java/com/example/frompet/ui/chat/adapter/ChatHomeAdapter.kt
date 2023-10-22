@@ -68,7 +68,6 @@ class ChatHomeAdapter(var context: Context, private val chatViewModel: ChatViewM
 
         }
     }
-
     class DiffCallback : DiffUtil.ItemCallback<User>() {
         override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
             return oldItem.uid == newItem.uid

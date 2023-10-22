@@ -23,7 +23,6 @@ import com.example.frompet.ui.chat.viewmodel.MessageViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 
-
 class ChatMessageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatMessageBinding
     private val messageViewModel: MessageViewModel by viewModels()
@@ -48,23 +47,26 @@ class ChatMessageActivity : AppCompatActivity() {
         binding = ActivityChatMessageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupRecyclerView()
-        observeViewModels()
+        with(binding) {
+            setupRecyclerView()
+            observeViewModels()
 
-        val user: User? = intent.getParcelableExtra(USER)
-        user?.let { handleChatActions(it) }
+            val user: User? = intent.getParcelableExtra(USER)
+            user?.let { handleChatActions(it) }
 
-        binding.backBtn.setOnClickListener {
-            goneNewMessage()
-            finish()
+            backBtn.setOnClickListener {
+                goneNewMessage()
+                finish()
+            }
+            ivExit.setOnClickListener {
+                showExitDailog()
+            }
+
+            ivSendImage.setOnClickListener { goGallery() }
         }
-        binding.ivExit.setOnClickListener {
-            showExitDailog()
-        }
-
-        binding.ivSendImage.setOnClickListener { goGallery() }
     }
-      override fun onBackPressed() {
+
+    override fun onBackPressed() {
         goneNewMessage()
         super.onBackPressed()
     }
@@ -73,9 +75,10 @@ class ChatMessageActivity : AppCompatActivity() {
         goneNewMessage()
         super.onDestroy()
     }
+
     private fun setupRecyclerView() {
         adapter = ChatMessageAdapter(this@ChatMessageActivity)
-        binding.apply {
+        with(binding) {
             rvMessage.adapter = adapter
             val layoutManager = LinearLayoutManager(this@ChatMessageActivity)
             layoutManager.stackFromEnd = true
@@ -96,13 +99,15 @@ class ChatMessageActivity : AppCompatActivity() {
             binding.tvTyping.text = if (isTyping) "입력중..." else ""
         })
     }
+
     private fun showExitDailog() {
         ChatExitDailog(this).showExitDailog {
             val user: User? = intent.getParcelableExtra(USER)
-            user?.let { selectUser->
+            user?.let { selectUser ->
                 val currentUserId = auth.currentUser?.uid ?: return@let
                 val chatRoomId = messageViewModel.chatRoom(currentUserId, selectUser.uid)
                 matchSharedViewModel.removeMatchedUser(selectUser.uid)
+
                 chatViewModel.removeChatRoom(chatRoomId)
                 finish()
             }
@@ -119,32 +124,41 @@ class ChatMessageActivity : AppCompatActivity() {
         messageViewModel.observeTypingStatus(user.uid)
         messageViewModel.observeUserProfile(user.uid)
 
-        binding.ivSendBtn.setOnClickListener {
-            val message = binding.etMessage.text.toString()
-            if (message.isNotEmpty()) {
-                messageViewModel.sendMessage(user.uid, message)
-                binding.etMessage.text.clear()
-            }
-        }
-
-        binding.etMessage.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                if (s.isNullOrEmpty()) {
-                    messageViewModel.setTypingStatus(false)
-                } else {
-                    messageViewModel.setTypingStatus(true)
-                    typingTimeoutHandler.removeCallbacks(typingTimeoutRunnable)
-                    typingTimeoutHandler.postDelayed(typingTimeoutRunnable, 5000)
+        with(binding) {
+            ivSendBtn.setOnClickListener {
+                val message = etMessage.text.toString()
+                if (message.isNotEmpty()) {
+                    messageViewModel.sendMessage(user.uid, message)
+                    etMessage.text.clear()
                 }
             }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            etMessage.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    if (s.isNullOrEmpty()) {
+                        messageViewModel.setTypingStatus(false)
+                    } else {
+                        messageViewModel.setTypingStatus(true)
+                        typingTimeoutHandler.removeCallbacks(typingTimeoutRunnable)
+                        typingTimeoutHandler.postDelayed(typingTimeoutRunnable, 5000)
+                    }
+                }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            })
+        }
 
         messageViewModel.loadPreviousMessages(chatRoomId)
     }
+
 
     private fun goneNewMessage() {
         val user: User? = intent.getParcelableExtra(USER)

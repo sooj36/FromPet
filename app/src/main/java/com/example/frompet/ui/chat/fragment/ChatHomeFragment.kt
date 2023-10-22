@@ -64,12 +64,15 @@ class ChatHomeFragment : Fragment() {
             rvChatHome.layoutManager = LinearLayoutManager(context)
         }
         matchSharedViewModel.matchedList.observe(viewLifecycleOwner) { users ->
-           chatViewModel.getLastTimeSorted(users){
-                adapter.submitList(it)
-               Log.d("jun","매리리스트 옵져버$it")
-                binding?.tvPossibleText?.text = "${it.size}명과 대화가 가능해요"
-            }
+           chatViewModel.getLastTimeSorted(users) {
+               adapter.submitList(it)
+               Log.d("jun", "매리리스트 옵져버$it")
+               binding?.tvPossibleText?.text = "${it.size}명과 대화가 가능해요"
+           }
         }
+
+
+
         matchSharedViewModel.loadMatchedUsers()
             }
     override fun onDestroyView() {
