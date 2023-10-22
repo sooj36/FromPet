@@ -22,7 +22,7 @@ class ChatHomeFragment : Fragment() {
 
     private var _binding: FragmentChatHomeBinding? = null
     private lateinit var  adapter: ChatHomeAdapter
-    private val binding get() = _binding
+    private val binding get() = _binding!!
 
     private val matchSharedViewModel: MatchSharedViewModel by activityViewModels()
     private val chatViewModel: ChatViewModel by viewModels()
@@ -45,7 +45,7 @@ class ChatHomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentChatHomeBinding.inflate(inflater, container, false)
-        return binding?.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +59,7 @@ class ChatHomeFragment : Fragment() {
             }
         }
 
-        binding?.apply {
+        binding.apply {
             rvChatHome.adapter = adapter
             rvChatHome.layoutManager = LinearLayoutManager(context)
         }
@@ -67,7 +67,7 @@ class ChatHomeFragment : Fragment() {
            chatViewModel.getLastTimeSorted(users) {
                adapter.submitList(it)
                Log.d("jun", "매리리스트 옵져버$it")
-               binding?.tvPossibleText?.text = "${it.size}명과 대화가 가능해요"
+               binding.tvPossibleText?.text = "${it.size}명과 대화가 가능해요"
            }
         }
 

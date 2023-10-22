@@ -19,9 +19,10 @@
         <ImageView
             android:layout_marginStart="10dp"
             android:id="@+id/back_btn"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@drawable/icon_back"
+            android:padding="1dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -45,20 +46,19 @@
             android:id="@+id/tv_typing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
             android:text="       "
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/black"
-            android:textSize="13sp"
+            android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_friend_name"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:layout_marginEnd="10dp"
             android:id="@+id/iv_exit"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@drawable/exit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

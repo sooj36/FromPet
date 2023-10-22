@@ -1,5 +1,6 @@
 package com.example.frompet.ui.chat.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import coil.load
@@ -31,6 +32,13 @@ class ChatClickUserDetailActivity : AppCompatActivity() {
         binding.backBtn.setOnClickListener {
             finish()
         }
+
+        binding.ivPetProfile.setOnClickListener {
+            val intent = Intent(this@ChatClickUserDetailActivity, ChatPullScreenActivity::class.java)
+            intent.putExtra(ChatPullScreenActivity.IMAGE_URL, user?.petProfile)
+            startActivity(intent)
+        }
+
     }
 
     private fun displayUserInfo(user: User) {
