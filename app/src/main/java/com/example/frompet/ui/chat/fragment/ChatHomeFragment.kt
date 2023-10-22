@@ -1,8 +1,9 @@
-package com.example.frompet.ui.chat
+package com.example.frompet.ui.chat.fragment
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frompet.MatchSharedViewModel
 import com.example.frompet.ui.chat.adapter.ChatHomeAdapter
 import com.example.frompet.databinding.FragmentChatHomeBinding
+import com.example.frompet.ui.chat.viewmodel.ChatViewModel
+import com.example.frompet.ui.chat.activity.ChatMessageActivity
 
 class ChatHomeFragment : Fragment() {
 
@@ -32,6 +35,7 @@ class ChatHomeFragment : Fragment() {
                 }
             }
         }
+
 
     companion object {
         const val USER = "user"
@@ -59,16 +63,15 @@ class ChatHomeFragment : Fragment() {
             rvChatHome.adapter = adapter
             rvChatHome.layoutManager = LinearLayoutManager(context)
         }
-        matchSharedViewModel.loadMatchedUsers()
         matchSharedViewModel.matchedList.observe(viewLifecycleOwner) { users ->
            chatViewModel.getLastTimeSorted(users){
                 adapter.submitList(it)
+               Log.d("jun","매리리스트 옵져버$it")
                 binding?.tvPossibleText?.text = "${it.size}명과 대화가 가능해요"
             }
         }
-
-    }
-
+        matchSharedViewModel.loadMatchedUsers()
+            }
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()

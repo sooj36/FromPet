@@ -1,37 +1,35 @@
-package com.example.frompet.ui.chat
+package com.example.frompet.ui.chat.activity
 
+import com.example.frompet.ui.chat.dialog.ChatExitDailog
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.frompet.R
+import com.example.frompet.MatchSharedViewModel
 import com.example.frompet.ui.chat.adapter.ChatMessageAdapter
 import com.example.frompet.databinding.ActivityChatMessageBinding
-import com.example.frompet.data.model.ChatMessage
 import com.example.frompet.data.model.User
-import com.example.frompet.ui.login.putFile
-import com.example.frompet.util.showToast
+import com.example.frompet.ui.chat.viewmodel.ChatViewModel
+import com.example.frompet.ui.chat.viewmodel.MessageViewModel
+
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+
 
 
 class ChatMessageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatMessageBinding
     private val messageViewModel: MessageViewModel by viewModels()
+    private val chatViewModel: ChatViewModel by viewModels()
+    private val matchSharedViewModel: MatchSharedViewModel by viewModels()
+
     private lateinit var adapter: ChatMessageAdapter
     private val auth = FirebaseAuth.getInstance()
     private val typingTimeoutHandler = Handler(Looper.getMainLooper())
@@ -59,6 +57,9 @@ class ChatMessageActivity : AppCompatActivity() {
         binding.backBtn.setOnClickListener {
             goneNewMessage()
             finish()
+        }
+        binding.ivExit.setOnClickListener {
+            showExitDailog()
         }
 
         binding.ivSendImage.setOnClickListener { goGallery() }
@@ -94,6 +95,18 @@ class ChatMessageActivity : AppCompatActivity() {
         messageViewModel.isTyping.observe(this, Observer { isTyping ->
             binding.tvTyping.text = if (isTyping) "입력중..." else ""
         })
+    }
+    private fun showExitDailog() {
+        ChatExitDailog(this).showExitDailog {
+            val user: User? = intent.getParcelableExtra(USER)
+            user?.let { selectUser->
+                val currentUserId = auth.currentUser?.uid ?: return@let
+                val chatRoomId = messageViewModel.chatRoom(currentUserId, selectUser.uid)
+                matchSharedViewModel.removeMatchedUser(selectUser.uid)
+                chatViewModel.removeChatRoom(chatRoomId)
+                finish()
+            }
+        }
     }
 
     private fun handleChatActions(user: User) {

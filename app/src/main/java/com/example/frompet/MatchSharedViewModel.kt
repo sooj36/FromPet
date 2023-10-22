@@ -52,7 +52,6 @@ class MatchSharedViewModel : ViewModel() {
                 val likedUsers = mutableListOf<User>()
 
                 likedUserIds.forEach { userId ->
-
                     database.child(currentUserId).child("matched").child(userId)
                         .addValueEventListener(object : ValueEventListener {
 
@@ -63,22 +62,24 @@ class MatchSharedViewModel : ViewModel() {
                                         .addOnSuccessListener { document ->
                                             val user = document.toObject(User::class.java)
                                             user?.let {
-                                                likedUsers.add(it)
-                                                _likeList.value = likedUsers.toList()
-                                                Log.d("jun", "매치되기전라이크리스트${_likeList.value}")
+                                                // 중복 체크: 이미 likedUsers에 있는 사용자는 추가하지 않음
+                                                if (likedUsers.none { existingUser -> existingUser.uid == user.uid }) {
+                                                    likedUsers.add(it)
+                                                    _likeList.value = likedUsers.toList()
+                                                    Log.d("jun", "매치되기전라이크리스트${_likeList.value}")
+                                                }
                                             }
                                         }
                                 }
                             }
-
                             override fun onCancelled(error: DatabaseError) {}
                         })
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+
     fun loadAlreadyActionUsers(load: (List<String>) -> Unit) {
         val currentUserId = auth.currentUser?.uid ?: return
         val exceptIds = mutableListOf<String>()
@@ -155,6 +156,8 @@ class MatchSharedViewModel : ViewModel() {
         database.child(currentUserId).child("matched").child(otherUserUid).setValue(true)
         database.child(otherUserUid).child("matched").child(currentUserId).setValue(true)
         database.child(currentUserId).child("likedBy").child(otherUserUid).removeValue()
+        database.child(otherUserUid).child("likedBy").child(currentUserId).removeValue()
+
         val currentLikes = _likeList.value?.toMutableList() ?: mutableListOf()
         currentLikes?.removeIf { it.uid == otherUserUid }
         _likeList.value = currentLikes
@@ -192,6 +195,16 @@ class MatchSharedViewModel : ViewModel() {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+    fun removeMatchedUser(targetUserId: String) {
+        val currentUserId = auth.currentUser?.uid ?: return
+        database.child(currentUserId).child("matched").child(targetUserId).removeValue()
+        database.child(targetUserId).child("matched").child(currentUserId).removeValue()
+        val currentMatchList = _matchedList.value?.toMutableList() ?: mutableListOf()
+        currentMatchList?.removeIf { it.uid == targetUserId }
+        _matchedList.value = currentMatchList
+        Log.d("jun", "삭제한 후 매치리스트  : ${_matchedList.value}")
+    }
+
 
 }
 
