@@ -1,12 +1,9 @@
-package com.example.frompet.ui.chat
+package com.example.frompet.ui.chat.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import coil.load
-import com.example.frompet.R
-import com.example.frompet.databinding.ActivityChatMessageBinding
 import com.example.frompet.databinding.ActivityChatPullScreenBinding
 
 class ChatPullScreenActivity : AppCompatActivity() {

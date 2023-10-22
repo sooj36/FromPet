@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.frompet.R
-import com.example.frompet.ui.chat.ChatClickUserDetailActivity
+import com.example.frompet.ui.chat.activity.ChatClickUserDetailActivity
 import com.example.frompet.databinding.ItemChathomeBinding
 import com.example.frompet.data.model.User
-import com.example.frompet.ui.chat.ChatViewModel
+import com.example.frompet.ui.chat.viewmodel.ChatViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class ChatHomeAdapter(var context: Context, private val chatViewModel: ChatViewModel, private val lifecycleOwner: LifecycleOwner,) :
@@ -68,10 +68,9 @@ class ChatHomeAdapter(var context: Context, private val chatViewModel: ChatViewM
 
         }
     }
-
     class DiffCallback : DiffUtil.ItemCallback<User>() {
         override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
-            return oldItem == newItem
+            return oldItem.uid == newItem.uid
         }
         override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
             return oldItem == newItem

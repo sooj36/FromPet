@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/light_gray"
-            tools:context=".ui.chat.ChatUserDetailActivity">
+            tools:context=".ui.chat.activity.ChatUserDetailActivity">
 
             <ImageView
                 android:id="@+id/back_btn"

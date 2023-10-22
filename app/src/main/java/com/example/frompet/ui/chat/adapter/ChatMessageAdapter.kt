@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.frompet.R
-import com.example.frompet.ui.chat.ChatClickUserDetailActivity
-import com.example.frompet.ui.chat.ChatPullScreenActivity
+import com.example.frompet.ui.chat.activity.ChatClickUserDetailActivity
+import com.example.frompet.ui.chat.activity.ChatPullScreenActivity
 
 import com.example.frompet.databinding.ItemMyMessageBinding
 import com.example.frompet.databinding.ItemOtherMessageBinding

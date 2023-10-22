@@ -17,4 +17,6 @@ interface ChatRepository {
 
     fun getLastTimeSorted(user: List<User>, onUpdate: (List<User>) -> Unit)
 
+    fun removeChatRoomData(chatRoomId: String)
+
 }

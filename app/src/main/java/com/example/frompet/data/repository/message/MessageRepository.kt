@@ -16,6 +16,7 @@ interface MessageRepository {
     suspend fun checkTypingStatus(receiverId: String): Boolean
 
     suspend fun setTypingStatus(isTyping: Boolean)
+
     suspend fun getCurrentUserId(): String?
 
     suspend fun getUserProfile(userId: String): User?

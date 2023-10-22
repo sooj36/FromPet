@@ -1,4 +1,4 @@
-package com.example.frompet.ui.chat
+package com.example.frompet.ui.chat.viewmodel
 
 import androidx.lifecycle.LiveData
 
@@ -25,6 +25,10 @@ class ChatViewModel : ViewModel() {
         val newChats: LiveData<HashMap<String, Boolean>> get() = repository.loadNewChats()
 
         fun getLastTimeSorted(user: List<User>, onUpdate: (List<User>) -> Unit) = viewModelScope.launch {  repository.getLastTimeSorted(user, onUpdate)}
+
+        fun removeChatRoom(chatRoomId: String){
+                repository.removeChatRoomData(chatRoomId)
+        }
     }
 
 

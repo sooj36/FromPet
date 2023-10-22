@@ -1,4 +1,4 @@
-package com.example.frompet.ui.chat
+package com.example.frompet.ui.chat.fragment
 
 import android.app.Activity
 import android.content.Intent
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.frompet.MatchSharedViewModel
 import com.example.frompet.ui.chat.adapter.ChatListAdapter
 import com.example.frompet.databinding.FragmentChatListBinding
+import com.example.frompet.ui.chat.activity.ChatUserDetailActivity
 
 
 class ChatLikeListFragment : Fragment() {

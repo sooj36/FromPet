@@ -83,4 +83,11 @@ class ChatRepositoryImpl : ChatRepository {
         val currentUserId = auth.currentUser?.uid ?: return
         database.child("newMessages").child(chatRoomId).child(currentUserId).setValue(false)
     }
+
+    override fun removeChatRoomData(chatRoomId: String) {
+        database.child("chatMessages").child(chatRoomId).removeValue()
+        database.child("lastMessages").child(chatRoomId).removeValue()
+        database.child("newMessages").child(chatRoomId).removeValue()
+        database.child("typingStatus").child(chatRoomId).removeValue()
+    }
 }
