@@ -2,9 +2,9 @@ package com.example.frompet.ui.chat.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.frompet.ui.chat.ChatFragment
-import com.example.frompet.ui.chat.ChatHomeFragment
-import com.example.frompet.ui.chat.ChatLikeListFragment
+import com.example.frompet.ui.chat.fragment.ChatFragment
+import com.example.frompet.ui.chat.fragment.ChatHomeFragment
+import com.example.frompet.ui.chat.fragment.ChatLikeListFragment
 
 class ViewPagerAdapter(private val fragmentActivity: ChatFragment, private val fragments:List<Fragment>):FragmentStateAdapter(fragmentActivity) {
     override fun getItemCount(): Int {

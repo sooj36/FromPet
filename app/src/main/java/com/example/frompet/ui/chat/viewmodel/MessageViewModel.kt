@@ -1,4 +1,4 @@
-package com.example.frompet.ui.chat
+package com.example.frompet.ui.chat.viewmodel
 
 import android.net.Uri
 import androidx.lifecycle.LiveData

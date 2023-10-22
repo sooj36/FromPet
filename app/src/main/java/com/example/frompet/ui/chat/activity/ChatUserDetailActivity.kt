@@ -1,4 +1,4 @@
-package com.example.frompet.ui.chat
+package com.example.frompet.ui.chat.activity
 
 import android.app.Activity
 import android.content.Intent
