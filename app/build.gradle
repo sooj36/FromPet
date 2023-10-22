@@ -44,6 +44,9 @@ android {
 
 dependencies {
 
+    implementation 'com.firebaseui:firebase-ui-storage:7.2.0' // 파베 스토리지
+
+    implementation 'com.google.maps.android:android-maps-utils:2.2.0'
     implementation 'com.naver.maps:map-sdk:3.17.0' //네이버 지도 SDK
     implementation "com.google.android.gms:play-services-location:21.0.1" // 네이버 지도 위치 추적
     implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0' // 권한 요청 다이얼로그 라이브러리

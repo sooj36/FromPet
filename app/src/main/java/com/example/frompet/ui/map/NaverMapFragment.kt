@@ -3,6 +3,7 @@ package com.example.frompet.ui.map
 import android.Manifest
 import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
@@ -22,6 +23,8 @@ import com.example.frompet.data.model.UserLocation
 import com.example.frompet.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -30,20 +33,23 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import org.checkerframework.checker.nullness.qual.NonNull
 
 class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-
-
+    private val ONE_MEGABYTE = 1024 * 1024
 
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
@@ -194,16 +200,9 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+
     private fun setMark(location: UserLocation) {
         val marker = Marker()
-
-        // 원근감 표시
-        // marker.iconPerspectiveEnabled = true
-        // 마커의 투명도
-        marker.alpha = 0.8f
-
-
-//        marker.icon = OverlayImage.fromFile()
         // 마커 위치
         if (location != null) {
             marker.position = LatLng(location.latitude, location.longitude)
@@ -212,6 +211,15 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         marker.zIndex = 10
         // 마커 표시
         marker.map = naverMap
+        // 원근감 표시
+        // marker.iconPerspectiveEnabled = true
+        // 마커의 투명도
+        marker.alpha = 0.8f
+
+
 
     }
 }
+
+//        val storageRef = FirebaseStorage.getInstance().reference
+//        val imageRef = storageRef.child("images/IMAGE_20231016_214525.png") // 이미지 파일 경로
