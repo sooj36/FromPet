@@ -33,6 +33,11 @@ class UserRepositoryImp @Inject constructor(
         return true
     }
 
+    override suspend fun isAlreadyLoggedIn(): Boolean {
+        val user = authenticator.getUser()
+        return user != null
+    }
+
     suspend fun saveUserProfile(user:User){
         val userDocument = firestore.collection("User").document(user.uid)
         userDocument.set(user)
