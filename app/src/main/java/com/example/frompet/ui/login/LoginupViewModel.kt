@@ -38,16 +38,59 @@ class LoginupViewModel @Inject constructor(
     }
 
     fun signInUser(email: String, password: String) = viewModelScope.launch {
-        when {
-            email.isEmpty() -> {
-                eventsChannel.send(AllEvents.ErrorCode(1))
+        val currentUser = auth.currentUser
+        Log.d("zzzzzzzz", "Current User: ${auth.currentUser}")
+        if (currentUser != null) {
+            // 이미 로그인한 사용자가 있습니다. 중복 로그인을 방지합니다.
+            viewModelScope.launch(Dispatchers.Main) {
+                eventsChannel.send(AllEvents.Error("이미 로그인한 사용자가 있습니다."))
             }
-
-            password.isEmpty() -> {
-                eventsChannel.send(AllEvents.ErrorCode(2))
+        } else {
+            // 로그인 시도
+            when {
+                email.isEmpty() -> {
+                    eventsChannel.send(AllEvents.ErrorCode(1))
+                }
+                password.isEmpty() -> {
+                    eventsChannel.send(AllEvents.ErrorCode(2))
+                }
+                else -> {
+                    auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val user = task.result?.user
+                                if (user != null) {
+                                    _firebaseUser.postValue(user)
+                                    _loginResult.postValue(true)
+                                } else {
+                                    _firebaseUser.postValue(null)
+                                    _loginResult.postValue(false)
+                                }
+                            } else {
+                                val exception = task.exception
+                                if (exception is FirebaseAuthException) {
+                                    if (exception.errorCode == "INVALID_LOGIN_CREDENTIALS") {
+                                        viewModelScope.launch(Dispatchers.Main) {
+                                            eventsChannel.send(AllEvents.Error("이메일 또는 비밀번호가 올바르지 않습니다."))
+                                        }
+                                    } else {
+                                        viewModelScope.launch(Dispatchers.Main) {
+                                            eventsChannel.send(AllEvents.Error(exception.message ?: "로그인 중 오류 발생"))
+                                        }
+                                    }
+                                } else {
+                                    viewModelScope.launch(Dispatchers.Main) {
+                                        eventsChannel.send(AllEvents.Error("로그인 중 오류 발생"))
+                                    }
+                                }
+                            }
+                        }
+                }
             }
+        }
+    }
 
-            else -> {
+     /*       else -> {
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
@@ -84,7 +127,7 @@ class LoginupViewModel @Inject constructor(
                     }
             }
         }
-    }
+    }*/
 
     fun signUpUser(email: String, password: String, confirmPass: String) = viewModelScope.launch {
         when {

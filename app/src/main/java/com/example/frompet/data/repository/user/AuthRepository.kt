@@ -30,4 +30,9 @@ class AuthRepository @Inject constructor(
         authenticator.sendPasswordReset(email)
         return true
     }
+
+    override suspend fun isAlreadyLoggedIn(): Boolean {
+        val user = authenticator.getUser()
+        return user != null
+    }
 }
