@@ -4,13 +4,14 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/communityFragment"
-    android:background="#7C4DFF"
-    tools:context="com.example.frompet.ui.commnunity.CommunicationFragment">
+    android:background="#E3DEF3"
+    tools:context="com.example.frompet.ui.commnunity.communication.CommunicationFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/communicationrecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="horizontal"/>
 
 </RelativeLayout>
