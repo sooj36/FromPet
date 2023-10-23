@@ -76,11 +76,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun handleNotificationInForeground(notification: Notification) {
-        // 알림 처리 로직을 구현하세요.
+        // 알림 처리 로직을 구현해야함
     }
 
     private fun isAppInForeground(): Boolean {
-        // 앱이 현재 포그라운드에 있는지 여부를 확인하는 로직을 구현하세요.
+        // 앱이 현재 포그라운드에 있는지 여부를 확인하는 로직을 구현해야함
         return true
     }
 }
