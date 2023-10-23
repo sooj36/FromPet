@@ -179,6 +179,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         locationRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (snapshots in snapshot.children) {
+                    Log.d("sooj", "$snapshot")
                     val location = snapshots.getValue(UserLocation::class.java)
                     val userUid = snapshots.key // 사용자 uid
 
@@ -223,7 +224,6 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         }.build()
 
         imageLoader?.execute(request)
-
 
     }
 }
