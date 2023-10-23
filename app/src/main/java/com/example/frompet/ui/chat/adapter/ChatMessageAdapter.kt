@@ -3,6 +3,7 @@ package com.example.frompet.ui.chat.adapter
 import android.content.Context
 import android.content.Intent
 import android.icu.text.SimpleDateFormat
+import android.icu.util.TimeZone
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -77,7 +78,7 @@ class ChatMessageAdapter(var context: Context) :
             if (chatMessage.imageUrl.isNullOrEmpty().not()) {
                 ivMessageImage.isVisible = true
                 tvMessage.isVisible = false
-                tvTime.text = SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
+                tvTime.text = formatTimeStamp(chatMessage.timestamp)
                 ivMessageImage.load(chatMessage.imageUrl) {
                     error(R.drawable.kakaotalk_20230825_222509794_01)
                 }
@@ -88,7 +89,7 @@ class ChatMessageAdapter(var context: Context) :
                 tvMessage.setBackgroundResource(R.drawable.chat2)
                 tvMessage.text = chatMessage.message
                 tvTime.text =
-                    SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
+                    formatTimeStamp(chatMessage.timestamp)
             }
         }
     }
@@ -100,7 +101,7 @@ class ChatMessageAdapter(var context: Context) :
             if (chatMessage.imageUrl.isNullOrEmpty().not()) {
                 ivMessageImage.isVisible = true
                 tvMessage.isVisible = false
-                tvTime.text = SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
+                tvTime.text = formatTimeStamp(chatMessage.timestamp)
                 ivMessageImage.load(chatMessage.imageUrl) {
                     error(R.drawable.kakaotalk_20230825_222509794_01)
                 }
@@ -112,7 +113,7 @@ class ChatMessageAdapter(var context: Context) :
                 tvMessage.setBackgroundResource(R.drawable.chat1)
                 tvMessage.text = chatMessage.message
                 tvTime.text =
-                    SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
+                    formatTimeStamp(chatMessage.timestamp)
             }
 
             firestore.collection("User").document(chatMessage.senderId).get().addOnSuccessListener { document ->
@@ -151,5 +152,10 @@ class ChatMessageAdapter(var context: Context) :
         val intent = Intent(context, ChatClickUserDetailActivity::class.java)
         intent.putExtra(ChatClickUserDetailActivity.USER, user)
         context.startActivity(intent)
+    }
+    private fun formatTimeStamp(timestamp:Long):String{
+        val sdf = SimpleDateFormat("a HH:mm",Locale.KOREA)
+        sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+        return sdf.format(Date(timestamp))
     }
 }

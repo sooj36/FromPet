@@ -2,6 +2,8 @@ package com.example.frompet.ui.chat.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
+import android.icu.util.TimeZone
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +18,8 @@ import com.example.frompet.databinding.ItemChathomeBinding
 import com.example.frompet.data.model.User
 import com.example.frompet.ui.chat.viewmodel.ChatViewModel
 import com.google.firebase.auth.FirebaseAuth
+import java.util.Date
+import java.util.Locale
 
 class ChatHomeAdapter(var context: Context, private val chatViewModel: ChatViewModel, private val lifecycleOwner: LifecycleOwner,) :
     ListAdapter<User, ChatHomeAdapter.ChatHomeViewHolder>(DiffCallback()) {
@@ -52,6 +56,10 @@ class ChatHomeAdapter(var context: Context, private val chatViewModel: ChatViewM
                 val liveData = chatViewModel.lastChatLiveData(chatRoomId)
                 liveData.observe(lifecycleOwner) { lastMessage ->
                     binding.tvLastmessage.text = lastMessage?.message ?: ""
+                    lastMessage?.let {
+                        val formatTime = formatTimeStamp(it.timestamp)
+                        binding.tvLastTime.text = formatTime
+                    }
                 }
                 chatViewModel.newChats.observe(lifecycleOwner) { newMessages ->
                     val hasNewMessage = newMessages[chatRoomId] ?: false
@@ -80,5 +88,10 @@ class ChatHomeAdapter(var context: Context, private val chatViewModel: ChatViewM
         val intent = Intent(context, ChatClickUserDetailActivity::class.java)
         intent.putExtra(ChatClickUserDetailActivity.USER, user)
         context.startActivity(intent)
+    }
+    private fun formatTimeStamp(timestamp: Long): String {
+        val sdf = SimpleDateFormat("a HH:mm", Locale.KOREA)
+        sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+        return sdf.format(Date(timestamp))
     }
 }
