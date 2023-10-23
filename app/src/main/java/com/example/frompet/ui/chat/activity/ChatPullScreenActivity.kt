@@ -16,7 +16,7 @@ class ChatPullScreenActivity : AppCompatActivity() {
     private var isToolbarVisible = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
-         binding = ActivityChatPullScreenBinding.inflate(layoutInflater)
+        binding = ActivityChatPullScreenBinding.inflate(layoutInflater)
 
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
