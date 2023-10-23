@@ -51,30 +51,31 @@ class ChatHomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = ChatHomeAdapter(requireContext(), chatViewModel, viewLifecycleOwner).apply {
-            onChatItemClick = { user ->
-                val intent = Intent(requireContext(), ChatMessageActivity::class.java)
-                intent.putExtra(USER, user)
-                chatMessageActivityResult.launch(intent)
+        _binding?.let { binding ->
+            adapter = ChatHomeAdapter(requireContext(), chatViewModel, viewLifecycleOwner).apply {
+                onChatItemClick = { user ->
+                    val intent = Intent(requireContext(), ChatMessageActivity::class.java)
+                    intent.putExtra(USER, user)
+                    chatMessageActivityResult.launch(intent)
+                }
             }
-        }
 
-        binding.apply {
-            rvChatHome.adapter = adapter
-            rvChatHome.layoutManager = LinearLayoutManager(context)
-        }
-        matchSharedViewModel.matchedList.observe(viewLifecycleOwner) { users ->
-           chatViewModel.getLastTimeSorted(users) {
-               adapter.submitList(it)
-               Log.d("jun", "매리리스트 옵져버$it")
-               binding.tvPossibleText?.text = "${it.size}명과 대화가 가능해요"
-           }
-        }
-
-
-
-        matchSharedViewModel.loadMatchedUsers()
+            binding.apply {
+                rvChatHome.adapter = adapter
+                rvChatHome.layoutManager = LinearLayoutManager(context)
             }
+            matchSharedViewModel.matchedList.observe(viewLifecycleOwner) { users ->
+                chatViewModel.getLastTimeSorted(users) {
+                    adapter.submitList(it)
+                    Log.d("jun", "매리리스트 옵져버$it")
+                    binding.tvPossibleText?.text = "${it.size}명과 대화가 가능해요"
+                }
+            }
+
+            matchSharedViewModel.loadMatchedUsers()
+        }
+    }
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
