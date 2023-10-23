@@ -1,16 +1,21 @@
 package com.example.frompet.ui.home
 
+import HomeBottomSheetFragment
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.RecyclerView
 import com.example.frompet.databinding.FragmentHomeBinding
 import com.example.frompet.MatchSharedViewModel
+import com.example.frompet.R
+import com.example.frompet.data.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
@@ -83,6 +88,9 @@ class HomeFragment : Fragment() {
                         }
 
                     }
+                    Direction.Top -> {
+
+                    }
                     else -> {
                         // 다른 방향으로 스와이프한 경우
                     }
@@ -101,6 +109,7 @@ class HomeFragment : Fragment() {
 
             override fun onCardCanceled() {
 
+
             }
 
             override fun onCardAppeared(view: View?, position: Int) {
@@ -117,16 +126,41 @@ class HomeFragment : Fragment() {
         manager.setScaleInterval(0.8f)
         manager.setMaxDegree(20.0f)
         manager.setDirections(Direction.HORIZONTAL)
-        binding.cardStackView.layoutManager = manager
-        binding.cardStackView.itemAnimator = DefaultItemAnimator()
-        binding.cardStackView.adapter = homeAdapter
-        Log.e("shshsh","Adapter set to cardStackCiew")
 
-    }
+        with(binding.cardStackView) {
+            layoutManager = manager
+            itemAnimator = DefaultItemAnimator()
+            adapter = homeAdapter
+            addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
+                override fun onChildViewAttachedToWindow(view: View) {
+                    val imageView: ImageView = view.findViewById(R.id.iv_pet_image)
+                    imageView.setOnClickListener {
+                        val currentPosition = manager.topPosition
+                        if (currentPosition < homeAdapter.currentList.size) {
+                            val user = homeAdapter.currentList[currentPosition]
+                            user?.let {
+                                showBottomSheet(it)
+                            }
+                        }
+                    }
+                }
+
+                override fun onChildViewDetachedFromWindow(view: View) {
+                    val imageView: ImageView = view.findViewById(R.id.iv_pet_image)
+                    imageView.setOnClickListener(null)
+                }
+            })
+        }
+     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+    }
+    private fun showBottomSheet(user: User) {
+
+        val bottomSheetFragment = HomeBottomSheetFragment.newInstance(user)
+        bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
     }
 
 

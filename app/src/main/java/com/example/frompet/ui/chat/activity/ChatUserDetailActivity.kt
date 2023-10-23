@@ -54,6 +54,11 @@ class ChatUserDetailActivity : AppCompatActivity() {
                 setResultAndFinish(userId, DISLIKE)
             }
         }
+        binding.ivPetProfile.setOnClickListener {
+            val intent = Intent(this@ChatUserDetailActivity, ChatPullScreenActivity::class.java)
+            intent.putExtra(ChatPullScreenActivity.IMAGE_URL, user?.petProfile)
+            startActivity(intent)
+        }
         binding.backBtn.setOnClickListener {
             finish()
         }
