@@ -74,7 +74,9 @@ class ChatMessageAdapter(var context: Context) :
     inner class MyMessageViewHolder(private val binding: ItemMyMessageBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chatMessage: ChatMessage) = with(binding) {
             tvMessage.setBackgroundResource(R.drawable.chat2)
-            // ivMessageImage.setBackgroundResource(R.drawable.chat2)
+
+//            ivMessageImage.setBackgroundResource(R.drawable.chat2)
+
             tvMessage.text = chatMessage.message
             tvTime.text =
                 SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
@@ -95,7 +97,10 @@ class ChatMessageAdapter(var context: Context) :
         fun bind(chatMessage: ChatMessage) = with(binding) {
             tvName.text = chatMessage.senderPetName
             tvMessage.setBackgroundResource(R.drawable.chat1)
-            // ivMessageImage.setBackgroundResource(R.drawable.chat1)
+
+//            ivMessageImage.setBackgroundResource(R.drawable.chat1)
+
+
             tvMessage.text = chatMessage.message
             tvTime.text = SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
 

@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         binding.myBottomNav.itemIconTintList = null
 
         // FCM 설정 및 토큰 가져오기
-        MyFirebaseMessagingService().getFirebaseToken()
+        FCMTokenManagerViewModel().getFirebaseToken()
 
         // Android 13 PostNotification 처리
         checkAppPushNotification()
