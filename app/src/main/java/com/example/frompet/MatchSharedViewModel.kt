@@ -1,4 +1,4 @@
-package com.example.frompet.ui.chat
+package com.example.frompet
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -21,10 +21,6 @@ class MatchSharedViewModel : ViewModel() {
     private val _matchedList : MutableLiveData<List<User>> = MutableLiveData()
     val matchedList : MutableLiveData<List<User>> get() = _matchedList
 
-
-
-
-
     private val database = FirebaseDatabase.getInstance().getReference("likeUsers")
     private val disLikeDb = FirebaseDatabase.getInstance().getReference("dislikeList")
 
@@ -36,13 +32,13 @@ class MatchSharedViewModel : ViewModel() {
         Log.d("jun", "현재유저 ID: $currentUserId, 타겟유저 ID: $targetUserId")
         database.child(targetUserId).child("likedBy").child(currentUserId).setValue(true)
 
+
+
     }
 
     fun dislike(targetUserId: String) {
         val currentUserId = auth.currentUser?.uid ?: return
         database.child(currentUserId).child("likedBy").child(targetUserId).removeValue()
-//        database.child(targetUserId).child("matched").child(currentUserId).removeValue()
-//        database.child(currentUserId).child("matched").child(targetUserId).removeValue()
         disLikeDb.child(currentUserId).child(targetUserId).setValue(true)
     }
 
@@ -56,7 +52,6 @@ class MatchSharedViewModel : ViewModel() {
                 val likedUsers = mutableListOf<User>()
 
                 likedUserIds.forEach { userId ->
-
                     database.child(currentUserId).child("matched").child(userId)
                         .addValueEventListener(object : ValueEventListener {
 
@@ -67,22 +62,24 @@ class MatchSharedViewModel : ViewModel() {
                                         .addOnSuccessListener { document ->
                                             val user = document.toObject(User::class.java)
                                             user?.let {
-                                                likedUsers.add(it)
-                                                _likeList.value = likedUsers.toList()
-                                                Log.d("jun", "매치되기전라이크리스트${_likeList.value}")
+                                                // 중복 체크: 이미 likedUsers에 있는 사용자는 추가하지 않음
+                                                if (likedUsers.none { existingUser -> existingUser.uid == user.uid }) {
+                                                    likedUsers.add(it)
+                                                    _likeList.value = likedUsers.toList()
+                                                    Log.d("jun", "매치되기전라이크리스트${_likeList.value}")
+                                                }
                                             }
                                         }
                                 }
                             }
-
                             override fun onCancelled(error: DatabaseError) {}
                         })
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+
     fun loadAlreadyActionUsers(load: (List<String>) -> Unit) {
         val currentUserId = auth.currentUser?.uid ?: return
         val exceptIds = mutableListOf<String>()
@@ -159,6 +156,8 @@ class MatchSharedViewModel : ViewModel() {
         database.child(currentUserId).child("matched").child(otherUserUid).setValue(true)
         database.child(otherUserUid).child("matched").child(currentUserId).setValue(true)
         database.child(currentUserId).child("likedBy").child(otherUserUid).removeValue()
+        database.child(otherUserUid).child("likedBy").child(currentUserId).removeValue()
+
         val currentLikes = _likeList.value?.toMutableList() ?: mutableListOf()
         currentLikes?.removeIf { it.uid == otherUserUid }
         _likeList.value = currentLikes
@@ -176,6 +175,10 @@ class MatchSharedViewModel : ViewModel() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val matchedUserIds = snapshot.children.mapNotNull { it.key }
                 val matchedUsers = mutableListOf<User>()
+                if (matchedUserIds.isEmpty()) {
+                    _matchedList.value = listOf()
+                    return //이 부분 추가해서 매치리스트가 빈null일때도 ui업뎃하게함..
+                }
 
                 matchedUserIds.forEach { userId ->
                     firestore.collection("User").document(userId)
@@ -196,6 +199,18 @@ class MatchSharedViewModel : ViewModel() {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+    fun removeMatchedUser(targetUserId: String) {
+        val currentUserId = auth.currentUser?.uid ?: return
+        database.child(currentUserId).child("matched").child(targetUserId).removeValue()
+        database.child(targetUserId).child("matched").child(currentUserId).removeValue()
+        database.child(targetUserId).child("likeBy").child(currentUserId).removeValue()
+        database.child(currentUserId).child("likeBy").child(targetUserId).removeValue()
+        loadMatchedUsers()
+        loadlike()
+
+        Log.d("jun", "삭제한 후 매치리스트  : ${_matchedList.value}")
+    }
+
 
 }
 

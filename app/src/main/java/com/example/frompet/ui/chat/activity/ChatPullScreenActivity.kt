@@ -1,4 +1,4 @@
-package com.example.frompet.ui.chat
+package com.example.frompet.ui.chat.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.example.frompet.databinding.ActivityMemberInfoBinding
 import com.example.frompet.data.model.User
 import com.example.frompet.MainActivity
+import com.example.frompet.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -50,7 +51,7 @@ class MemberInfoActivity : AppCompatActivity() {
                 if (petProfile != null) {
                     contentUpload(petProfile)
                 } else {
-                    showToast("프로필 이미지를 선택하세요.")
+                    showToast(getString(R.string.profile_image_choose))
                 }
 
                 // User 모델을 생성
@@ -67,12 +68,12 @@ class MemberInfoActivity : AppCompatActivity() {
                     .addOnSuccessListener {
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
-                        showToast("회원 정보가 업데이트되었습니다.")
+                        showToast(getString(R.string.update_info))
                         finish()
                     }
                     .addOnFailureListener {
                         // 정보 저장 실패
-                        showToast("회원 정보 업데이트에 실패했습니다.")
+                        showToast(getString(R.string.failure_info))
                     }
             }
         }
@@ -90,7 +91,7 @@ class MemberInfoActivity : AppCompatActivity() {
     // contentUpload() 함수 내부에서 이미지를 Firebase Storage에 업로드할 수 있습니다.
     private fun contentUpload(uri: String?) {
         uri?.let { petProfileUri ->
-            val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+            val timestamp = SimpleDateFormat(getString(R.string.member_info_timestamp), Locale.getDefault()).format(Date())
             val fileName = "IMAGE_$timestamp.png"
             // 서버 스토리지에 접근하기
             val storageRef = storage.reference.child("images").child(fileName)

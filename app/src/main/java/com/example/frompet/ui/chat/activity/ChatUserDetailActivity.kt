@@ -1,4 +1,4 @@
-package com.example.frompet.ui.chat
+package com.example.frompet.ui.chat.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import coil.load
+import com.example.frompet.MatchSharedViewModel
 import com.example.frompet.R
 import com.example.frompet.util.showToast
 import com.example.frompet.databinding.ActivityChatUserDetailBinding
@@ -41,7 +42,7 @@ class ChatUserDetailActivity : AppCompatActivity() {
         binding.likeBtn.setOnClickListener {
             user?.uid?.let { userId ->
                 matchSharedViewModel.matchUser(userId)
-                showToast("${user.petName}님과 매치 되었습니다\n대화방이 생성되었습니다!",Toast.LENGTH_LONG)
+                showToast("${user.petName}님과 매치 되었습니다\n 대화방이 생성되었습니다!",Toast.LENGTH_LONG)
                 setResultAndFinish(userId, MATCH)
             }
         }

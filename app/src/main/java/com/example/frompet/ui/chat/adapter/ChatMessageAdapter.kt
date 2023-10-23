@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.frompet.R
-import com.example.frompet.ui.chat.ChatClickUserDetailActivity
-import com.example.frompet.ui.chat.ChatPullScreenActivity
+import com.example.frompet.ui.chat.activity.ChatClickUserDetailActivity
+import com.example.frompet.ui.chat.activity.ChatPullScreenActivity
 
 import com.example.frompet.databinding.ItemMyMessageBinding
 import com.example.frompet.databinding.ItemOtherMessageBinding
@@ -71,51 +71,51 @@ class ChatMessageAdapter(var context: Context) :
         }
     }
 
-    inner class MyMessageViewHolder(private val binding: ItemMyMessageBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MyMessageViewHolder(private val binding: ItemMyMessageBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(chatMessage: ChatMessage) = with(binding) {
-            tvMessage.setBackgroundResource(R.drawable.chat2)
-
-//            ivMessageImage.setBackgroundResource(R.drawable.chat2)
-
-            tvMessage.text = chatMessage.message
-            tvTime.text =
-                SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
-
             if (chatMessage.imageUrl.isNullOrEmpty().not()) {
                 ivMessageImage.isVisible = true
                 tvMessage.isVisible = false
+                tvTime.text = SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
                 ivMessageImage.load(chatMessage.imageUrl) {
                     error(R.drawable.kakaotalk_20230825_222509794_01)
                 }
                 clickListener(ivMessageImage, chatMessage.imageUrl)
             } else {
                 ivMessageImage.isVisible = false
+                tvMessage.isVisible = true
+                tvMessage.setBackgroundResource(R.drawable.chat2)
+                tvMessage.text = chatMessage.message
+                tvTime.text =
+                    SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
             }
         }
     }
-    inner class OtherMessageViewHolder(private val binding: ItemOtherMessageBinding) : RecyclerView.ViewHolder(binding.root) {
+
+    inner class OtherMessageViewHolder(private val binding: ItemOtherMessageBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
         fun bind(chatMessage: ChatMessage) = with(binding) {
-            tvName.text = chatMessage.senderPetName
-            tvMessage.setBackgroundResource(R.drawable.chat1)
-
-//            ivMessageImage.setBackgroundResource(R.drawable.chat1)
-
-
-            tvMessage.text = chatMessage.message
-            tvTime.text = SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
-
             if (chatMessage.imageUrl.isNullOrEmpty().not()) {
                 ivMessageImage.isVisible = true
                 tvMessage.isVisible = false
+                tvTime.text = SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
                 ivMessageImage.load(chatMessage.imageUrl) {
                     error(R.drawable.kakaotalk_20230825_222509794_01)
                 }
                 clickListener(ivMessageImage, chatMessage.imageUrl)
             } else {
                 ivMessageImage.isVisible = false
+                tvMessage.isVisible = true
+                tvName.text = chatMessage.senderPetName
+                tvMessage.setBackgroundResource(R.drawable.chat1)
+                tvMessage.text = chatMessage.message
+                tvTime.text =
+                    SimpleDateFormat("a HH:mm", Locale.KOREA).format(Date(chatMessage.timestamp))
             }
-            //보내는사람=현재 uid
-            firestore.collection("User").document(chatMessage.senderId ).get().addOnSuccessListener { document ->
+
+            firestore.collection("User").document(chatMessage.senderId).get().addOnSuccessListener { document ->
                 val user = document.toObject(User::class.java)
                 user?.petProfile?.let {
                     ivProfile.load(it) {
@@ -127,9 +127,11 @@ class ChatMessageAdapter(var context: Context) :
         }
     }
 
+
+
     class DiffCallback : DiffUtil.ItemCallback<ChatMessage>() {
         override fun areItemsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
-            return oldItem.senderPetName == newItem.senderPetName
+            return oldItem.timestamp == newItem.timestamp
         }
 
         override fun areContentsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
