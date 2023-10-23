@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
+    android:layout_marginBottom="20dp"
     android:orientation="horizontal">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -11,22 +11,23 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="7dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/text_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:orientation="vertical"
-        app:layout_constraintStart_toEndOf="@+id/iv_pet_profile"
-        app:layout_constraintTop_toTopOf="@+id/iv_pet_profile"
         app:layout_constraintBottom_toBottomOf="@+id/iv_pet_profile"
-        >
+        app:layout_constraintStart_toEndOf="@+id/iv_pet_profile"
+        app:layout_constraintTop_toTopOf="@+id/iv_pet_profile">
 
         <TextView
             android:id="@+id/tv_chat_title"
@@ -35,6 +36,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/chatroom_name"
             android:textColor="#000000"
+
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -42,9 +44,9 @@
             android:id="@+id/tv_lastmessage"
             android:layout_width="270dp"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:ellipsize="end"
             android:layout_marginTop="6dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@string/last_message" />
     </LinearLayout>
 
@@ -52,30 +54,32 @@
         android:id="@+id/tv_new_message"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/circle_background"
-         android:gravity="center"
         android:visibility="gone"
+        android:gravity="center"
         android:text="@string/message_noti"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/text_container"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_container"
-        app:layout_constraintBottom_toBottomOf="@+id/text_container" />
+        app:layout_constraintTop_toTopOf="@+id/text_container" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginStart="205dp"
+        android:layout_marginEnd="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toEndOf="@+id/text_container"
+        app:layout_constraintTop_toBottomOf="@+id/tv_new_message">
 
         <TextView
             android:id="@+id/tv_last_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="오전:11시40분"
+            android:text="@string/chat_home_last_time"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
