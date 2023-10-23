@@ -11,7 +11,7 @@ import com.example.frompet.databinding.FragmentChatBinding
 class ChatFragment : Fragment() {
 
     private var _binding: FragmentChatBinding? = null
-    private val binding get() = _binding
+    private val binding get() = _binding!!
     private val chatHomeFrag: ChatHomeFragment by lazy { ChatHomeFragment() }
     private val chatListFrag: ChatLikeListFragment by lazy { ChatLikeListFragment() }
 
@@ -24,10 +24,10 @@ class ChatFragment : Fragment() {
         val fragments = listOf(chatHomeFrag, chatListFrag)
         val adapter = ViewPagerAdapter(this, fragments)
 
-        binding?.viewPager?.adapter = adapter
-        binding?.viewPager?.let { binding?.dots?.setViewPager2(it) }
+        binding.viewPager.adapter = adapter
+        binding.viewPager.let { binding.dots.setViewPager2(it) }
 
-        return binding?.root
+        return binding.root
     }
 
     override fun onDestroyView() {
