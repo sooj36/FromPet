@@ -5,6 +5,7 @@ import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -16,7 +17,10 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import coil.Coil
 import coil.load
+import coil.request.ImageRequest
 import com.example.frompet.R
 import com.example.frompet.data.model.User
 import com.example.frompet.data.model.UserLocation
@@ -44,13 +48,15 @@ import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.coroutines.launch
 import org.checkerframework.checker.nullness.qual.NonNull
+import java.io.File
 
 class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-//    private val ONE_MEGABYTE = 1024 * 1024
+    private val ONE_MEGABYTE : Long = 1024 * 1024
 
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
@@ -190,19 +196,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
     }
 
 
-    private fun LatLng() { //경도 위도
-        naverMap.addOnLocationChangeListener { location ->
-            Toast.makeText(
-                requireContext(), "${location.latitude}, ${location.longitude}",
-                Toast.LENGTH_SHORT
-            ).show()
-
-            Log.d(TAG, "${location.latitude}, ${location.longitude}")
-        }
-    }
-
-
-    private fun setMark(location: UserLocation) {
+    private fun setMark(location: UserLocation) = lifecycleScope.launch {
         val marker = Marker()
         // 마커 위치
         if (location != null) {
@@ -217,13 +211,18 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         // 마커의 투명도
         marker.alpha = 0.8f
 
-        // 마커 이미지
-        marker.icon = OverlayImage.fromResource(R.drawable.heart)
+        marker.width = 130
+        marker.height = 120
 
-        marker.width = 90
-        marker.height = 90
+        val image = "https://firebasestorage.googleapis.com/v0/b/frompet-70b42.appspot.com/o/images%2FIMAGE_20231018_215401.png?alt=media&token=7353dc7b-f260-4ca9-b9ba-47ea95911b79"
+        val imageLoader = context?.let { Coil.imageLoader(it) }
+        val request = ImageRequest.Builder(requireContext()).data(image).target {
+            val bitmap = (it as BitmapDrawable).bitmap
+            val imageOverlay = OverlayImage.fromBitmap(bitmap)
+            marker.icon = imageOverlay
+        }.build()
 
-
+        imageLoader?.execute(request)
 
 
     }
