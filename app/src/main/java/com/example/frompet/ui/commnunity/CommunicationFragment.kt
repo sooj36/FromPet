@@ -22,7 +22,7 @@ class CommunicationFragment : Fragment() {
     ): View? {
          _binding = FragmentCommunicationBinding.inflate(inflater,container,false)
 
-        return binding?.root
+        return binding.root
     }
 
     override fun onDestroyView() {
