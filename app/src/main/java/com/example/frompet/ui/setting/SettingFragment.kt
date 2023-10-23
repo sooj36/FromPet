@@ -1,5 +1,6 @@
 package com.example.frompet.ui.setting
 
+import FCMTokenManagerViewModel
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +20,8 @@ class SettingFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SettingViewModel by viewModels()
+    private val fcmTokenManagerViewModel: FCMTokenManagerViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,11 +53,25 @@ class SettingFragment : Fragment() {
 
 
         binding.ibLogOut.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            val intent = Intent(requireActivity(), LoginActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            startActivity(intent)
+            val currentUser = FirebaseAuth.getInstance().currentUser
+
+            if (currentUser != null) {
+                // 현재 로그인된 사용자가 있는 경우에만 실행
+                val userId = currentUser.uid
+
+                // FCM 토큰을 삭제하는 코드 추가
+                fcmTokenManagerViewModel.removeFCMToken(userId)
+
+                // 사용자 로그아웃
+                FirebaseAuth.getInstance().signOut()
+
+                // LoginActivity로 이동
+                val intent = Intent(requireActivity(), LoginActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                startActivity(intent)
+            }
         }
+
 
         binding.btModify.setOnClickListener {
             val intent = Intent(requireActivity(), SettingProfileActivity::class.java)
