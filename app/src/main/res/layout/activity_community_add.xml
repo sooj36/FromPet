@@ -149,6 +149,7 @@
             android:layout_marginEnd="118dp"
             android:layout_marginBottom="33dp"
             android:text="@string/community_add_cancel"
+            android:backgroundTint="@color/light_beige"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_add_enroll"
             app:layout_constraintStart_toStartOf="parent" />
@@ -161,6 +162,7 @@
             android:text="@string/community_add_enroll"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:backgroundTint="@color/light_beige"
             app:layout_constraintStart_toEndOf="@+id/btn_add_cancel" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
