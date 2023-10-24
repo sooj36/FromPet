@@ -23,7 +23,6 @@ class LoginActivity : AppCompatActivity() {
     private val binding get() = _binding!!
     private val viewModel by lazy {
         ViewModelProvider(this)[LoginupViewModel::class.java]
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,9 +110,6 @@ class LoginActivity : AppCompatActivity() {
                             }
                     }
 
-                    else -> {
-                        Log.d(ContentValues.TAG, "listenToChannels: No event received so far")
-                    }
                 }
 
             }
