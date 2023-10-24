@@ -28,7 +28,9 @@
         android:layout_height="match_parent"
         android:layout_marginTop="65dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintTop_toBottomOf="@id/et_add_title">
+        app:layout_constraintTop_toBottomOf="@id/et_add_title"
+        tools:layout_editor_absoluteX="-202dp">
+
 
         <View
             android:id="@+id/add_view_line_1"
@@ -140,6 +142,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/add_view_line_2" />
 
+        <Button
+            android:id="@+id/btn_add_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="118dp"
+            android:layout_marginBottom="33dp"
+            android:text="@string/community_add_cancel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_add_enroll"
+            app:layout_constraintStart_toStartOf="parent" />
 
+        <Button
+            android:id="@+id/btn_add_enroll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="33dp"
+            android:text="@string/community_add_enroll"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_add_cancel" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

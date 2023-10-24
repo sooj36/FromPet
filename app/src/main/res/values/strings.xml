@@ -44,6 +44,8 @@
     <string name="community_detail_title">산책 다닐 강아지 친구 구해요</string>
     <string name="community_add_title">제목</string>
     <string name="community_add_content">내용을 입력하세요</string>
+    <string name="community_add_cancel">취소</string>
+    <string name="community_add_enroll">등록</string>
 
 
 </resources>
