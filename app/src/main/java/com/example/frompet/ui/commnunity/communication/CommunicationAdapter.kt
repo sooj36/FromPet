@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +13,7 @@ import com.example.frompet.data.model.CommunicationData
 import com.example.frompet.databinding.ItemCoummunicationBinding
 import com.example.frompet.ui.chat.activity.ChatPullScreenActivity
 import com.example.frompet.ui.chat.adapter.ChatMessageAdapter
+import com.example.frompet.ui.commnunity.community.CommunityActivity
 
 class CommunicationAdapter(communicationFragment: List<CommunicationData>) :
     ListAdapter<CommunicationData, CommunicationAdapter.CommunicationViewHolder>(
@@ -56,6 +58,11 @@ class CommunicationAdapter(communicationFragment: List<CommunicationData>) :
         fun bind(communicationData: CommunicationData) {
             binding.ivPetNameComm.load(communicationData.pet_logo)
             binding.tvPetNameComm.text = communicationData.pet_name
+
+            binding.communicationId.setOnClickListener {
+                val intent : Intent = Intent(it.context, CommunityActivity::class.java)
+                it.context.startActivity(intent)
+            }
         }
     }
 }

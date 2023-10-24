@@ -1,5 +1,6 @@
 package com.example.frompet.ui.commnunity.communication
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunicationData
 import com.example.frompet.databinding.FragmentCommunicationBinding
-import com.example.frompet.ui.commnunity.community.CommunityFragment
+import com.example.frompet.ui.commnunity.community.CommunityActivity
 
 
 class CommunicationFragment : Fragment() {
@@ -46,17 +47,10 @@ class CommunicationFragment : Fragment() {
         recyclerView.adapter = adapter
         adapter.submitList(communicationData)
 
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        val movetransaction = CommunityFragment()
-        transaction.remove(this) // 이전 프래그먼트 제거
+
 
         return binding.root
     }
-
-
-
-
-
 
 
 
