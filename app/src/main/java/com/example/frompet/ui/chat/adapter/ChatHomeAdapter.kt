@@ -21,13 +21,18 @@ import com.google.firebase.auth.FirebaseAuth
 import java.util.Date
 import java.util.Locale
 
-class ChatHomeAdapter(var context: Context, private val chatViewModel: ChatViewModel, private val lifecycleOwner: LifecycleOwner,) :
+class ChatHomeAdapter(
+    var context: Context,
+    private val chatViewModel: ChatViewModel,
+    private val lifecycleOwner: LifecycleOwner,
+) :
     ListAdapter<User, ChatHomeAdapter.ChatHomeViewHolder>(DiffCallback()) {
 
     var onChatItemClick: ((User) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatHomeViewHolder {
-        val binding = ItemChathomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemChathomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ChatHomeViewHolder(binding)
     }
 
@@ -38,57 +43,64 @@ class ChatHomeAdapter(var context: Context, private val chatViewModel: ChatViewM
 
     inner class ChatHomeViewHolder(private val binding: ItemChathomeBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindItems(user: User) {
-            binding.apply {
-                tvChatTitle.text = user.petName
-                user.petProfile.let {
-                    ivPetProfile.load(it){
-                        error(R.drawable.kakaotalk_20230825_222509794_01)
-                    }
-                }
-                ivPetProfile.setOnClickListener {
-                    userDetail(user)
-                }
-                val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-                val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
-                chatViewModel.loadLastChats(currentUserId, user.uid)
+        fun bindItems(user: User) = with(binding) {
 
-                val liveData = chatViewModel.lastChatLiveData(chatRoomId)
-                liveData.observe(lifecycleOwner) { lastMessage ->
-                    binding.tvLastmessage.text = lastMessage?.message ?: ""
-                    lastMessage?.let {
-                        val formatTime = formatTimeStamp(it.timestamp)
-                        binding.tvLastTime.text = formatTime
-                    }
-                }
-                chatViewModel.newChats.observe(lifecycleOwner) { newMessages ->
-                    val hasNewMessage = newMessages[chatRoomId] ?: false
-                    if (hasNewMessage) {
-                        tvNewMessage.visibility = View.VISIBLE
-                    } else {
-                        tvNewMessage.visibility = View.GONE
-                    }
-                }
-                root.setOnClickListener {
-                    onChatItemClick?.invoke(user)
+            tvChatTitle.text = user.petName
+            user.petProfile.let {
+                ivPetProfile.load(it) {
+                    error(R.drawable.kakaotalk_20230825_222509794_01)
                 }
             }
+            ivPetProfile.setOnClickListener {
+                userDetail(user)
+            }
+            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+            val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
+            chatViewModel.loadLastChats(currentUserId, user.uid)
 
+            val liveData = chatViewModel.lastChatLiveData(chatRoomId)
+            liveData.observe(lifecycleOwner) { lastMessage ->
+                if (lastMessage?.imageUrl != null) {
+                    tvLastmessage.text = "(사진)"
+                } else {
+                    tvLastmessage.text = lastMessage?.message ?: "메시지가 없습니다."
+                }
+                lastMessage?.let {
+                    val formatTime = formatTimeStamp(it.timestamp)
+                    tvLastTime.text = formatTime
+                }
+            }
+            chatViewModel.newChats.observe(lifecycleOwner) { newMessages ->
+                val hasNewMessage = newMessages[chatRoomId] ?: false
+                if (hasNewMessage) {
+                    tvNewMessage.visibility = View.VISIBLE
+                } else {
+                    tvNewMessage.visibility = View.GONE
+                }
+            }
+            root.setOnClickListener {
+                onChatItemClick?.invoke(user)
+            }
         }
+
     }
+
     class DiffCallback : DiffUtil.ItemCallback<User>() {
         override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
             return oldItem.uid == newItem.uid
         }
+
         override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
             return oldItem == newItem
         }
     }
+
     private fun userDetail(user: User) {
         val intent = Intent(context, ChatClickUserDetailActivity::class.java)
         intent.putExtra(ChatClickUserDetailActivity.USER, user)
         context.startActivity(intent)
     }
+
     private fun formatTimeStamp(timestamp: Long): String {
         val sdf = SimpleDateFormat("a HH:mm", Locale.KOREA)
         sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
