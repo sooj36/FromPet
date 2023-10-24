@@ -7,29 +7,28 @@
     android:layout_gravity="center">
 
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardview"
-            android:layout_width="80dp"
-            android:layout_weight="1"
-            android:layout_height="80dp"
-            android:layout_marginEnd="20dp"
-            android:backgroundTint="@color/light_beige"
-            android:padding="20dp"
-            app:cardCornerRadius="30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardview"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/light_beige"
+        android:padding="20dp"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/iv_pet_name_comm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:contentDescription="@string/toCommunity"
-                android:scaleType="centerCrop"
-                android:src="@drawable/dog" />
+        <ImageView
+            android:id="@+id/iv_pet_name_comm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/toCommunity"
+            android:scaleType="centerCrop"
+            android:src="@drawable/dog" />
 
-        </com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/tv_pet_name_comm"
