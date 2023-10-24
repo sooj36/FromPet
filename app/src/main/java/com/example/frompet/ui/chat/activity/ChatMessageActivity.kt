@@ -3,6 +3,8 @@ package com.example.frompet.ui.chat.activity
 import com.example.frompet.ui.chat.dialog.ChatExitDailog
 import android.app.Activity
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
+import android.icu.util.TimeZone
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frompet.MatchSharedViewModel
+import com.example.frompet.data.model.ChatItem
+import com.example.frompet.data.model.ChatMessage
 import com.example.frompet.ui.chat.adapter.ChatMessageAdapter
 import com.example.frompet.databinding.ActivityChatMessageBinding
 import com.example.frompet.data.model.User
@@ -21,6 +25,8 @@ import com.example.frompet.ui.chat.viewmodel.MessageViewModel
 
 
 import com.google.firebase.auth.FirebaseAuth
+import java.util.Date
+import java.util.Locale
 
 
 class ChatMessageActivity : AppCompatActivity() {
@@ -88,12 +94,14 @@ class ChatMessageActivity : AppCompatActivity() {
 
     private fun observeViewModels() {
         messageViewModel.chatMessages.observe(this) { messages ->
-            adapter.submitList(messages) {
+            val chatItems = convertToChatItems(messages)
+            adapter.submitList(chatItems) {
                 binding.rvMessage.post {
-                    binding.rvMessage.scrollToPosition(messages.size - 1)
+                    binding.rvMessage.scrollToPosition(chatItems.size - 1)
                 }
             }
         }
+
 
         messageViewModel.isTyping.observe(this, Observer { isTyping ->
             binding.tvTyping.text = if (isTyping) "입력중..." else ""
@@ -113,6 +121,30 @@ class ChatMessageActivity : AppCompatActivity() {
             }
         }
     }
+    private fun convertToChatItems(messages: List<ChatMessage>): List<ChatItem> {
+        val chatItems = mutableListOf<ChatItem>()
+        var lastDate: String? = null
+        val sdf = SimpleDateFormat("yyyy년MM월dd일", Locale.KOREA)
+        sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+
+        val currentDate = sdf.format(Date())
+
+        for (message in messages) {
+            val messageDate = sdf.format(Date(message.timestamp))
+            if (lastDate == null || messageDate != lastDate) {
+                if (messageDate == currentDate) {
+                    chatItems.add(ChatItem.DateHeader("오늘"))
+                } else {
+                    chatItems.add(ChatItem.DateHeader(messageDate))
+                }
+                lastDate = messageDate
+            }
+            chatItems.add(ChatItem.MessageItem(message))
+        }
+
+        return chatItems
+    }
+
 
     private fun handleChatActions(user: User) {
         displayInfo(user)

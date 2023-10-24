@@ -12,4 +12,9 @@ data class ChatMessage(
     val imageUrl: String? = null,
     val timestamp: Long = System.currentTimeMillis()
 ): Parcelable
+sealed class ChatItem {
+    data class MessageItem(val chatMessage: ChatMessage) : ChatItem()
+    data class DateHeader(val date: String) : ChatItem()
+}
+
 
