@@ -31,7 +31,7 @@
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/tv_user_name"
-                android:text="username"
+                android:text="@string/chat_list_name"
                 android:textStyle="bold|normal"
                 android:textAlignment="center"
                 android:layout_marginTop="5dp"
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/tv_user_type"
-                android:text="type"
+                android:text="@string/chat_list_type"
                 android:textAlignment="center"
                 android:layout_marginTop="3dp"
                 android:textSize="12sp"
