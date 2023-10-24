@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.Switch
 import androidx.fragment.app.viewModels
 import coil.load
 import com.bumptech.glide.Glide
@@ -21,6 +22,8 @@ class SettingFragment : Fragment() {
 
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
+    private lateinit var chatSwitch: Switch
+    private lateinit var friendsSwitch: Switch
 
     private val viewModel: SettingViewModel by viewModels()
     private val fcmTokenManagerViewModel: FCMTokenManagerViewModel by viewModels()
@@ -80,6 +83,22 @@ class SettingFragment : Fragment() {
         binding.btModify.setOnClickListener {
             val intent = Intent(requireActivity(), SettingProfileActivity::class.java)
             startActivity(intent)
+        }
+
+        chatSwitch = binding.chatSwitch
+
+
+        binding.ibNotification.setOnClickListener {
+
+            chatSwitch.isChecked = !chatSwitch.isChecked
+        }
+
+        friendsSwitch = binding.friendsSwitch
+
+
+        binding.ibFriendsNoti.setOnClickListener {
+
+            friendsSwitch.isChecked = !friendsSwitch.isChecked
         }
 
         return binding.root
