@@ -3,18 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/light_gray"
     android:layout_height="match_parent"
     tools:context=".ui.commnunity.CommunityDetailActivity">
 
-    <ImageView
-        android:id="@+id/iv_detail_backbtn"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:src="@drawable/back"
-        android:layout_margin="10dp"
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_tag"
+        style="@style/Widget.MaterialComponents.Chip.Choice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/community_walk"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:chipBackgroundColor="@color/light_pink"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_detail_title"
@@ -28,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_detail_backbtn" />
+        app:layout_constraintTop_toBottomOf="@id/chip_tag" />
 
     <View
         android:id="@+id/detail_view_line"
@@ -47,8 +52,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/community_detail_comment"
-        android:textSize="15sp"
+        android:textSize="17sp"
         android:layout_marginTop="15dp"
+        android:layout_marginStart="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detail_view_line" />

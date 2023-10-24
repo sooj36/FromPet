@@ -8,6 +8,7 @@
     app:cardUseCompatPadding="true"
     app:cardCornerRadius="13dp"
     app:cardElevation="10dp"
+    android:background="@drawable/gradient_shape"
     tools:context=".ui.chat.fragment.ChatLikeListFragment">
     <LinearLayout
         android:orientation="vertical"
@@ -34,6 +35,7 @@
                 android:textStyle="bold|normal"
                 android:textAlignment="center"
                 android:layout_marginTop="5dp"
+                android:textColor="@color/black"
                 android:textSize="15sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

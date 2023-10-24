@@ -23,7 +23,7 @@ class SettingProfileActivity : AppCompatActivity() {
     private val binding get() = _binding!!
     private lateinit var storage: FirebaseStorage
     private lateinit var ViewModel: SettingViewModel
-    private var selectedImageUri: Uri? = null // 이미지 선택을 저장할 변수
+    private var selectedImageUri: Uri? = null // 이미지 선택을 저장할 변수임
 
     companion object {
         const val GALLERY_REQUEST_CODE = 123

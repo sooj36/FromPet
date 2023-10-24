@@ -14,8 +14,6 @@ import androidx.navigation.ui.NavigationUI
 import com.example.frompet.data.repository.firebase.MyFirebaseMessagingService
 import com.example.frompet.databinding.ActivityMainBinding
 import com.example.frompet.ui.login.LoginActivity
-import com.example.frompet.ui.login.LoginViewModel
-import com.example.frompet.ui.login.LoginViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import android.Manifest
 
@@ -25,12 +23,6 @@ class MainActivity : AppCompatActivity() {
     }
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
-
-    private val viewModel by lazy {
-        ViewModelProvider(this,
-            LoginViewModelFactory()
-        )[LoginViewModel::class.java]
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)

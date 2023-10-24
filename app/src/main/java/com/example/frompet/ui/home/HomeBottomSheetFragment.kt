@@ -45,7 +45,7 @@ class HomeBottomSheetFragment : BottomSheetDialogFragment() {
     private fun displayUserInfo(user: User)= with(binding) {
             tvPetName.text = user.petName
             tvPetAge.text = "${user.petAge.toString()}세"
-            tvPetGender.text = user.petGender
+            tvPetGender.text = user.petGender.toString()
             tvPetType.text = user.petType
             tvPetDes.text = user.petDescription
             tvPetIntro.text = user.petIntroduction
