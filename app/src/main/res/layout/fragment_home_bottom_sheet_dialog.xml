@@ -1,276 +1,238 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:context=".ui.home.">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/background_gradient"
             tools:context=".ui.chat.activity.ChatUserDetailActivity">
 
             <ImageView
-                android:id="@+id/back_btn"
-                android:padding="1dp"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_margin="10dp"
-                android:src="@drawable/back"
+                android:id="@+id/iv_pet_profile"
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/con_container"
+            android:layout_width="match_parent"
+            android:background="@drawable/rounded_corner"
+            android:layout_height="match_parent"
+            android:layout_marginTop="270dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="About Me"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="30dp"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="13dp"
-                android:layout_marginTop="35dp"
-                app:cardElevation="10dp"
-                app:cardUseCompatPadding="true"
-                app:layout_constraintEnd_toEndOf="parent"
+            <ImageView
+                android:id="@+id/iv_pet_name"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="70dp"
+
+                android:src="@drawable/name"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/iv_pet_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_launcher_background" />
-            </androidx.cardview.widget.CardView>
-
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView_name_label"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="15dp"
-                android:backgroundTint="@color/light_pink"
-                app:layout_constraintStart_toStartOf="@+id/card_view"
-                app:layout_constraintTop_toBottomOf="@+id/card_view">
-
-                <TextView
-                    android:id="@+id/tv_label_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-
-                    android:text="@string/activity_detail_label_names"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-            </androidx.cardview.widget.CardView>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_pet_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_marginStart="10dp"
-                android:text="@string/activity_detail_petname"
-                android:layout_marginTop="5dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@+id/cardView_name_label"
-                app:layout_constraintTop_toBottomOf="@+id/cardView_name_label" />
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="@string/activity_detail_petname"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_pet_name"
+                app:layout_constraintStart_toEndOf="@+id/iv_pet_name"
+                app:layout_constraintTop_toTopOf="@+id/iv_pet_name" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView_type_label"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:backgroundTint="@color/light_pink"
-                app:cardCornerRadius="15dp"
-                app:layout_constraintStart_toStartOf="@+id/card_view"
-                app:layout_constraintTop_toBottomOf="@+id/tv_pet_name">
-
-                <TextView
-                    android:id="@+id/tv_label_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="@string/activity_detail_label_type"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-            </androidx.cardview.widget.CardView>
+            <ImageView
+                android:id="@+id/iv_pet_type"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/type"
+                app:layout_constraintStart_toStartOf="@+id/iv_pet_name"
+                app:layout_constraintTop_toBottomOf="@+id/iv_pet_name" />
 
             <TextView
                 android:id="@+id/tv_pet_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_marginStart="10dp"
-                android:text="@string/activity_detail_pettype"
-                android:paddingStart="10dp"
-                android:layout_marginTop="5dp"
-                android:paddingEnd="10dp"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@+id/cardView_type_label"
-                app:layout_constraintTop_toBottomOf="@+id/cardView_type_label" />
+                android:textStyle="bold"
+                android:textSize="18sp"
 
+                android:text="@string/activity_detail_pettype"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_pet_type"
+                app:layout_constraintStart_toEndOf="@+id/iv_pet_type"
+                app:layout_constraintTop_toTopOf="@+id/iv_pet_type" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView_age_label"
-                android:layout_width="30dp"
-                android:layout_marginTop="5dp"
-                android:layout_height="wrap_content"
-
-                app:cardCornerRadius="15dp"
-                android:backgroundTint="@color/light_pink"
-                app:layout_constraintStart_toStartOf="@+id/card_view"
-                app:layout_constraintTop_toBottomOf="@+id/tv_pet_type">
-
-                <TextView
-                    android:id="@+id/tv_label_age"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:text="@string/activity_detail_label_age"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-            </androidx.cardview.widget.CardView>
-
+            <ImageView
+                android:id="@+id/iv_pet_age"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/age"
+                app:layout_constraintStart_toStartOf="@+id/iv_pet_type"
+                app:layout_constraintTop_toBottomOf="@+id/iv_pet_type" />
             <TextView
                 android:id="@+id/tv_pet_age"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_marginStart="10dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="18sp"
 
                 android:text="@string/activity_detail_petage"
-                android:paddingStart="10dp"
-                android:layout_marginTop="5dp"
-                android:paddingEnd="10dp"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@+id/cardView_age_label"
-                app:layout_constraintTop_toBottomOf="@+id/cardView_age_label" />
+                app:layout_constraintBottom_toBottomOf="@+id/iv_pet_age"
+                app:layout_constraintStart_toEndOf="@+id/iv_pet_age"
+                app:layout_constraintTop_toTopOf="@+id/iv_pet_age"
+                />
 
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView_gender_label"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="15dp"
-                android:layout_marginTop="5dp"
-                android:backgroundTint="@color/light_pink"
-                app:layout_constraintStart_toStartOf="@+id/card_view"
-                app:layout_constraintTop_toBottomOf="@+id/tv_pet_age">
-
-                <TextView
-                    android:id="@+id/tv_label_gender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="@string/activity_detail_label_gender"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-            </androidx.cardview.widget.CardView>
-
+            <ImageView
+                android:id="@+id/iv_pet_gender"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/gender"
+                app:layout_constraintStart_toStartOf="@+id/iv_pet_age"
+                app:layout_constraintTop_toBottomOf="@+id/iv_pet_age" />
             <TextView
                 android:id="@+id/tv_pet_gender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="18sp"
+
                 android:layout_marginStart="10dp"
                 android:text="@string/activity_detail_petgender"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:layout_marginTop="5dp"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@+id/cardView_gender_label"
-                app:layout_constraintTop_toBottomOf="@+id/cardView_gender_label" />
+                app:layout_constraintBottom_toBottomOf="@+id/iv_pet_gender"
+                app:layout_constraintStart_toEndOf="@+id/iv_pet_gender"
+                app:layout_constraintTop_toTopOf="@+id/iv_pet_gender"
+                />
 
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView_des_label"
-                android:layout_width="30dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout6"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/light_pink"
-                android:layout_marginTop="5dp"
-                app:cardCornerRadius="15dp"
-                app:layout_constraintStart_toStartOf="@+id/card_view"
-                app:layout_constraintTop_toBottomOf="@+id/tv_pet_gender">
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/iv_pet_gender"
+                app:layout_constraintTop_toBottomOf="@+id/iv_pet_gender">
+
+                <ImageView
+                    android:id="@+id/iv_pet_des"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/des"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/tv_label_des"
+                    android:id="@+id/tv_pet_des"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:text="@string/activity_detail_label_des"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-            </androidx.cardview.widget.CardView>
+                    android:layout_marginStart="10dp"
+                    android:text="@string/activity_detail_petdes"
+                    android:textColor="@color/black"
 
-            <TextView
-                android:id="@+id/tv_pet_des"
-                android:layout_width="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/iv_pet_des"
+                    app:layout_constraintTop_toTopOf="@+id/iv_pet_des" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:text="@string/activity_detail_petdes"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@+id/cardView_des_label"
-                app:layout_constraintTop_toBottomOf="@+id/cardView_des_label" />
-
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView_intro_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/light_pink"
-                app:cardCornerRadius="15dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="30dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_pet_des">
+                app:layout_constraintStart_toStartOf="@+id/iv_pet_gender"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6">
+
+                <ImageView
+                    android:id="@+id/iv_pet_intro"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/intro"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/tv_label_intro"
-                    android:layout_width="30dp"
-                    android:layout_gravity="center"
+                    android:id="@+id/tv_pet_intro"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:text="@string/activity_detail_label_intro"
-                    android:textSize="12sp"
-                    android:gravity="center" />
-            </androidx.cardview.widget.CardView>
+                    android:layout_marginStart="10dp"
+                    android:text="@string/activity_detail_petintro"
+                    android:textColor="@color/black"
 
-            <TextView
-                android:id="@+id/tv_pet_intro"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginTop="15dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:textColor="@color/black"
-                android:text="@string/activity_detail_petintro"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView_intro_label" />
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/iv_pet_intro"
+                    app:layout_constraintTop_toTopOf="@+id/iv_pet_intro" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-</LinearLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="250dp"
+                android:layout_marginEnd="10dp"
+                android:rotation="30"
+                android:src="@drawable/ribbon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="top|start"
+                android:layout_margin="10dp"
+                android:padding="1dp"
+                android:src="@drawable/back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </FrameLayout>
+
+</ScrollView>
