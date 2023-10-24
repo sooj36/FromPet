@@ -34,12 +34,12 @@ class ChatMessageActivity : AppCompatActivity() {
     private val messageViewModel: MessageViewModel by viewModels()
     private val chatViewModel: ChatViewModel by viewModels()
     private val matchSharedViewModel: MatchSharedViewModel by viewModels()
-
+    private lateinit var receiverId: String
     private lateinit var adapter: ChatMessageAdapter
     private val auth = FirebaseAuth.getInstance()
     private val typingTimeoutHandler = Handler(Looper.getMainLooper())
     private val typingTimeoutRunnable = Runnable {
-        messageViewModel.setTypingStatus(false)
+        messageViewModel.setTypingStatus(receiverId,false)
     }
 
     companion object {
@@ -58,7 +58,9 @@ class ChatMessageActivity : AppCompatActivity() {
             observeViewModels()
 
             val user: User? = intent.getParcelableExtra(USER)
-            user?.let { handleChatActions(it) }
+            user?.let {
+                receiverId = it.uid
+                handleChatActions(it) }
 
             backBtn.setOnClickListener {
                 goneNewMessage()
@@ -168,9 +170,9 @@ class ChatMessageActivity : AppCompatActivity() {
             etMessage.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
                     if (s.isNullOrEmpty()) {
-                        messageViewModel.setTypingStatus(false)
+                        messageViewModel.setTypingStatus(user.uid, false)
                     } else {
-                        messageViewModel.setTypingStatus(true)
+                        messageViewModel.setTypingStatus(user.uid, true)
                         typingTimeoutHandler.removeCallbacks(typingTimeoutRunnable)
                         typingTimeoutHandler.postDelayed(typingTimeoutRunnable, 5000)
                     }
