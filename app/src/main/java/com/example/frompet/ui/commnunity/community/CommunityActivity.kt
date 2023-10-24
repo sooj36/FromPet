@@ -1,10 +1,12 @@
 package com.example.frompet.ui.commnunity.community
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frompet.R
 import com.example.frompet.databinding.ActivityCommunityBinding
+import com.example.frompet.ui.commnunity.communitAdd.CommunityAddActivity
 import com.example.frompet.ui.commnunity.communityHome.CommunityHomeFragment
 
 class CommunityActivity : AppCompatActivity() {
@@ -26,6 +28,11 @@ class CommunityActivity : AppCompatActivity() {
                 .replace(R.id.communicationrecyclerView, fragment)
                 .addToBackStack(null)
                 .commit()
+        }
+
+        binding?.ivPen?.setOnClickListener {
+            val intent : Intent =  Intent(this@CommunityActivity, CommunityAddActivity::class.java)
+            startActivity(intent)
         }
 
 
