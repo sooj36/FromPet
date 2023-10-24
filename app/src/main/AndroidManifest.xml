@@ -25,7 +25,18 @@
         android:theme="@style/Theme.FromPet"
         tools:targetApi="31">
         <activity
+
             android:name=".ui.setting.FriendsListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.commnunity.CommunityDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.commnunity.communitAdd.CommunityAddActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.commnunity.community.CommunityActivity"
+
             android:exported="false" />
         <activity
             android:name=".ui.chat.activity.ChatClickUserDetailActivity"
