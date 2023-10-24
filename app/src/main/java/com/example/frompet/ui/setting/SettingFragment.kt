@@ -8,8 +8,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.fragment.app.viewModels
 import coil.load
+import com.bumptech.glide.Glide
+import com.example.frompet.R
 import com.example.frompet.databinding.FragmentSettingBinding
 import com.example.frompet.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -21,6 +24,7 @@ class SettingFragment : Fragment() {
 
     private val viewModel: SettingViewModel by viewModels()
     private val fcmTokenManagerViewModel: FCMTokenManagerViewModel by viewModels()
+    private lateinit var progressBar: ProgressBar
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +38,7 @@ class SettingFragment : Fragment() {
     ): View? {
 
         _binding = FragmentSettingBinding.inflate(inflater, container, false)
-
+        progressBar = binding.progressBar
 
         viewModel.petProfile.observe(viewLifecycleOwner) { petProfile ->
             petProfile?.let {
