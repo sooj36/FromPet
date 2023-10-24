@@ -1,33 +1,32 @@
-package com.example.frompet.ui.commnunity.communication
+package com.example.frompet.ui.commnunity.communityHome
 
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageButton
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.frompet.data.model.CommunicationData
+import com.example.frompet.data.model.CommunityHomeData
 import com.example.frompet.databinding.ItemCoummunicationBinding
 import com.example.frompet.ui.chat.activity.ChatPullScreenActivity
 import com.example.frompet.ui.chat.adapter.ChatMessageAdapter
 import com.example.frompet.ui.commnunity.community.CommunityActivity
 
-class CommunicationAdapter(communicationFragment: List<CommunicationData>) :
-    ListAdapter<CommunicationData, CommunicationAdapter.CommunicationViewHolder>(
-        object : DiffUtil.ItemCallback<CommunicationData>() {
+class CommunityHomeAdapter(communicationFragment: List<CommunityHomeData>) :
+    ListAdapter<CommunityHomeData, CommunityHomeAdapter.CommunicationViewHolder>(
+        object : DiffUtil.ItemCallback<CommunityHomeData>() {
             override fun areItemsTheSame(
-                oldItem: CommunicationData,
-                newItem: CommunicationData
+                oldItem: CommunityHomeData,
+                newItem: CommunityHomeData
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areContentsTheSame(
-                oldItem: CommunicationData,
-                newItem: CommunicationData
+                oldItem: CommunityHomeData,
+                newItem: CommunityHomeData
             ): Boolean {
                 return oldItem == newItem
             }
@@ -55,9 +54,9 @@ class CommunicationAdapter(communicationFragment: List<CommunicationData>) :
 
     class CommunicationViewHolder(private val binding: ItemCoummunicationBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(communicationData: CommunicationData) {
-            binding.ivPetNameComm.load(communicationData.pet_logo)
-            binding.tvPetNameComm.text = communicationData.pet_name
+        fun bind(communityHomeData: CommunityHomeData) {
+            binding.ivPetNameComm.load(communityHomeData.pet_logo)
+            binding.tvPetNameComm.text = communityHomeData.pet_name
 
             binding.communicationId.setOnClickListener {
                 val intent : Intent = Intent(it.context, CommunityActivity::class.java)

@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frompet.R
 import com.example.frompet.databinding.ActivityCommunityBinding
+import com.example.frompet.ui.commnunity.communityHome.CommunityHomeFragment
 
 class CommunityActivity : AppCompatActivity() {
 
@@ -18,5 +19,15 @@ class CommunityActivity : AppCompatActivity() {
 
         val recyclerView = binding?.recyclerview
         recyclerView?.layoutManager = LinearLayoutManager(this)
+
+        binding?.backBtn?.setOnClickListener {
+            val fragment = CommunityHomeFragment()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.communicationrecyclerView, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+
     }
 }

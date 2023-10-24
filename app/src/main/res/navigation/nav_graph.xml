@@ -17,9 +17,9 @@
         tools:layout="@layout/fragment_chat" />
     <fragment
         android:id="@+id/communityFragment"
-        android:name="com.example.frompet.ui.commnunity.communication.CommunicationFragment"
+        android:name="com.example.frompet.ui.commnunity.communityHome.CommunityHomeFragment"
         android:label="fragment_communication"
-        tools:layout="@layout/fragment_communication" />
+        tools:layout="@layout/fragment_communityhome" />
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.example.frompet.ui.setting.SettingFragment"
