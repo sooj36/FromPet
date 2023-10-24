@@ -39,7 +39,7 @@ class CommunicationAdapter(communicationFragment: List<CommunicationData>) :
 
     override fun onBindViewHolder(holder: CommunicationViewHolder, position : Int) {
         // currentList : 해당 Adapter 에 " submitList()를 통해 삽입한 아이템 리스트
-//        holder.bind(currentList[position])
+        holder.bind(currentList[position])
     }
 
     private fun clickListener(imageButton: ImageButton, imageUrl: String?) {

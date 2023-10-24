@@ -28,11 +28,6 @@ class CommunicationFragment : Fragment() {
         val recyclerView = binding.communicationrecyclerView
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 4)
 
-        //adapter - list 채우고
-        val adapter = CommunicationAdapter(communicationData)
-        recyclerView.adapter = adapter
-        adapter.submitList(communicationData)
-
         // data list
         communicationData = mutableListOf(
             CommunicationData(R.drawable.dog, "강아지"),
@@ -43,12 +38,15 @@ class CommunicationFragment : Fragment() {
             CommunicationData(R.drawable.pig, "돼지"),
             CommunicationData(R.drawable.snake, "파충류"),
             CommunicationData(R.drawable.fish, "물고기"),
-
-
-
         )
 
-        return view
+        //adapter
+        val adapter = CommunicationAdapter(communicationData)
+        recyclerView.adapter = adapter
+        adapter.submitList(communicationData)
+
+
+        return binding.root
     }
 
 
