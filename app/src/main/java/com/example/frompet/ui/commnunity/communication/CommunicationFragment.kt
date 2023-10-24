@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunicationData
 import com.example.frompet.databinding.FragmentCommunicationBinding
+import com.example.frompet.ui.commnunity.community.CommunityFragment
 
 
 class CommunicationFragment : Fragment() {
@@ -45,9 +46,18 @@ class CommunicationFragment : Fragment() {
         recyclerView.adapter = adapter
         adapter.submitList(communicationData)
 
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        val movetransaction = CommunityFragment()
+        transaction.remove(this) // 이전 프래그먼트 제거
 
         return binding.root
     }
+
+
+
+
+
+
 
 
 
