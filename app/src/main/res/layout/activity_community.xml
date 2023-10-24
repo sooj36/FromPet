@@ -6,9 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".ui.commnunity.community.CommunityActivity">
 
+    <ImageView
+        android:id="@+id/back_btn"
+        android:layout_width="30dp"
+        android:layout_height="20dp"
+        app:srcCompat="@drawable/backbtn"
+        app:layout_constraintTop_toTopOf="@id/chip_constraintLayout"
+        app:layout_constraintStart_toStartOf="parent"
+         />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/chip_constraintLayout"
+        app:layout_constraintTop_toBottomOf="@id/back_btn"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.google.android.material.chip.ChipGroup
@@ -29,47 +40,88 @@
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="전체"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/white" />
+                android:text="@string/community_all"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/light_beige" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_share"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" 나눔"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/white" />
+                android:text="@string/community_share"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/light_orenge" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_walk"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/walk"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/white" />
+                android:text="@string/community_walk"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/light_pink" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_love"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/love"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/white" />
+                android:text="@string/community_love"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/lip_pink" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_exchange"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/exchange"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/white" />
+                android:text="@string/community_exchange"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/light_gray" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_add"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/community_add"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/light_gray" />
+
+
+
+
         </com.google.android.material.chip.ChipGroup>
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/chip_group"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_line"/>
+
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

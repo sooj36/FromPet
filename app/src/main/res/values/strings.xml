@@ -34,9 +34,12 @@
     <string name="login_success_ac">로그인 성공</string>
     <string name="login_failure_ac">로그인 실패</string>
     <string name="toCommunity">커뮤니티게시판으로 이동</string>
-    <string name="exchange">정보교환</string>
-    <string name="love">사랑</string>
-    <string name="walk">산책</string>
+    <string name="community_exchange">정보교환</string>
+    <string name="community_love">사랑</string>
+    <string name="community_walk">산책</string>
+    <string name="community_share">나눔</string>
+    <string name="community_all">전체</string>
+    <string name="community_add">+</string>
 
 
 </resources>

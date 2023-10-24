@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center">
 
-
         <ImageView
             android:id="@+id/iv_pet_name_comm"
             android:layout_width="match_parent"
