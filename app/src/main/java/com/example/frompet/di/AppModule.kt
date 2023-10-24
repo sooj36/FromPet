@@ -37,7 +37,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideFirestore(): FirebaseFirestore {
+    fun provideMemberInfoViewModel(): FirebaseFirestore {
         val firestore = FirebaseFirestore.getInstance()
         val settings = firestore.firestoreSettings
         firestore.firestoreSettings = settings

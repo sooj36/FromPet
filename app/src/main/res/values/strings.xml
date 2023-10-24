@@ -33,6 +33,15 @@
     <string name="signup_failure">회원가입 실패</string>
     <string name="login_success_ac">로그인 성공</string>
     <string name="login_failure_ac">로그인 실패</string>
+    <string name="et_login_email">이메일</string>
+    <string name="et_login_password">비밀번호</string>
+    <string name="bt_login">로그인</string>
+    <string name="tv_find_password">비밀번호 찾기</string>
+    <string name="tv_signup">이메일로 회원가입 진행하기</string>
+    <string name="tvb_signup">회원가입</string>
+    <string name="message_event">메시지: %s</string>
+    <string name="error_code_event">오류 코드: %d</string>
+    <string name="error_event">오류: %s</string>
     <string name="toCommunity">커뮤니티게시판으로 이동</string>
     <string name="community_exchange">정보교환</string>
     <string name="community_love">사랑</string>

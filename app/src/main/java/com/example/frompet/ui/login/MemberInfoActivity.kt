@@ -5,11 +5,14 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.compose.ui.platform.textInputServiceFactory
+import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.frompet.databinding.ActivityMemberInfoBinding
 import com.example.frompet.data.model.User
 import com.example.frompet.MainActivity
 import com.example.frompet.R
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -26,23 +29,24 @@ class MemberInfoActivity : AppCompatActivity() {
     // FirebaseStorage 초기화
     val storage = FirebaseStorage.getInstance()
     private var petProfile: String? = null
+    private var petGender: String = "" // 성별 정보 저장 변수
+    private var petNeuter: String = "" // 중성화 여부 정보 저장 변수
+    private var petAge: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMemberInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.petProfile.setOnClickListener {
+        binding.btSelectPetPhoto.setOnClickListener {
             goGallery()
         }
 
-        binding.btUpdate.setOnClickListener {
-            val petName = binding.etPetName.text.toString()
-            val petAge = binding.etPetAge.text.toString().toIntOrNull() ?: 0
-            val petDescription = binding.etPetDetail.text.toString()
-            val petGender = binding.etPetSex.text.toString()
-            val petIntroduction = binding.etPetIntroduce.text.toString()
-            val petType = binding.etPetType.text.toString()
+        binding.btComplete.setOnClickListener {
+            val petName = binding.textInputEditTextAddPetName.text.toString()
+            val petDescription = binding.textInputEditTextPetDescription.text.toString()
+            val petIntroduction = binding.textInputEditTextPetCharacter.text.toString()
+            val petType = binding.autoCompleteTextViewPetBreed.text.toString()
             // Firebase 현재 사용자 가져오기
             val currentUser = FirebaseAuth.getInstance().currentUser
 
@@ -52,6 +56,20 @@ class MemberInfoActivity : AppCompatActivity() {
                     contentUpload(petProfile)
                 } else {
                     showToast(getString(R.string.profile_image_choose))
+                }
+
+                val selectedGenderId = binding.toggleButtonPetGender.checkedButtonId
+                if (selectedGenderId == R.id.buttonHe) {
+                    petGender = "남"
+                } else if (selectedGenderId == R.id.buttonShe) {
+                    petGender = "여"
+                }
+
+                val selectedNeuterId = binding.toggleButtonNeuter.checkedButtonId
+                if (selectedNeuterId == R.id.buttonNeuter) {
+                    petNeuter = "중성화"
+                } else if (selectedNeuterId == R.id.buttonNoNeuter) {
+                    petNeuter = "중성화 안함"
                 }
 
                 // User 모델을 생성
@@ -76,6 +94,29 @@ class MemberInfoActivity : AppCompatActivity() {
                         showToast(getString(R.string.failure_info))
                     }
             }
+        }
+
+        binding.textInputPetBirthText.setOnClickListener {
+            val datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("날짜선택")
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .build()
+
+            datePicker.addOnPositiveButtonClickListener { selectedDateInMillis ->
+                val selectDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    .format(Date(selectedDateInMillis))
+                binding.textInputPetBirthText.setText(selectDate)
+
+                // 선택한 날짜를 이용하여 나이를 계산하고 petAge 변수에 할당
+                val birthDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(selectDate)
+                if (birthDate != null) {
+                    val currentDate = Date()
+                    val ageMilliseconds = currentDate.time - birthDate.time
+                    val ageYears = (ageMilliseconds / (1000L * 60 * 60 * 24 * 365.25)).toInt()
+                    petAge = ageYears
+                }
+            }
+            datePicker.show(supportFragmentManager, datePicker.toString())
         }
     }
 
@@ -109,7 +150,7 @@ class MemberInfoActivity : AppCompatActivity() {
                     petProfile = imageUrl
                     Glide.with(this)
                         .load(imageUrl)
-                        .into(binding.petProfile)//ㅁㄴㅇㅁㄴㅇ
+                        .into(binding.imageViewAddPet)//ㅁㄴㅇㅁㄴㅇ
                 }
                 .addOnCanceledListener {
                     // 업로드 취소 시
@@ -128,7 +169,9 @@ class MemberInfoActivity : AppCompatActivity() {
     }
 }
 
+
 fun StorageReference.putFile(petProfileUri: String): UploadTask {
     val file = Uri.parse(petProfileUri) // 문자열 URI를 Uri 객체로 변환
     return putFile(file)
 }
+
