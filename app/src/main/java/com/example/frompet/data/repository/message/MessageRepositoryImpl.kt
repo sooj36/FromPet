@@ -52,15 +52,17 @@ class MessageRepositoryImpl : MessageRepository {
         }
     }
 
+    override suspend fun setTypingStatus(receiverId: String, isTyping: Boolean) {
+        val currentId = auth.currentUser?.uid ?: return
+        database.child("typingStatus").child(currentId).child(receiverId).setValue(isTyping)
+    }
+
     override suspend fun checkTypingStatus(receiverId: String): Boolean {
-        val snapshot = database.child("typingStatus").child(receiverId).get().await()
+        val currentId = auth.currentUser?.uid ?: return false
+        val snapshot = database.child("typingStatus").child(currentId).child(receiverId).get().await()
         return snapshot.getValue(Boolean::class.java) ?: false
     }
 
-    override suspend fun setTypingStatus(isTyping: Boolean) {
-        val currentId = auth.currentUser?.uid ?: return
-        database.child("typingStatus").child(currentId).setValue(isTyping)
-    }
     override suspend fun getCurrentUserId(): String? {
         return auth.currentUser?.uid
     }
@@ -102,8 +104,8 @@ class MessageRepositoryImpl : MessageRepository {
         }
         chatMessagesRef.addValueEventListener(listener)
     }
-    override fun addTypingStatusListener(receiverId: String, onTypingStatusUpdated: (Boolean) -> Unit) {//파이어베이스의변화를 실시간으로 감지하고 ui에반영하기위해서 23년 권장방식이라고 봤던거같아서 ?
-        val typingStatusRef = database.child("typingStatus").child(receiverId)
+    override fun addTypingStatusListener(receiverId: String, onTypingStatusUpdated: (Boolean) -> Unit) {
+        val typingStatusRef = database.child("typingStatus").child(receiverId).child(auth.currentUser?.uid ?: return)
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val isTyping = snapshot.getValue(Boolean::class.java) ?: false
@@ -116,6 +118,9 @@ class MessageRepositoryImpl : MessageRepository {
         }
         typingStatusRef.addValueEventListener(listener)
     }
+
+
+
     override fun addUserProfileListener(userId: String, onProfileUpdated: (User) -> Unit) {
         val userRef = firestore.collection("User").document(userId)
         userRef.addSnapshotListener { snapshot, error ->

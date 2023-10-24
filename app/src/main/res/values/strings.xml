@@ -42,6 +42,19 @@
     <string name="message_event">메시지: %s</string>
     <string name="error_code_event">오류 코드: %d</string>
     <string name="error_event">오류: %s</string>
+    <string name="toCommunity">커뮤니티게시판으로 이동</string>
+    <string name="community_exchange">정보교환</string>
+    <string name="community_love">사랑</string>
+    <string name="community_walk">산책</string>
+    <string name="community_share">나눔</string>
+    <string name="community_all">전체</string>
+    <string name="community_add">+</string>
+    <string name="community_detail_comment">우리집 강아지는 멍멍 강아지 \n 산책 친구 구해요\n 우리집 강아지는 멍멍 강아지 \n 산책 친구 구해요\n 우리집 강아지는 멍멍 강아지 \n 산책 친구 구해요\n 우리집 강아지는 멍멍 강아지 \n 산책 친구 구해요\n 우리집 강아지는 멍멍 강아지 \n 산책 친구 구해요\n</string>
+    <string name="community_detail_title">산책 다닐 강아지 친구 구해요</string>
+    <string name="community_add_title">제목</string>
+    <string name="community_add_content">내용을 입력하세요</string>
+    <string name="community_add_cancel">취소</string>
+    <string name="community_add_enroll">등록</string>
 
 
 </resources>

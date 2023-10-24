@@ -56,11 +56,13 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private val ONE_MEGABYTE : Long = 1024 * 1024
+//    private val ONE_MEGABYTE : Long = 1024 * 1024
 
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
-    private lateinit var binding: FragmentMapBinding
+    private var _binding: FragmentMapBinding? = null
+    private val binding get() = _binding!!
+
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 1000
 
@@ -83,7 +85,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentMapBinding.inflate(inflater, container, false)
+        _binding = FragmentMapBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -179,6 +181,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         locationRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (snapshots in snapshot.children) {
+                    Log.d("sooj", "$snapshot")
                     val location = snapshots.getValue(UserLocation::class.java)
                     val userUid = snapshots.key // 사용자 uid
 
@@ -224,6 +227,10 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
         imageLoader?.execute(request)
 
+    }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

@@ -68,8 +68,8 @@ class MessageViewModel : ViewModel() {
         _isTyping.postValue(isTyping)
     }
 
-    fun setTypingStatus(isTyping: Boolean) = viewModelScope.launch {
-        repository.setTypingStatus(isTyping)
+    fun setTypingStatus(receiverId: String, isTyping: Boolean) = viewModelScope.launch {
+        repository.setTypingStatus(receiverId, isTyping)
     }
        fun uploadImage(uri: Uri, user: User) {
         viewModelScope.launch {
