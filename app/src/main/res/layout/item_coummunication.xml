@@ -44,4 +44,3 @@
         app:layout_constraintTop_toBottomOf="@id/cardview" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
