@@ -6,14 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.frompet.databinding.ActivitySingUpBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -21,7 +19,7 @@ class SingUpActivity : AppCompatActivity() {
     private var _binding: ActivitySingUpBinding? = null
     private val binding get() = _binding!!
     private val viewModel by lazy {
-        ViewModelProvider(this)[LoginupViewModel::class.java]
+        ViewModelProvider(this)[LoginViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,16 +64,16 @@ class SingUpActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.allEventsFlow.collect { event ->
                 when(event){
-                    is LoginupViewModel.AllEvents.Error -> {
+                    is LoginViewModel.AllEvents.Error -> {
                         binding.apply {
                             errorTxt.text = event.error
                             progressBarSignup.isInvisible = true
                         }
                     }
-                    is LoginupViewModel.AllEvents.Message -> {
+                    is LoginViewModel.AllEvents.Message -> {
                         Toast.makeText(this@SingUpActivity, event.message, Toast.LENGTH_SHORT).show()
                     }
-                    is LoginupViewModel.AllEvents.ErrorCode -> {
+                    is LoginViewModel.AllEvents.ErrorCode -> {
                         if (event.code == 1)
                             binding.apply {
                                 userEmailEtvl.error = "메일이 비어있어요"
@@ -100,7 +98,7 @@ class SingUpActivity : AppCompatActivity() {
                     }
 
                     else ->{
-                        Log.d(TAG, "listenToChannels: No event received so far")
+
                     }
                 }
 

@@ -1,10 +1,8 @@
 package com.example.frompet.ui.login
 
-import android.content.ContentValues
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -12,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.frompet.databinding.ActivityLoginBinding
 import com.example.frompet.MainActivity
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -22,7 +21,7 @@ class LoginActivity : AppCompatActivity() {
     private var _binding: ActivityLoginBinding? = null
     private val binding get() = _binding!!
     private val viewModel by lazy {
-        ViewModelProvider(this)[LoginupViewModel::class.java]
+        ViewModelProvider(this)[LoginViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,12 +41,12 @@ class LoginActivity : AppCompatActivity() {
 
             }
 
-            binding.signUpTxt.setOnClickListener {
+            signUpTxt.setOnClickListener {
                 val intent = Intent(this@LoginActivity, SingUpActivity::class.java)
                 startActivity(intent)
             }
 
-            binding.forgotPassTxt.setOnClickListener {
+            forgotPassTxt.setOnClickListener {
                 val intent = Intent(this@LoginActivity, PasswordResetActivity::class.java)
                 startActivity(intent)
             }
@@ -84,38 +83,35 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.allEventsFlow.collect { event ->
                 when (event) {
-                    is LoginupViewModel.AllEvents.Error -> {
-                        binding.apply {
-                            errorTxt.text = event.error
-                            progressBarSignin.isInvisible = true
+                    is LoginViewModel.AllEvents.Error -> {
+                        val errorMessage = event.getKoreanMessage()
+                        showSnackbar(errorMessage)
+                        binding.progressBarSignin.isInvisible = true
+                    }
+
+                    is LoginViewModel.AllEvents.Message -> {
+                        showSnackbar(event.message)
+                    }
+
+                    is LoginViewModel.AllEvents.ErrorCode -> {
+                        when (event.code) {
+                            1 -> {
+                                binding.userEmailEtvl.error = "메일이 비어있어요"
+                            }
+
+                            2 -> {
+                                binding.userPasswordEtvl.error = "비밀번호가 비어있어요"
+                            }
                         }
+                        binding.progressBarSignin.isInvisible = true
                     }
-
-                    is LoginupViewModel.AllEvents.Message -> {
-                        Toast.makeText(this@LoginActivity, event.message, Toast.LENGTH_SHORT).show()
-                    }
-
-                    is LoginupViewModel.AllEvents.ErrorCode -> {
-                        if (event.code == 1)
-                            binding.apply {
-                                userEmailEtvl.error = "메일이 비어있어요"
-                                progressBarSignin.isInvisible = true
-                            }
-
-
-                        if (event.code == 2)
-                            binding.apply {
-                                userPasswordEtvl.error = "비밀번호가 비어있어요"
-                                progressBarSignin.isInvisible = true
-                            }
-                    }
-
                 }
-
             }
         }
-
     }
 
+    private fun showSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    }
 }
 

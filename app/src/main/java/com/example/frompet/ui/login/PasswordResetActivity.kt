@@ -15,7 +15,7 @@ class PasswordResetActivity : AppCompatActivity() {
     private val binding get() = _binding!!
 
     private val viewModel by lazy {
-        ViewModelProvider(this).get(LoginupViewModel::class.java)
+        ViewModelProvider(this).get(LoginViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,16 +29,16 @@ class PasswordResetActivity : AppCompatActivity() {
                 viewModel.verifySendPasswordReset(email)
                 viewModel.allEventsFlow.collect { event ->
                     when (event) {
-                        is LoginupViewModel.AllEvents.Message -> {
+                        is LoginViewModel.AllEvents.Message -> {
                             Toast.makeText(this@PasswordResetActivity, event.message, Toast.LENGTH_SHORT).show()
                         }
-                        is LoginupViewModel.AllEvents.ErrorCode -> {
+                        is LoginViewModel.AllEvents.ErrorCode -> {
                             when (event.code) {
                                 1 -> Toast.makeText(this@PasswordResetActivity, "Error Code 1", Toast.LENGTH_SHORT).show()
                                 2 -> Toast.makeText(this@PasswordResetActivity, "Error Code 2", Toast.LENGTH_SHORT).show()
                             }
                         }
-                        is LoginupViewModel.AllEvents.Error -> {
+                        is LoginViewModel.AllEvents.Error -> {
                             Toast.makeText(this@PasswordResetActivity, event.error, Toast.LENGTH_SHORT).show()
                         }
 
