@@ -23,11 +23,7 @@ class CommunityActivity : AppCompatActivity() {
         recyclerView?.layoutManager = LinearLayoutManager(this)
 
         binding?.backBtn?.setOnClickListener {
-            val fragment = CommunityHomeFragment()
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.communicationrecyclerView, fragment)
-                .addToBackStack(null)
-                .commit()
+            finish()
         }
 
         binding?.ivPen?.setOnClickListener {

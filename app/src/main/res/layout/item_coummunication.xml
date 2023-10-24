@@ -6,31 +6,44 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center">
 
-        <ImageView
-            android:id="@+id/iv_pet_name_comm"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardview"
+            android:layout_width="80dp"
+            android:layout_weight="1"
+            android:layout_height="80dp"
             android:layout_marginEnd="20dp"
-            android:contentDescription="@string/toCommunity"
-            android:scaleType="centerCrop"
-            android:src="@drawable/dog"
-            app:layout_constraintDimensionRatio="1:1"
+            android:backgroundTint="@color/light_beige"
+            android:padding="20dp"
+            app:cardCornerRadius="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                android:id="@+id/iv_pet_name_comm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:contentDescription="@string/toCommunity"
+                android:scaleType="centerCrop"
+                android:src="@drawable/dog" />
 
-    <TextView
-        android:id="@+id/tv_pet_name_comm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:gravity="center"
-        android:text="강아지"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_pet_name_comm" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/tv_pet_name_comm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:paddingBottom="25dp"
+            android:text="강아지"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardview" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
