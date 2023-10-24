@@ -8,8 +8,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.Switch
 import androidx.fragment.app.viewModels
 import coil.load
+import com.bumptech.glide.Glide
+import com.example.frompet.R
 import com.example.frompet.databinding.FragmentSettingBinding
 import com.example.frompet.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -18,9 +22,12 @@ class SettingFragment : Fragment() {
 
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
+    private lateinit var chatSwitch: Switch
+    private lateinit var friendsSwitch: Switch
 
     private val viewModel: SettingViewModel by viewModels()
     private val fcmTokenManagerViewModel: FCMTokenManagerViewModel by viewModels()
+    private lateinit var progressBar: ProgressBar
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +41,7 @@ class SettingFragment : Fragment() {
     ): View? {
 
         _binding = FragmentSettingBinding.inflate(inflater, container, false)
-
+        progressBar = binding.progressBar
 
         viewModel.petProfile.observe(viewLifecycleOwner) { petProfile ->
             petProfile?.let {
@@ -76,6 +83,22 @@ class SettingFragment : Fragment() {
         binding.btModify.setOnClickListener {
             val intent = Intent(requireActivity(), SettingProfileActivity::class.java)
             startActivity(intent)
+        }
+
+        chatSwitch = binding.chatSwitch
+
+
+        binding.ibNotification.setOnClickListener {
+
+            chatSwitch.isChecked = !chatSwitch.isChecked
+        }
+
+        friendsSwitch = binding.friendsSwitch
+
+
+        binding.ibFriendsNoti.setOnClickListener {
+
+            friendsSwitch.isChecked = !friendsSwitch.isChecked
         }
 
         return binding.root
