@@ -25,8 +25,6 @@ class MessageViewModel : ViewModel() {
     private val _userProfile = MutableLiveData<User>()
     val userProfile: LiveData<User> get() = _userProfile
 
-    private val auth = FirebaseAuth.getInstance()
-    private val firestore = FirebaseFirestore.getInstance()
 
     fun chatRoom(uid1: String, uid2: String): String {
         return if (uid1 > uid2) "$uid1+$uid2" else "$uid2+$uid1"
@@ -35,6 +33,11 @@ class MessageViewModel : ViewModel() {
     fun sendMessage(receiverId: String, message: String) {
         viewModelScope.launch {
             repository.createAndSendMessage(receiverId, message)
+        }
+    }
+    fun uploadImage(uri: Uri, user: User) {
+        viewModelScope.launch {
+            repository.createAndSendImage(uri, user)
         }
     }
     fun goneNewMessages(chatRoomId: String) = viewModelScope.launch {
@@ -56,11 +59,8 @@ class MessageViewModel : ViewModel() {
     fun setTypingStatus(receiverId: String, isTyping: Boolean) = viewModelScope.launch {
         repository.setTypingStatus(receiverId, isTyping)
     }
-    fun uploadImage(uri: Uri, user: User) {
-        viewModelScope.launch {
-            repository.createAndSendImage(uri, user)
-        }
-    }
+
+
     fun observeChatMessages(chatRoomId: String) {
         repository.addChatMessagesListener(chatRoomId) { messages ->
             _chatMessages.postValue(messages)

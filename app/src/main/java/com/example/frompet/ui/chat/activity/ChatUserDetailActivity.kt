@@ -38,8 +38,8 @@ class ChatUserDetailActivity : AppCompatActivity() {
         setClickListeners(user)
     }
 
-    private fun setClickListeners(user: User?) {
-        binding.likeBtn.setOnClickListener {
+    private fun setClickListeners(user: User?)= with(binding) {
+        likeBtn.setOnClickListener {
             user?.uid?.let { userId ->
                 matchSharedViewModel.matchUser(userId)
                 showToast("${user.petName}님과 매치 되었습니다\n 대화방이 생성되었습니다!",Toast.LENGTH_LONG)
@@ -47,19 +47,19 @@ class ChatUserDetailActivity : AppCompatActivity() {
             }
         }
 
-        binding.dislikeBtn.setOnClickListener {
+        dislikeBtn.setOnClickListener {
             user?.uid?.let { userId ->
                 matchSharedViewModel.dislike(userId)
                 showToast("${user.petName}님과 매칭에 실패 했습니다!",Toast.LENGTH_LONG)
                 setResultAndFinish(userId, DISLIKE)
             }
         }
-        binding.ivPetProfile.setOnClickListener {
+       ivPetProfile.setOnClickListener {
             val intent = Intent(this@ChatUserDetailActivity, ChatPullScreenActivity::class.java)
             intent.putExtra(ChatPullScreenActivity.IMAGE_URL, user?.petProfile)
             startActivity(intent)
         }
-        binding.backBtn.setOnClickListener {
+        backBtn.setOnClickListener {
             finish()
         }
     }
