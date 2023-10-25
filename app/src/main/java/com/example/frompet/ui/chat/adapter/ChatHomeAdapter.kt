@@ -68,6 +68,8 @@ class ChatHomeAdapter(
                 lastMessage?.let {
                     val formatTime = formatTimeStamp(it.timestamp)
                     tvLastTime.text = formatTime
+                }?:run{
+                    tvLastTime.text = ""
                 }
             }
             chatViewModel.newChats.observe(lifecycleOwner) { newMessages ->
