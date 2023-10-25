@@ -10,31 +10,30 @@
         android:id="@+id/toolbar2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="#80FFFFFF"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/btnBack"
+            android:id="@+id/bt_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_marginEnd="16dp"
             android:src="@drawable/icon_back" />
         <TextView
-           android:id="@+id/toolbar_title"
+           android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="친구 목록"
             android:textSize="20dp"
-            android:textColor="#fff"
+            android:textColor="#000"
             android:textStyle="bold" />
         <ImageButton
-            android:id="@+id/icon_search"
+            android:id="@+id/ib_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -54,6 +53,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar2">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_friends"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
