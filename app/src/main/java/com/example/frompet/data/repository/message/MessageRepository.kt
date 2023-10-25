@@ -7,7 +7,13 @@ import com.example.frompet.data.model.User
 interface MessageRepository {
     suspend fun sendMessage(chatRoomId: String, chatMessage: ChatMessage)
 
+    suspend fun createAndSendMessage(receiverId: String, message: String)
+
+    suspend fun createAndSendImage(uri: Uri, user: User)
+
     suspend fun sendImage(chatMessage: ChatMessage)
+
+    suspend fun uploadImage(uri: Uri): String?
 
     suspend fun goneNewMessages(chatRoomId: String)
 
@@ -20,8 +26,6 @@ interface MessageRepository {
     suspend fun getCurrentUserId(): String?
 
     suspend fun getUserProfile(userId: String): User?
-
-    suspend fun uploadImage(uri: Uri): String?
 
 
     fun addChatMessagesListener(chatRoomId: String, onMessagesUpdated: (List<ChatMessage>) -> Unit)

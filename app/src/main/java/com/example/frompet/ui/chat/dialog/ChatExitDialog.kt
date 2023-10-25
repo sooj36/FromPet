@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.example.frompet.databinding.ChatBottomSheetExitBinding
 
-class ChatExitDailog(private val context: Context) {
+class ChatExitDialog(private val context: Context) {
 
 
-    fun showExitDailog(onConfirm: () -> Unit) {
+    fun showExitDialog(onConfirm: () -> Unit) {
         val bottomSheetDialog = BottomSheetDialog(context)
         val binding = ChatBottomSheetExitBinding.inflate(LayoutInflater.from(context), null, false)
 

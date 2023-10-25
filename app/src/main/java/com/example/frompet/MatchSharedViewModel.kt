@@ -30,9 +30,6 @@ class MatchSharedViewModel : ViewModel() {
     fun like(targetUserId: String) {
         val currentUserId = auth.currentUser?.uid ?: return
         database.child(targetUserId).child("likedBy").child(currentUserId).setValue(true)
-
-
-
     }
 
     fun dislike(targetUserId: String) {

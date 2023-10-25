@@ -35,10 +35,10 @@
             android:name=".ui.setting.FriendsListActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.commnunity.CommunityDetailActivity"
+            android:name=".ui.commnunity.communitydetail.CommunityDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.commnunity.communitAdd.CommunityAddActivity"
+            android:name=".ui.commnunity.communityadd.CommunityAddActivity"
             android:exported="false" />
         <activity
             android:name=".ui.commnunity.community.CommunityActivity"
