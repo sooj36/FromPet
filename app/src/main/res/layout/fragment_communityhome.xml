@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/communityFragment"
     android:background="@color/light_gray"
-    tools:context="com.example.frompet.ui.commnunity.communityHome.CommunityHomeFragment">
+    tools:context="com.example.frompet.ui.commnunity.communityhome.CommunityHomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="커뮤니티"
+            android:text="@string/communityhome_meet"
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="20sp"

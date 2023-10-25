@@ -9,12 +9,16 @@ import com.example.frompet.databinding.ActivityCommunityDetailBinding
 class CommunityDetailActivity : AppCompatActivity() {
 
     private var _binding : ActivityCommunityDetailBinding? = null
-    private val binding get() = _binding
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityCommunityDetailBinding.inflate(layoutInflater)
 
-        setContentView(R.layout.activity_community_detail)
+        setContentView(binding.root)
+
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
     }
 }
