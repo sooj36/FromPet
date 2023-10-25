@@ -150,6 +150,7 @@ class ChatMessageActivity : AppCompatActivity() {
                 false
             }
             ivSendBtn.setOnClickListener { sendMessage() }
+
             etMessage.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
                     handleTypingStatus(s, user)
