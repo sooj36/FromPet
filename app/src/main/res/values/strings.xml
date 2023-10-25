@@ -55,6 +55,22 @@
     <string name="community_add_content">내용을 입력하세요</string>
     <string name="community_add_cancel">취소</string>
     <string name="community_add_enroll">등록</string>
+    <string name="chat_home_possible_">0명과 대화가 가능해요</string>
+    <string name="chat_like_me">0명이 나를 좋아해요</string>
+    <string name="home_about_me">About Me</string>
+    <string name="friend_name">친구이름</string>
+    <string name="click_about_me">About Me</string>
+    <string name="like_about_me">About Me</string>
+    <string name="chat_list_name">username</string>
+    <string name="chat_list_type">type</string>
+    <string name="date_header">날짜</string>
+    <string name="home_name">TextView</string>
+    <string name="home_type">TextView</string>
+    <string name="message_time">시간</string>
+    <string name="message_message">메세지</string>
+    <string name="other_name">이름</string>
+    <string name="other_message">메세지</string>
+    <string name="other_time">시간</string>
 
 
 </resources>
