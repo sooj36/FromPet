@@ -74,7 +74,7 @@ class SettingProfileActivity : AppCompatActivity() {
         binding.btModify2.setOnClickListener {
             onProfileUpdateClick()
         }
-        binding.ibBackButton.setOnClickListener {
+        binding.btBack.setOnClickListener {
             onBackPressed()
         }
     }

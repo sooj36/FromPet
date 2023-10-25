@@ -1,6 +1,7 @@
 package com.example.frompet.ui.setting
 
 import FCMTokenManagerViewModel
+
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -100,6 +101,12 @@ class SettingFragment : Fragment() {
 
             friendsSwitch.isChecked = !friendsSwitch.isChecked
         }
+
+        binding.ibFriends.setOnClickListener {
+            val intent = Intent(requireActivity(), FriendsListActivity::class.java)
+            startActivity(intent)
+        }
+
 
         return binding.root
     }
