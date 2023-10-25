@@ -75,7 +75,8 @@ class SettingFragment : Fragment() {
 
                 // LoginActivity로 이동
                 val intent = Intent(requireActivity(), LoginActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                //승현님 로그아웃 하면 앱이 리프레쉬할수 있게 수정해놨습니다!
                 startActivity(intent)
             }
         }
