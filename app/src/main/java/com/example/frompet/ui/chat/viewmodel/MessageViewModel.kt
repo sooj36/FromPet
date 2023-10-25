@@ -34,24 +34,9 @@ class MessageViewModel : ViewModel() {
 
     fun sendMessage(receiverId: String, message: String) {
         viewModelScope.launch {
-            val currentUserId = repository.getCurrentUserId()?:return@launch
-            val chatRoomId = chatRoom(currentUserId, receiverId)
-            val document = firestore.collection("User").document(currentUserId).get().await()
-            val currentUser = document.toObject(User::class.java)
-            val senderPetName = currentUser?.petName ?: "오류"
-
-            val chatMessage = ChatMessage(
-                senderId = currentUserId,
-                senderPetName = senderPetName,
-                receiverId = receiverId,
-                message = message,
-                timestamp = System.currentTimeMillis()
-            )
-            repository.sendMessage(chatRoomId, chatMessage)
+            repository.createAndSendMessage(receiverId, message)
         }
     }
-
-
     fun goneNewMessages(chatRoomId: String) = viewModelScope.launch {
         repository.goneNewMessages(chatRoomId)
     }
@@ -71,22 +56,9 @@ class MessageViewModel : ViewModel() {
     fun setTypingStatus(receiverId: String, isTyping: Boolean) = viewModelScope.launch {
         repository.setTypingStatus(receiverId, isTyping)
     }
-       fun uploadImage(uri: Uri, user: User) {
+    fun uploadImage(uri: Uri, user: User) {
         viewModelScope.launch {
-            val imageUrl = repository.uploadImage(uri)
-            imageUrl?.let {
-                val currentUserId = repository.getCurrentUserId()
-                val currentUser = repository.getUserProfile(currentUserId!!)
-                val message = ChatMessage(
-                    senderId = currentUserId,
-                    receiverId = user.uid,
-                    senderPetName = currentUser?.petName ?: return@let,
-                    message = "",
-                    imageUrl = imageUrl,
-                    timestamp = System.currentTimeMillis()
-                )
-                repository.sendImage(message)
-            }
+            repository.createAndSendImage(uri, user)
         }
     }
     fun observeChatMessages(chatRoomId: String) {
@@ -120,6 +92,4 @@ class MessageViewModel : ViewModel() {
         }
         return userProfile
     }
-
-
 }
