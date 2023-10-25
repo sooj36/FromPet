@@ -1,6 +1,7 @@
 package com.example.frompet.ui.setting
 
 import FCMTokenManagerViewModel
+
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -63,7 +64,7 @@ class SettingFragment : Fragment() {
             val currentUser = FirebaseAuth.getInstance().currentUser
 
             if (currentUser != null) {
-                // 현재 로그인된 사용자가 있는 경우에만 실행
+                // 현재 로그인된 사용자가 있는 경우에만 실행!
                 val userId = currentUser.uid
 
                 // FCM 토큰을 삭제하는 코드 추가
@@ -100,6 +101,30 @@ class SettingFragment : Fragment() {
 
             friendsSwitch.isChecked = !friendsSwitch.isChecked
         }
+
+        binding.ibFriends.setOnClickListener {
+            val intent = Intent(requireActivity(), FriendsListActivity::class.java)
+            startActivity(intent)
+        }
+        binding.chatSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+
+            if (isChecked) {
+                binding.ivNotification.setImageResource(R.drawable.icon_alarm_on)
+            } else {
+                binding.ivNotification.setImageResource(R.drawable.icon_alarm_off)
+            }
+        }
+
+        binding.friendsSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+
+            if (isChecked) {
+                binding.ivFriendsNoti.setImageResource(R.drawable.icon_alarm_on)
+            } else {
+                binding.ivFriendsNoti.setImageResource(R.drawable.icon_alarm_off)
+            }
+        }
+
+
 
         return binding.root
     }
