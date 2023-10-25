@@ -219,7 +219,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
         val image = "https://firebasestorage.googleapis.com/v0/b/frompet-70b42.appspot.com/o/images%2FIMAGE_20231018_215401.png?alt=media&token=7353dc7b-f260-4ca9-b9ba-47ea95911b79"
         val imageLoader = context?.let { Coil.imageLoader(it) }
-        val request = ImageRequest.Builder(requireContext()).data(image).target {
+        val request = ImageRequest.Builder(requireActivity()).data(image).target { //
             val bitmap = (it as BitmapDrawable).bitmap
             val imageOverlay = OverlayImage.fromBitmap(bitmap)
             marker.icon = imageOverlay
