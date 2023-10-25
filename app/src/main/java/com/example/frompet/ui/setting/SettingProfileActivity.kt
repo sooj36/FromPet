@@ -59,11 +59,11 @@ class SettingProfileActivity : AppCompatActivity() {
         ViewModel.petAge.observe(this) { petAge ->
             binding.etPetAge.setText(petAge?.toString() ?: "")
         }
-        ViewModel.petIntroduction.observe(this) { petIntroduction ->
-            binding.etPetIntroduction.setText(petIntroduction)
-        }
-        ViewModel.petDescription.observe(this) { petDescription ->
+        ViewModel.petIntroduction.observe(this) { petDescription ->
             binding.etPurpose.setText(petDescription)
+        }
+        ViewModel.petDescription.observe(this) { petIntroduction ->
+            binding.etPetIntroduction.setText(petIntroduction)
         }
 
         binding.ibProfile.setOnClickListener {
@@ -74,7 +74,7 @@ class SettingProfileActivity : AppCompatActivity() {
         binding.btModify2.setOnClickListener {
             onProfileUpdateClick()
         }
-        binding.ibBackButton.setOnClickListener {
+        binding.btBack.setOnClickListener {
             onBackPressed()
         }
     }
@@ -171,8 +171,8 @@ class SettingProfileActivity : AppCompatActivity() {
         val updatedPetType = binding.etPetType.text.toString()
         val updatedPetGender = binding.etPetGender.text.toString()
         val updatedPetAge = binding.etPetAge.text.toString().toInt()
-        val updatedPetIntroduction = binding.etPetIntroduction.text.toString()
-        val updatedPetDescription = binding.etPurpose.text.toString()
+        val updatedPetIntroduction = binding.etPurpose.text.toString()
+        val updatedPetDescription = binding.etPetIntroduction.text.toString()
 
         // Firebase Firestore에서 현재 사용자 ID 가져오기
         val userId = FirebaseAuth.getInstance().currentUser?.uid

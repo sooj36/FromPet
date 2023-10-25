@@ -41,11 +41,11 @@ class ChatClickUserDetailActivity : AppCompatActivity() {
 
     }
 
-    private fun displayUserInfo(user: User) {
-        binding.apply {
+    private fun displayUserInfo(user: User)= with(binding) {
+
             tvPetName.text = user.petName
-            tvPetAge.text = "${user.petAge.toString()}세"
-            tvPetGender.text = user.petGender.toString()
+            tvPetAge.text = "${user.petAge}세"
+            tvPetGender.text = user.petGender
             tvPetType.text = user.petType
             tvPetDes.text = user.petDescription
             tvPetIntro.text = user.petIntroduction
@@ -56,4 +56,4 @@ class ChatClickUserDetailActivity : AppCompatActivity() {
             }
         }
     }
-}
+

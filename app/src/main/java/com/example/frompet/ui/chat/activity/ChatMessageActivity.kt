@@ -10,6 +10,8 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -159,14 +161,23 @@ class ChatMessageActivity : AppCompatActivity() {
         messageViewModel.observeUserProfile(user.uid)
 
         with(binding) {
-            ivSendBtn.setOnClickListener {
+            fun sendMessage(user: User) {
                 val message = etMessage.text.toString()
                 if (message.isNotEmpty()) {
                     messageViewModel.sendMessage(user.uid, message)
                     etMessage.text.clear()
                 }
             }
-
+            etMessage.setOnKeyListener { _, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN) {
+                    sendMessage(user)
+                    return@setOnKeyListener true
+                }
+                false
+            }
+            ivSendBtn.setOnClickListener {
+                sendMessage(user)
+            }
             etMessage.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
                     if (s.isNullOrEmpty()) {
@@ -177,7 +188,6 @@ class ChatMessageActivity : AppCompatActivity() {
                         typingTimeoutHandler.postDelayed(typingTimeoutRunnable, 5000)
                     }
                 }
-
                 override fun beforeTextChanged(
                     s: CharSequence?,
                     start: Int,
@@ -189,7 +199,6 @@ class ChatMessageActivity : AppCompatActivity() {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
         }
-
         messageViewModel.loadPreviousMessages(chatRoomId)
     }
 

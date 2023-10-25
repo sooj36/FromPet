@@ -1,18 +1,16 @@
 package com.example.frompet.ui.setting
-
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frompet.MatchSharedViewModel
-import com.example.frompet.R
-import com.example.frompet.data.model.User
 import com.example.frompet.databinding.ActivityFriendsListBinding
+import com.example.frompet.ui.chat.activity.ChatClickUserDetailActivity
+
 class FriendsListActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityFriendsListBinding // 바인딩 변수 선언
+    private lateinit var binding: ActivityFriendsListBinding
 
     private val matchSharedViewModel: MatchSharedViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
@@ -24,7 +22,11 @@ class FriendsListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         recyclerView = binding.rvFriends
-        adapter = FriendsListAdapter(this)
+        adapter = FriendsListAdapter(this) { user ->
+            val intent = Intent(this, ChatClickUserDetailActivity::class.java)
+            intent.putExtra(ChatClickUserDetailActivity.USER, user)
+            startActivity(intent)
+        }
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = GridLayoutManager(this, 2)

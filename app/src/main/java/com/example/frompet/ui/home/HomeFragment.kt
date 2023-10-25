@@ -84,7 +84,7 @@ class HomeFragment : Fragment() {
                         val user = homeAdapter.currentList[manager.topPosition -1]
                         user?.let {
                             viewModel.dislike(user.uid)
-                            Toast.makeText(requireContext(), "Disliked", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "${user.petName}(을)를 거절했습니다", Toast.LENGTH_SHORT).show()
                         }
 
                     }

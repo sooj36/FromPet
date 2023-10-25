@@ -2,6 +2,7 @@ package com.example.frompet.ui.map
 
 import android.Manifest
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -19,12 +20,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import coil.Coil
+import coil.ImageLoader
 import coil.load
 import coil.request.ImageRequest
+import coil.transform.CircleCropTransformation
 import com.example.frompet.R
 import com.example.frompet.data.model.User
 import com.example.frompet.data.model.UserLocation
 import com.example.frompet.databinding.FragmentMapBinding
+import com.example.frompet.ui.chat.activity.ChatUserDetailActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
@@ -37,6 +41,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
@@ -46,9 +51,11 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import org.checkerframework.checker.nullness.qual.NonNull
 import java.io.File
 
@@ -59,6 +66,10 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 //    private val ONE_MEGABYTE : Long = 1024 * 1024
 
     private lateinit var naverMap: NaverMap
+    private val firestore = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
+    private val database = FirebaseDatabase.getInstance().reference
+
     private lateinit var locationSource: FusedLocationSource
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
@@ -136,7 +147,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         Log.d("sooj", "onmapready")
 
         // 줌
-        naverMap.maxZoom = 20.0  // (최대 21)
+        naverMap.maxZoom = 17.0  // (최대 21)
         naverMap.minZoom = 5.0
 
         // Firebase
@@ -187,7 +198,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
                     // 다른 사용자 위치 마커 표시
                     if (location != null && userUid != null && userUid != currentUserId) {
-                        setMark(location)
+                        setMark(userUid,location) //사용자 uid 셋마크로 넘겨주고
                         Log.d("sooj", "$location")
                     }
 
@@ -199,7 +210,8 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
     }
 
 
-    private fun setMark(location: UserLocation) = lifecycleScope.launch {
+    private fun setMark(userUid:String,location: UserLocation) = lifecycleScope.launch {
+        if (!isAdded) return@launch //프래그먼트에서 액티비티가 연결되어 있는지 확인 만약 연결되어 있지 않다면 빠르게 종료해서requireContext호출을 방지
         val marker = Marker()
         // 마커 위치
         if (location != null) {
@@ -210,24 +222,43 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         // 마커 표시
         marker.map = naverMap
         // 원근감 표시
-         marker.isIconPerspectiveEnabled = true
+        marker.isIconPerspectiveEnabled = true
         // 마커의 투명도
-        marker.alpha = 0.8f
+//        marker.alpha = 0.8f
 
-        marker.width = 130
-        marker.height = 120
+        marker.width = 150
+        marker.height = 150
 
-        val image = "https://firebasestorage.googleapis.com/v0/b/frompet-70b42.appspot.com/o/images%2FIMAGE_20231018_215401.png?alt=media&token=7353dc7b-f260-4ca9-b9ba-47ea95911b79"
-        val imageLoader = context?.let { Coil.imageLoader(it) }
-        val request = ImageRequest.Builder(requireContext()).data(image).target {
-            val bitmap = (it as BitmapDrawable).bitmap
-            val imageOverlay = OverlayImage.fromBitmap(bitmap)
-            marker.icon = imageOverlay
-        }.build()
+        marker.onClickListener = Overlay.OnClickListener {
+            lifecycleScope.launch {
+            val userDocument = firestore.collection("User").document(userUid).get().await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
+            val user = userDocument.toObject(User::class.java) //위에서 얻은 문서들을 user클래스의 인스턴스로 변환
+            val intent = Intent(context, MapUserDetailActivity::class.java)
+            intent.putExtra(MapUserDetailActivity.USER, user)
+            startActivity(intent)
+            }
+            true
+        }
 
-        imageLoader?.execute(request)
+        val userDocument = firestore.collection("User").document(userUid).get()
+            .await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
+        val user = userDocument.toObject(User::class.java) //위에서 얻은 문서들을 user클래스의 인스턴스로 변환
+        val profileUrl = user?.petProfile //유저인스턴스에 해당 사용자들의 프로필 사진 변수
+        if (profileUrl != null) { //이미지가 널값이 아닐때
+                val imageLoader = context?.let { Coil.imageLoader(it) }
+                val request = ImageRequest.Builder(requireActivity())
+                    .data(profileUrl)
+                    .size(200,200)
+                    .transformations(CircleCropTransformation(),MapMakerBorder(requireContext(),15f)) //이미지동그랗게
+                    .target {
+                        val bitmap = (it as BitmapDrawable).bitmap
+                        val imageOverlay = OverlayImage.fromBitmap(bitmap)
+                        marker.icon = imageOverlay
+                    }.build()
 
-    }
+                imageLoader?.execute(request)
+            }
+        }
 
     override fun onDestroyView() {
         _binding = null

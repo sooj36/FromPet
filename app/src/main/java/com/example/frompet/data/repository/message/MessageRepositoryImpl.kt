@@ -23,7 +23,6 @@ class MessageRepositoryImpl : MessageRepository {
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
- //챗메시지,라스트메시지,뉴메시지등등 나중에 상수값으로 뺼 예정
  private fun chatRoom(uid1: String, uid2: String): String {
      return if (uid1 > uid2) "$uid1+$uid2" else "$uid2+$uid1"
  }
