@@ -23,13 +23,31 @@ class MessageRepositoryImpl : MessageRepository {
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
- private fun chatRoom(uid1: String, uid2: String): String {
-     return if (uid1 > uid2) "$uid1+$uid2" else "$uid2+$uid1"
- }
+    private fun chatRoom(uid1: String, uid2: String): String {
+        return if (uid1 > uid2) "$uid1+$uid2" else "$uid2+$uid1"
+    }
+
     override suspend fun sendMessage(chatRoomId: String, chatMessage: ChatMessage) {
         database.child("chatMessages").child(chatRoomId).push().setValue(chatMessage)
         database.child("lastMessages").child(chatRoomId).setValue(chatMessage)
         database.child("newMessages").child(chatRoomId).child(chatMessage.receiverId).setValue(true)
+    }
+
+    override suspend fun createAndSendMessage(receiverId: String, message: String) {
+        val currentUserId = getCurrentUserId() ?: return
+        val chatRoomId = chatRoom(currentUserId, receiverId)
+        val document = firestore.collection("User").document(currentUserId).get().await()
+        val currentUser = document.toObject(User::class.java)
+        val senderPetName = currentUser?.petName ?: "오류"
+
+        val chatMessage = ChatMessage(
+            senderId = currentUserId,
+            senderPetName = senderPetName,
+            receiverId = receiverId,
+            message = message,
+            timestamp = System.currentTimeMillis()
+        )
+        sendMessage(chatRoomId, chatMessage)
     }
 
     override suspend fun sendImage(chatMessage: ChatMessage) {
@@ -37,6 +55,31 @@ class MessageRepositoryImpl : MessageRepository {
         database.child("chatMessages").child(chatRoomId).push().setValue(chatMessage)
         database.child("lastMessages").child(chatRoomId).setValue(chatMessage)
         database.child("newMessages").child(chatRoomId).child(chatMessage.receiverId).setValue(true)
+    }
+    override suspend fun createAndSendImage(uri: Uri, user: User) {
+        val imageUrl = uploadImage(uri)
+        imageUrl?.let {
+            val currentUserId = getCurrentUserId()
+            val currentUser = getUserProfile(currentUserId!!)
+            val message = ChatMessage(
+                senderId = currentUserId,
+                receiverId = user.uid,
+                senderPetName = currentUser?.petName ?: return@let,
+                message = "",
+                imageUrl = imageUrl,
+                timestamp = System.currentTimeMillis()
+            )
+            sendImage(message)
+        }
+    }
+    override suspend fun uploadImage(uri: Uri): String? {
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val fileName = "IMAGE_$timestamp.png"
+        val storageRef = storage.reference.child("images").child(fileName)
+        storageRef.putFile(uri).await()
+        val imageUrl = storageRef.downloadUrl.await().toString()
+        Log.d("jun", "Image URL: $imageUrl")
+        return imageUrl
     }
 
     override suspend fun goneNewMessages(chatRoomId: String) {
@@ -58,7 +101,8 @@ class MessageRepositoryImpl : MessageRepository {
 
     override suspend fun checkTypingStatus(receiverId: String): Boolean {
         val currentId = auth.currentUser?.uid ?: return false
-        val snapshot = database.child("typingStatus").child(currentId).child(receiverId).get().await()
+        val snapshot =
+            database.child("typingStatus").child(currentId).child(receiverId).get().await()
         return snapshot.getValue(Boolean::class.java) ?: false
     }
 
@@ -70,18 +114,6 @@ class MessageRepositoryImpl : MessageRepository {
         val document = firestore.collection("User").document(userId).get().await()
         return document.toObject(User::class.java)
     }
-
-    override suspend fun uploadImage(uri: Uri): String? {
-        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val fileName = "IMAGE_$timestamp.png"
-        val storageRef = storage.reference.child("images").child(fileName)
-        storageRef.putFile(uri).await()
-        val imageUrl = storageRef.downloadUrl.await().toString()
-        Log.d("jun", "Image URL: $imageUrl")
-        return imageUrl
-    }
-
-
 
 
     override fun addChatMessagesListener( //파이어베이스의변화를 실시간으로 감지하고 ui에반영하기위해서 23년 권장방식이라고 봤던거같아서 ?
@@ -103,8 +135,13 @@ class MessageRepositoryImpl : MessageRepository {
         }
         chatMessagesRef.addValueEventListener(listener)
     }
-    override fun addTypingStatusListener(receiverId: String, onTypingStatusUpdated: (Boolean) -> Unit) {
-        val typingStatusRef = database.child("typingStatus").child(receiverId).child(auth.currentUser?.uid ?: return)
+
+    override fun addTypingStatusListener(
+        receiverId: String,
+        onTypingStatusUpdated: (Boolean) -> Unit
+    ) {
+        val typingStatusRef =
+            database.child("typingStatus").child(receiverId).child(auth.currentUser?.uid ?: return)
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val isTyping = snapshot.getValue(Boolean::class.java) ?: false
@@ -119,7 +156,6 @@ class MessageRepositoryImpl : MessageRepository {
     }
 
 
-
     override fun addUserProfileListener(userId: String, onProfileUpdated: (User) -> Unit) {
         val userRef = firestore.collection("User").document(userId)
         userRef.addSnapshotListener { snapshot, error ->
@@ -130,4 +166,4 @@ class MessageRepositoryImpl : MessageRepository {
             }
         }
     }
-    }
+}

@@ -25,8 +25,6 @@ class MessageViewModel : ViewModel() {
     private val _userProfile = MutableLiveData<User>()
     val userProfile: LiveData<User> get() = _userProfile
 
-    private val auth = FirebaseAuth.getInstance()
-    private val firestore = FirebaseFirestore.getInstance()
 
     fun chatRoom(uid1: String, uid2: String): String {
         return if (uid1 > uid2) "$uid1+$uid2" else "$uid2+$uid1"
@@ -34,24 +32,14 @@ class MessageViewModel : ViewModel() {
 
     fun sendMessage(receiverId: String, message: String) {
         viewModelScope.launch {
-            val currentUserId = repository.getCurrentUserId()?:return@launch
-            val chatRoomId = chatRoom(currentUserId, receiverId)
-            val document = firestore.collection("User").document(currentUserId).get().await()
-            val currentUser = document.toObject(User::class.java)
-            val senderPetName = currentUser?.petName ?: "오류"
-
-            val chatMessage = ChatMessage(
-                senderId = currentUserId,
-                senderPetName = senderPetName,
-                receiverId = receiverId,
-                message = message,
-                timestamp = System.currentTimeMillis()
-            )
-            repository.sendMessage(chatRoomId, chatMessage)
+            repository.createAndSendMessage(receiverId, message)
         }
     }
-
-
+    fun uploadImage(uri: Uri, user: User) {
+        viewModelScope.launch {
+            repository.createAndSendImage(uri, user)
+        }
+    }
     fun goneNewMessages(chatRoomId: String) = viewModelScope.launch {
         repository.goneNewMessages(chatRoomId)
     }
@@ -71,24 +59,8 @@ class MessageViewModel : ViewModel() {
     fun setTypingStatus(receiverId: String, isTyping: Boolean) = viewModelScope.launch {
         repository.setTypingStatus(receiverId, isTyping)
     }
-       fun uploadImage(uri: Uri, user: User) {
-        viewModelScope.launch {
-            val imageUrl = repository.uploadImage(uri)
-            imageUrl?.let {
-                val currentUserId = repository.getCurrentUserId()
-                val currentUser = repository.getUserProfile(currentUserId!!)
-                val message = ChatMessage(
-                    senderId = currentUserId,
-                    receiverId = user.uid,
-                    senderPetName = currentUser?.petName ?: return@let,
-                    message = "",
-                    imageUrl = imageUrl,
-                    timestamp = System.currentTimeMillis()
-                )
-                repository.sendImage(message)
-            }
-        }
-    }
+
+
     fun observeChatMessages(chatRoomId: String) {
         repository.addChatMessagesListener(chatRoomId) { messages ->
             _chatMessages.postValue(messages)
@@ -120,6 +92,4 @@ class MessageViewModel : ViewModel() {
         }
         return userProfile
     }
-
-
 }
