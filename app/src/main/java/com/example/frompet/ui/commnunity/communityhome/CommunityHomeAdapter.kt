@@ -1,4 +1,4 @@
-package com.example.frompet.ui.commnunity.communityHome
+package com.example.frompet.ui.commnunity.communityhome
 
 import android.content.Intent
 import android.view.LayoutInflater
