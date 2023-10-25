@@ -1,18 +1,24 @@
 package com.example.frompet.ui.login
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.frompet.data.model.SignInResult
+import com.example.frompet.data.model.SignState
 import com.example.frompet.data.repository.user.UserRepositoryImp
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,6 +38,18 @@ class LoginViewModel @Inject constructor(
     private val eventsChannel = Channel<AllEvents>()
     val allEventsFlow = eventsChannel.receiveAsFlow()
 
+    private val _state = MutableStateFlow(SignState())
+    val state = _state.asStateFlow()
+
+    fun onSignInResult(result: SignInResult){
+        _state.update { it.copy(
+            isSignInSuccessful = result.data != null,
+            signInError = result.errorMessage
+        ) }
+    }
+    fun resetState(){
+        _state.update { SignState() }
+    }
     init {
         // ViewModel이 초기화될 때 현재 사용자 정보를 가져와서 _user LiveData에 설정합니다.
         _firebaseUser.value = auth.currentUser
@@ -139,10 +157,21 @@ class LoginViewModel @Inject constructor(
         }
 
     }
-
-
-    fun signInGoogle() {
-        val signInIntent = mGoogleSignInClient.signInIntent
+    fun signInGoogle(idToken: String) = viewModelScope.launch{
+        if (idToken.isNotEmpty()) {
+            try {
+                val user = userRepository.signInGoogle(idToken)
+                user?.let {
+                    _firebaseUser.postValue(it)
+                    eventsChannel.send(AllEvents.Message("Google로 로그인 되었습니다."))
+                }
+            } catch (e: Exception) {
+                eventsChannel.send(AllEvents.Error("Google 로그인 중 오류가 발생"))
+            }
+        } else {
+            // idToken이 비어있는 경우에 대한 처리
+            eventsChannel.send(AllEvents.Error("Google 로그인 중 오류가 발생"))
+        }
     }
 
     sealed class AllEvents {
@@ -159,6 +188,7 @@ class LoginViewModel @Inject constructor(
                 }
             }
             }
+        data class GoogleSignIn(val error: Intent):AllEvents()
         }
     }
 

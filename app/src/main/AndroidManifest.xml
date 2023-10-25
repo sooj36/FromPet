@@ -25,6 +25,10 @@
         android:theme="@style/Theme.FromPet"
         tools:targetApi="31">
         <activity
+            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+            android:screenOrientation="fullSensor"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+        <activity
             android:name=".ui.map.MapUserDetailActivity"
             android:exported="false" />
         <activity

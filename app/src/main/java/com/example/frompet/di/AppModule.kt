@@ -1,6 +1,7 @@
 package com.example.frompet.di
 
 import android.app.Application
+import com.example.frompet.R
 import com.example.frompet.data.repository.user.AuthRepository
 import com.example.frompet.data.repository.user.BaseAuthRepository
 import com.example.frompet.data.repository.firebase.BaseAuthenticator
@@ -10,6 +11,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.gun0912.tedpermission.provider.TedPermissionProvider.context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,7 +54,7 @@ object AppModule {
     @Provides
     fun provideGoogleSignInOptions(): GoogleSignInOptions {
         return GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("YOUR_WEB_CLIENT_ID")
+            .requestIdToken(context.getString(R.string.web_client_id))
             .requestEmail()
             .build()
     }

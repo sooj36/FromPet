@@ -6,6 +6,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 
 class FirebaseAuthenticator : BaseAuthenticator {
     override suspend fun signUpWithEmailPassword(email: String, password: String): FirebaseUser? {
@@ -19,9 +20,13 @@ class FirebaseAuthenticator : BaseAuthenticator {
     }
 
     override suspend fun sigInGoogle(idToken: String): FirebaseUser? {
-        val credential: AuthCredential = GoogleAuthProvider.getCredential(idToken.toString(), null)
-        Firebase.auth.signInWithCredential(credential).await()
-        return Firebase.auth.currentUser
+        val credential: AuthCredential = GoogleAuthProvider.getCredential(idToken, null)
+        return try{
+            Firebase.auth.signInWithCredential(credential).await()
+            Firebase.auth.currentUser
+        }catch (e: Exception){
+            null
+        }
     }
 
     override fun signOut(): FirebaseUser? {
