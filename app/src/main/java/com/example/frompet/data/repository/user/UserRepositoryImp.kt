@@ -2,10 +2,9 @@ package com.example.frompet.data.repository.user
 
 import com.example.frompet.data.model.User
 import com.example.frompet.data.repository.firebase.BaseAuthenticator
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestoreSettings
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -36,6 +35,16 @@ class UserRepositoryImp @Inject constructor(
     override suspend fun isAlreadyLoggedIn(): Boolean {
         val user = authenticator.getUser()
         return user != null
+    }
+
+    override suspend fun signInGoogle(idToken: String): FirebaseUser? {
+        return try {
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            authenticator.sigInGoogle(credential.toString())
+        } catch (e: Exception) {
+            // 실패 시 예외 처리
+            null
+        }
     }
 
     suspend fun saveUserProfile(user:User){

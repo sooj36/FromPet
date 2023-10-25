@@ -35,4 +35,9 @@ class AuthRepository @Inject constructor(
         val user = authenticator.getUser()
         return user != null
     }
+
+    override suspend fun signInGoogle(idToken: String): FirebaseUser? {
+        return authenticator.sigInGoogle(idToken)
+    }
+
 }

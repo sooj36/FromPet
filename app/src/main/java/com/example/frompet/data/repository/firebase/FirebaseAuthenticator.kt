@@ -1,7 +1,8 @@
 package com.example.frompet.data.repository.firebase
 
-import com.example.frompet.data.repository.firebase.BaseAuthenticator
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
@@ -14,6 +15,12 @@ class FirebaseAuthenticator : BaseAuthenticator {
 
     override suspend fun signInWithEmailPassword(email: String, password: String): FirebaseUser? {
         Firebase.auth.signInWithEmailAndPassword(email , password).await()
+        return Firebase.auth.currentUser
+    }
+
+    override suspend fun sigInGoogle(idToken: String): FirebaseUser? {
+        val credential: AuthCredential = GoogleAuthProvider.getCredential(idToken.toString(), null)
+        Firebase.auth.signInWithCredential(credential).await()
         return Firebase.auth.currentUser
     }
 

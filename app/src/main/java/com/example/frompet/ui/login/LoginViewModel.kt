@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frompet.data.repository.user.UserRepositoryImp
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userRepository: UserRepositoryImp,
+    private var mGoogleSignInClient: GoogleSignInClient,
     private val auth: FirebaseAuth
 ):ViewModel() {
 
@@ -138,6 +140,10 @@ class LoginViewModel @Inject constructor(
 
     }
 
+
+    fun signInGoogle() {
+        val signInIntent = mGoogleSignInClient.signInIntent
+    }
 
     sealed class AllEvents {
         data class Message(val message: String) : AllEvents()
