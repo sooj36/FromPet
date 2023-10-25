@@ -106,6 +106,24 @@ class SettingFragment : Fragment() {
             val intent = Intent(requireActivity(), FriendsListActivity::class.java)
             startActivity(intent)
         }
+        binding.chatSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+
+            if (isChecked) {
+                binding.ivNotification.setImageResource(R.drawable.icon_alarm_on)
+            } else {
+                binding.ivNotification.setImageResource(R.drawable.icon_alarm_off)
+            }
+        }
+
+        binding.friendsSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+
+            if (isChecked) {
+                binding.ivFriendsNoti.setImageResource(R.drawable.icon_alarm_on)
+            } else {
+                binding.ivFriendsNoti.setImageResource(R.drawable.icon_alarm_off)
+            }
+        }
+
 
 
         return binding.root
