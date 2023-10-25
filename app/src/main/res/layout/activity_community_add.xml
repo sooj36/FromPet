@@ -5,7 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_gray"
-    tools:context=".ui.commnunity.communitAdd.CommunityAddActivity">
+    tools:context=".ui.commnunity.communityadd.CommunityAddActivity">
+
+    <ImageView
+        android:id="@+id/back_btn"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_margin="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/back" />
 
     <EditText
         android:id="@+id/et_add_title"
@@ -20,14 +29,14 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/back_btn" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/chip_constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="65dp"
+        android:layout_marginTop="95dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintTop_toBottomOf="@id/et_add_title"
         tools:layout_editor_absoluteX="-202dp">
@@ -54,7 +63,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_view_line_1"
             app:singleLine="false"
             app:singleSelection="true">
 
@@ -133,6 +142,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed" />
 
         <EditText
+            android:id="@+id/et_add_contents"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"

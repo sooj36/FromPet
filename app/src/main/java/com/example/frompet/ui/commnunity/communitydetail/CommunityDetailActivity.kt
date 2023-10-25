@@ -1,4 +1,4 @@
-package com.example.frompet.ui.commnunity
+package com.example.frompet.ui.commnunity.communitydetail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
