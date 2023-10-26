@@ -15,7 +15,7 @@ class CommunityHomeFragment : Fragment() {
 
     private var _binding: FragmentCommunityhomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter : CommunityHomeAdapter
+    /*private lateinit var adapter : CommunityHomeAdapter*/
     private lateinit var communityHomeData : MutableList<CommunityHomeData>
 
     override fun onCreateView(
@@ -40,10 +40,10 @@ class CommunityHomeFragment : Fragment() {
             CommunityHomeData(R.drawable.fish, "물고기"),
         )
 
-        //adapter
+   /*     //adapter
         val adapter = CommunityHomeAdapter(communityHomeData)
         recyclerView.adapter = adapter
-        adapter.submitList(communityHomeData)
+        adapter.submitList(communityHomeData)*/
 
 
 

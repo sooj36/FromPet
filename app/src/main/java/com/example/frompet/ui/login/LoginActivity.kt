@@ -56,6 +56,7 @@ class LoginActivity : AppCompatActivity() {
             binding?.apply{
             loginGoogle.setOnClickListener {
                 startGoogleSignIn()
+                Log.d(TAG, "Google Sign-In button clicked")
             }
             }
 
@@ -130,6 +131,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
     private fun startGoogleSignIn() {
+        Log.d(TAG, "startGoogleSignIn() function called")
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.web_client_id))
             .requestEmail()
@@ -140,6 +142,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d(TAG, "onActivityResult() called with requestCode: $requestCode, resultCode: $resultCode")
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
