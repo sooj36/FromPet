@@ -11,18 +11,18 @@ class CommunityViewModel : ViewModel() {
     private val firestore = FirebaseFirestore.getInstance()
 
     private val _title = MutableLiveData<String?>()
-    val title : LiveData<String?> = _title
+    val title: LiveData<String?> = _title
 
     private val _contents = MutableLiveData<String>()
-    val contents : LiveData<String> = _contents
+    val contents: LiveData<String> = _contents
 
     private val _timestamp = MutableLiveData<String>()
-    val timestamp : LiveData<String> = _timestamp
+    val timestamp: LiveData<String> = _timestamp
 
     private val _tag = MutableLiveData<String>()
-    val tag : LiveData<String> = _tag
+    val tag: LiveData<String> = _tag
 
-    fun loadCommunity() {
+    fun loadCommunityList() {
         val userId = currentUser?.uid
 
         if (userId != null) {
@@ -31,10 +31,10 @@ class CommunityViewModel : ViewModel() {
                     if (documentSnapshop.exists()) {
                         _title.value = documentSnapshop.getString("title")
                         _contents.value = documentSnapshop.getString("contents")
+                        _tag.value = documentSnapshop.getString("tag")
+                        _timestamp.value = documentSnapshop.getString("timestamp")
                     }
                 }
         }
     }
-
-
 }
