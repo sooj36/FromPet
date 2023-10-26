@@ -35,7 +35,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/communicationrecyclerView"
         app:layout_constraintTop_toBottomOf="@id/constraintLayout"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"/>
