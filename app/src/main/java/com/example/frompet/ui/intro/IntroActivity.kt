@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import androidx.compose.runtime.currentCompositionErrors
 import androidx.viewpager2.widget.ViewPager2
 import com.example.frompet.MainActivity
 import com.example.frompet.R
@@ -23,11 +25,28 @@ class IntroActivity : AppCompatActivity() {
     private lateinit var binding: ActivityIntroBinding
     private var pageItemList = ArrayList<PageItem>()
     private lateinit var myIntroPagerRecyclerAdapter: IntroAdapter
+    private val autoScrollHandler = Handler()
+    private val autoScrollRunnable :Runnable = object  : Runnable{
+        override fun run() {
+            val currentItem = binding.myIntroViewPager.currentItem
+            val nextItem = currentItem + 1
+            if(nextItem < pageItemList.size){
+                binding.myIntroViewPager.setCurrentItem(nextItem, true)
+            }else{
+                autoScrollHandler.removeCallbacks(this)
+            }
+            autoScrollHandler.postDelayed(this, 4000)
+        }
+
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityIntroBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
         val currentUser = FirebaseAuth.getInstance().currentUser
 
         if(currentUser != null){
@@ -90,7 +109,7 @@ class IntroActivity : AppCompatActivity() {
             myIntroViewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
             dotsIndicator.setViewPager2(binding.myIntroViewPager)
         }
-
+        autoScrollHandler.postDelayed(autoScrollRunnable, 3000)
     }
 
 }

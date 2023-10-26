@@ -53,11 +53,15 @@ class LoginActivity : AppCompatActivity() {
                 viewModel.signInUser(email, password)
 
             }
-            binding?.apply{
-            loginGoogle.setOnClickListener {
-                startGoogleSignIn()
-                Log.d(TAG, "Google Sign-In button clicked")
-            }
+            binding?.apply {
+                loginGoogle.setOnClickListener {
+                    Log.d(TAG, "Google Sign-In button clicked")
+                    val fragment = GoogleAcceptUpFragment.newInstance()
+
+                    val transaction = supportFragmentManager.beginTransaction()
+                    transaction.add(fragment, "GoogleAcceptUpFragment")
+                    transaction.commit()
+                }
             }
 
             signUpTxt.setOnClickListener {
@@ -130,66 +134,11 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
-    private fun startGoogleSignIn() {
-        Log.d(TAG, "startGoogleSignIn() function called")
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.web_client_id))
-            .requestEmail()
-            .build()
-        val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-        val signInIntent = mGoogleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
-    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.d(TAG, "onActivityResult() called with requestCode: $requestCode, resultCode: $resultCode")
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-                try {
-                    val account = task.getResult(ApiException::class.java)
-                    val idToken = account.idToken
-                    if (idToken != null) {
-                        // Google 로그인 성공 후, 해당 idToken을 사용하여 Firebase에 인증합니다.
-                        viewModel.signInGoogle(idToken)
 
-                        // Firebase에 로그인 성공한 후, 사용자 정보를 Firestore에 저장하고 MainActivity로 이동합니다.
-                        viewModel.currentUser.observe(this@LoginActivity) { user ->
-                            user?.let {
-                                val uid = user.uid // 사용자의 고유 식별자 (UID)
-                                val userDocRef = FirebaseFirestore.getInstance().collection("User").document(uid)
-
-                                userDocRef.get()
-                                    .addOnSuccessListener { documentSnapshot ->
-                                        if (documentSnapshot.exists()) {
-                                            // 사용자 정보가 Firestore에 있는 경우, MainActivity로 이동
-                                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                                            startActivity(intent)
-                                        } else {
-                                            // 사용자 정보가 Firestore에 없는 경우, MemberInfoActivity로 이동
-                                            val intent = Intent(this@LoginActivity, MemberInfoActivity::class.java)
-                                            startActivity(intent)
-                                        }
-                                    }
-                                    .addOnFailureListener {
-                                        // Firestore에서 데이터를 가져오는 동안 오류가 발생한 경우
-                                    }
-                            }
-                        }
-                    } else {
-                        showSnackbar("Google 로그인 중 오류가 발생했습니다.")
-                    }
-                } catch (e: ApiException) {
-                    showSnackbar("Google 로그인 중 오류가 발생했습니다.")
-                }
-            } else {
-                showSnackbar("Google 로그인을 취소했습니다.")
-            }
-        }
-    }
     private fun showSnackbar(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
+
 }
 
