@@ -58,6 +58,7 @@ class CommunityHomeAdapter(communicationFragment: List<CommunityHomeData>) :
             binding.ivPetNameComm.load(communityHomeData.pet_logo)
             binding.tvPetNameComm.text = communityHomeData.pet_name
 
+
             binding.communicationId.setOnClickListener {
                 val intent : Intent = Intent(it.context, CommunityActivity::class.java)
                 it.context.startActivity(intent)
