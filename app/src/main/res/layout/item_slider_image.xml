@@ -5,51 +5,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/iv_badge_1"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/badge1" />
-
-        <ImageView
-            android:id="@+id/iv_badge_2"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/badge2" />
-
-        <ImageView
-            android:id="@+id/iv_badge_3"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/badge3" />
-
-        <ImageView
-            android:id="@+id/iv_badge_4"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/badge4" />
-
-        <ImageView
-            android:id="@+id/iv_badge_5"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/badge5" />
-
         <ImageView
             android:id="@+id/iv_top_profile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitCenter"
+            android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/iv_badge_1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/badge1" />
+
+    <ImageView
+        android:id="@+id/iv_badge_2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/badge2" />
+
+    <ImageView
+        android:id="@+id/iv_badge_3"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/badge3" />
+
+    <ImageView
+        android:id="@+id/iv_badge_4"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/badge4" />
+
+    <ImageView
+        android:id="@+id/iv_badge_5"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/badge5" />
 </androidx.constraintlayout.widget.ConstraintLayout>
