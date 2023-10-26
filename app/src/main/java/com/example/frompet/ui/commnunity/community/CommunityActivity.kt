@@ -3,6 +3,7 @@ package com.example.frompet.ui.commnunity.community
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frompet.data.model.CommunityData
@@ -18,6 +19,16 @@ class CommunityActivity : AppCompatActivity() {
     private var _binding: ActivityCommunityBinding? = null
     private val binding get() = _binding
     private val auth = FirebaseAuth.getInstance()
+    private val communityAdapter : CommunityAdapter by lazy { CommunityAdapter(
+        ListClick = {item ->
+            //전달하는 데이터
+            val intent: Intent = Intent(this, CommunityDetailActivity::class.java)
+            Log.d("sooj", "${item}")
+            intent.putExtra("communityData", item)
+            startActivity(intent)
+            finish()
+        }
+    ) }
 
     // FirebaseStorage 초기화
     val db = FirebaseFirestore.getInstance()
@@ -28,21 +39,10 @@ class CommunityActivity : AppCompatActivity() {
 
         setContentView(binding?.root)
 
-        // RecyclerView 설정
-        val recyclerView = binding?.recyclerview
-        recyclerView?.layoutManager = LinearLayoutManager(this)
-        // adapter 초기화
-        val adapter = CommunityAdapter { CommunityData ->
-            val intent : Intent = Intent(this, CommunityDetailActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
 
         // Firebase 현재 사용자 가져오기
         val currentUser = FirebaseAuth.getInstance().currentUser
 
-        recyclerView?.layoutManager = LinearLayoutManager(this)
-        recyclerView?.adapter = adapter
 
         // 데이터 가져오기
         val communitydb = FirebaseFirestore.getInstance()
@@ -51,15 +51,22 @@ class CommunityActivity : AppCompatActivity() {
 
         communitydb.collection("Community")
             .get()
-            .addOnSuccessListener { documents ->
+            .addOnSuccessListener { querySnapshot ->
                 val communityList = mutableListOf<CommunityData>()
 
-                for (document in documents) {
-                    val data = document.toObject(CommunityData::class.java)
-                    communityList.add(data)
-                }
-                adapter.submitList(communityList)
+                if (querySnapshot.isEmpty.not()) {
+                    for (document in querySnapshot.documents) {
+                        val data = document.toObject(CommunityData::class.java)
+                        data?.let {
+                            if (it.uid != currentUserId) {
+                                communityList.add(it)
+                            }
+                        }
+                    }
+                    communityAdapter.submitList(communityList)
+                    Log.d("sooj", "커뮤니티 리스트${communityList}")
 
+                }
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show()
@@ -71,10 +78,9 @@ class CommunityActivity : AppCompatActivity() {
         }
 
         binding?.ivPen?.setOnClickListener {
-            val intent: Intent = Intent(this@CommunityActivity, CommunityAddActivity::class.java)
+            val intent: Intent =
+                Intent(this@CommunityActivity, CommunityAddActivity::class.java)
             startActivity(intent)
         }
-
-
     }
 }

@@ -19,7 +19,7 @@
             android:theme="?attr/actionBarTheme"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:navigationIcon="@drawable/icon_back"
-            app:title="반려견 정보 입력" />
+            app:title="반려동물 정보 입력" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView

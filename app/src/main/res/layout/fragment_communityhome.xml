@@ -32,10 +32,47 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이번주 매칭왕"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/image_slider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/image_slider"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="108dp"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintBottom_toTopOf="@+id/communicationrecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+        android:id="@+id/dots_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:dotsColor="@color/gray"
+        app:selectedDotColor="@color/warm_blue"
+        app:layout_constraintTop_toBottomOf="@+id/image_slider"
+        app:layout_constraintStart_toStartOf="@+id/image_slider"
+        app:layout_constraintEnd_toEndOf="@+id/image_slider"
+        android:layout_marginTop="8dp"/>
+
+
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/communicationrecyclerView"
         app:layout_constraintTop_toBottomOf="@id/constraintLayout"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="300dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"/>
