@@ -16,6 +16,10 @@ import com.google.firebase.storage.FirebaseStorage
 
 class CommunityActivity : AppCompatActivity() {
 
+    companion object {
+        const val COMMUNITY_DATA = "communityData"
+    }
+
     private var _binding: ActivityCommunityBinding? = null
     private val binding get() = _binding
     private val auth = FirebaseAuth.getInstance()
@@ -24,7 +28,7 @@ class CommunityActivity : AppCompatActivity() {
             //전달하는 데이터
             val intent: Intent = Intent(this, CommunityDetailActivity::class.java)
             Log.d("sooj", "item == ${item}")
-            intent.putExtra("communityData", item)
+            intent.putExtra(COMMUNITY_DATA, item)
             startActivity(intent)
             finish()
         }
@@ -65,13 +69,11 @@ class CommunityActivity : AppCompatActivity() {
                     }
                     communityAdapter.submitList(communityList)
                     Log.d("sooj", "커뮤니티 리스트${communityList}")
-
                 }
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show()
             }
-
 
         binding?.backBtn?.setOnClickListener {
             finish()

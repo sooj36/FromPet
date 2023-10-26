@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.example.frompet.R
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityAddBinding
 import com.example.frompet.ui.commnunity.community.CommunityActivity
@@ -57,7 +58,7 @@ class CommunityAddActivity : AppCompatActivity() {
 
             if (currentUser != null) {
                 if (title.isEmpty() || contents.isEmpty()) {
-                    Toast.makeText(this, "제목과 글을 모두 입력해주세요", Toast.LENGTH_SHORT).show()
+                    showToast(getString(R.string.commu_all_add_plz), Toast.LENGTH_SHORT)
                     return@setOnClickListener
 
                 } else {
@@ -72,8 +73,7 @@ class CommunityAddActivity : AppCompatActivity() {
 
                 //커뮤니티액티비티로 옮김
                 FirebaseFirestore.getInstance().collection("Community")
-                    .document(currentUser.uid)
-                    .set(community)
+                    .add(community)  // add를
                     .addOnSuccessListener {
                         Toast.makeText(this, "등록되었습니다", Toast.LENGTH_SHORT).show()
 

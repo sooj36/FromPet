@@ -78,6 +78,7 @@
     <string name="comu_notice">[공지]</string>
     <string name="comu_notice_text">공지텍스트</string>
     <string name="comu_thisweekend_matched">이번주 매칭왕</string>
+    <string name="commu_all_add_plz">제목과 글을 모두 입력해주세요</string>
 
 
 </resources>

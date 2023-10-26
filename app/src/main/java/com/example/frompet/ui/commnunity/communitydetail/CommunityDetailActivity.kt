@@ -18,6 +18,10 @@ class CommunityDetailActivity : AppCompatActivity() {
 
     private val Detaildb = FirebaseFirestore.getInstance()
 
+    companion object {
+        const val COMMUNITY_DATA = "communityData"
+    }
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +33,9 @@ class CommunityDetailActivity : AppCompatActivity() {
         var communityData : CommunityData?
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            communityData = intent.getParcelableExtra("commuityData",CommunityData::class.java)
+            communityData = intent.getParcelableExtra(COMMUNITY_DATA,CommunityData::class.java)
         } else {
-            communityData = intent.getParcelableExtra("communityData", CommunityData::class.java)
+            communityData = intent.getParcelableExtra(COMMUNITY_DATA, CommunityData::class.java)
         }
 
 
