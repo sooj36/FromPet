@@ -29,9 +29,9 @@ class CommunityDetailActivity : AppCompatActivity() {
         var communityData : CommunityData?
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            communityData = intent.getSerializableExtra("commuityData",CommunityData::class.java)
+            communityData = intent.getParcelableExtra("commuityData",CommunityData::class.java)
         } else {
-            communityData = intent.getSerializableExtra("communityData", CommunityData::class.java)
+            communityData = intent.getParcelableExtra("communityData", CommunityData::class.java)
         }
 
 
@@ -45,7 +45,7 @@ class CommunityDetailActivity : AppCompatActivity() {
 
 
 
-        binding.backBtn?.setOnClickListener {
+        binding.backBtn.setOnClickListener {
             finish()
         }
     }

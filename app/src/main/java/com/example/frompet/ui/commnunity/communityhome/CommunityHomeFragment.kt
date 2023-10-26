@@ -39,8 +39,8 @@ class CommunityHomeFragment : Fragment() {
 
         // data list
         communityHomeData = mutableListOf(
-            CommunityHomeData(R.drawable.dog, "DOG"),
-            CommunityHomeData(R.drawable.cat, "CAT"),
+            CommunityHomeData(R.drawable.dog, "강아지"),
+            CommunityHomeData(R.drawable.cat, "고양이"),
             CommunityHomeData(R.drawable.raccoon, "라쿤"),
             CommunityHomeData(R.drawable.fox, "여우"),
             CommunityHomeData(R.drawable.chick, "새"),

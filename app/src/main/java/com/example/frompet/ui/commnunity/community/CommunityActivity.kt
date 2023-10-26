@@ -23,7 +23,7 @@ class CommunityActivity : AppCompatActivity() {
         ListClick = {item ->
             //전달하는 데이터
             val intent: Intent = Intent(this, CommunityDetailActivity::class.java)
-            Log.d("sooj", "${item}")
+            Log.d("sooj", "item == ${item}")
             intent.putExtra("communityData", item)
             startActivity(intent)
             finish()
@@ -38,6 +38,8 @@ class CommunityActivity : AppCompatActivity() {
         _binding = ActivityCommunityBinding.inflate(layoutInflater)
 
         setContentView(binding?.root)
+
+        binding?.recyclerview?.adapter = communityAdapter
 
 
         // Firebase 현재 사용자 가져오기
@@ -58,9 +60,7 @@ class CommunityActivity : AppCompatActivity() {
                     for (document in querySnapshot.documents) {
                         val data = document.toObject(CommunityData::class.java)
                         data?.let {
-                            if (it.uid != currentUserId) {
                                 communityList.add(it)
-                            }
                         }
                     }
                     communityAdapter.submitList(communityList)
