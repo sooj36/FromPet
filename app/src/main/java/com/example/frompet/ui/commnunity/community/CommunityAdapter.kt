@@ -6,27 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frompet.data.model.CommunityData
+import com.example.frompet.data.model.User
 import com.example.frompet.databinding.ItemCommunityBinding
+import com.example.frompet.ui.chat.adapter.ChatMessageAdapter
+import com.example.frompet.ui.setting.FriendsListAdapter
 
 class CommunityAdapter(private val ListClick: (CommunityData) -> Unit) :
-    ListAdapter<CommunityData, CommunityAdapter.CommunityViewHolder>(
-        object : DiffUtil.ItemCallback<CommunityData>() {
-            // listadapter & diffutill
-            override fun areItemsTheSame(
-                oldItem: CommunityData,
-                newItem: CommunityData
-            ): Boolean {
-                return oldItem == newItem
-            }
-
-            override fun areContentsTheSame(
-                oldItem: CommunityData,
-                newItem: CommunityData
-            ): Boolean {
-                return oldItem == newItem
-            }
-        }
-    ) {
+    ListAdapter<CommunityData, CommunityAdapter.CommunityViewHolder>(DiffCallback()) {
 
 
     override fun onCreateViewHolder(
@@ -59,6 +45,16 @@ class CommunityAdapter(private val ListClick: (CommunityData) -> Unit) :
                 ListClick(CommunityData)
             }
 
+        }
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<CommunityData>() {
+        override fun areItemsTheSame(oldItem: CommunityData, newItem: CommunityData): Boolean {
+            return oldItem.title == newItem.title
+        }
+
+        override fun areContentsTheSame(oldItem: CommunityData, newItem: CommunityData): Boolean {
+            return oldItem == newItem
         }
     }
 }
