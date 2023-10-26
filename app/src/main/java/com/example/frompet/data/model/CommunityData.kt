@@ -6,11 +6,13 @@ import java.io.Serializable
 import java.sql.Timestamp
 
 
-
+@Parcelize
 data class CommunityData(
     val title : String = "",
     val tag : String = "",
     val timestamp : String = "",
     val contents : String = "",
     var uid: String = ""
-): Serializable
+): Parcelable
+
+//    Serializable
