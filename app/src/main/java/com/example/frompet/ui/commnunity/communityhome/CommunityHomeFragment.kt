@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.frompet.MatchSharedViewModel
@@ -23,7 +25,7 @@ class CommunityHomeFragment : Fragment() {
     private lateinit var adapter : CommunityHomeAdapter
     private lateinit var communityHomeData : MutableList<CommunityHomeData>
     private val viewModel : MatchSharedViewModel by viewModels()
-    private val imageSliderAdapter: ImageSliderAdapter = ImageSliderAdapter()
+    private val imageSliderAdapter: ImageSliderAdapter by lazy { ImageSliderAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,15 +53,23 @@ class CommunityHomeFragment : Fragment() {
         val adapter = CommunityHomeAdapter(communityHomeData)
         recyclerView.adapter = adapter
         adapter.submitList(communityHomeData)
+
+
         binding.imageSlider.adapter = imageSliderAdapter
 
         viewModel.getTopMatchedUsersThisWeek { topUsers->
-            imageSliderAdapter.submitList(topUsers)
-            binding.dotsIndicator.setViewPager2(binding.imageSlider)
-            startAutoScroll()
+            _binding?.let { binding ->
+                imageSliderAdapter.submitList(topUsers)
+                binding.dotsIndicator.setViewPager2(binding.imageSlider)
+                startAutoScroll()
+            }
         }
 
+        viewModel.getTotalMatchedCount{matchedCount->
+            _binding?.tvNoticeText?.text = " 총 ${matchedCount}쌍이 매칭되었습니다!"
+        }
 
+        startNoticeTextAniMation()
 
         return binding.root
     }
@@ -76,7 +86,35 @@ class CommunityHomeFragment : Fragment() {
         }
         handler.postDelayed(runnable, 3000)
     }
+private fun startNoticeTextAniMation(){
+    val slideUp = AnimationUtils.loadAnimation(context, R.anim.slide_up)
+    val slideDown = AnimationUtils.loadAnimation(context, R.anim.slide_down)
 
+    slideUp.setAnimationListener(object : Animation.AnimationListener {
+        override fun onAnimationStart(animation: Animation?) {}
+
+        override fun onAnimationEnd(animation: Animation?) {
+            _binding?.tvNoticeText?.startAnimation(slideDown)
+        }
+
+        override fun onAnimationRepeat(animation: Animation?) {}
+    })
+
+    slideDown.setAnimationListener(object : Animation.AnimationListener {
+        override fun onAnimationStart(animation: Animation?) {}
+
+        override fun onAnimationEnd(animation: Animation?) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                _binding?.tvNoticeText?.startAnimation(slideUp)
+            }, 1000)
+        }
+
+        override fun onAnimationRepeat(animation: Animation?) {}
+    })
+
+    _binding?.tvNoticeText?.startAnimation(slideUp)
+
+}
 
 
 
