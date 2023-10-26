@@ -230,9 +230,15 @@ class MatchSharedViewModel : ViewModel() {
                     val userId = userSnapshot.key
                     val matchedThisWeek = userSnapshot.child("matched")
                         .children
-                        .filter { it.getValue(Long::class.java) ?: 0L > oneWeekAgo }
+                        .filter {
+                            val value = it.getValue(Long::class.java)
+                            value != null && value > oneWeekAgo
+                        }
+
                     val matchedThisWeekCount = matchedThisWeek.count()
-                    val earliestMatchThisWeek = matchedThisWeek.minOfOrNull { it.getValue(Long::class.java) ?: Long.MAX_VALUE } ?: Long.MAX_VALUE
+                    val earliestMatchThisWeek = matchedThisWeek
+                        .mapNotNull { it.getValue(Long::class.java) }
+                        .minOrNull() ?: Long.MAX_VALUE
 
                     userId?.let {
                         matchedCountsThisWeek[it] = matchedThisWeekCount
@@ -260,6 +266,22 @@ class MatchSharedViewModel : ViewModel() {
         })
     }
 
+
+    fun getTotalMatchedCount(onSuccess: (Int)-> Unit){
+        var totalMatchedCound = 0
+        database.addValueEventListener(object :ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach{ userSnapshot->
+                    val matchedCountUser = userSnapshot.child("matched").children.count()
+                    totalMatchedCound += matchedCountUser
+                }
+                onSuccess(totalMatchedCound)
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
+    }
 
 }
 
