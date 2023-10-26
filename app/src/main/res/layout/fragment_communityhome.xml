@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="커뮤니티"
+            android:text="@string/communityhome_meet"
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="20sp"
@@ -30,7 +30,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
