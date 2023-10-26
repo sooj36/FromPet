@@ -65,6 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/community_share"
+                android:padding="10dp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 app:chipBackgroundColor="@color/peach_puff" />
@@ -110,8 +111,6 @@
                 app:chipBackgroundColor="@color/peach_puff" />
 
 
-
-
         </com.google.android.material.chip.ChipGroup>
 
         <View
@@ -125,6 +124,16 @@
             app:layout_constraintTop_toBottomOf="@id/chip_group"
             app:layout_scrollFlags="scroll|exitUntilCollapsed" />
 
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintTop_toBottomOf="@+id/view_line_2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
@@ -133,6 +142,7 @@
             app:layout_constraintTop_toBottomOf="@id/view_line_2"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
+        </ScrollView>
         <ImageView
             android:id="@+id/iv_pen"
             android:layout_width="40dp"

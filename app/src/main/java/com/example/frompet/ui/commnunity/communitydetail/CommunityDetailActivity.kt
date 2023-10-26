@@ -1,11 +1,13 @@
 package com.example.frompet.ui.commnunity.communitydetail
 
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.annotation.RequiresApi
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityDetailBinding
+import com.example.frompet.ui.commnunity.community.CommunityActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -50,6 +52,8 @@ class CommunityDetailActivity : AppCompatActivity() {
 
 
         binding.backBtn.setOnClickListener {
+            val intent : Intent = Intent(this@CommunityDetailActivity, CommunityActivity::class.java)
+            startActivity(intent)
             finish()
         }
     }

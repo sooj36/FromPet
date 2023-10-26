@@ -6,7 +6,11 @@ import android.os.Bundle
 import android.widget.Toast
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunityData
+import com.example.frompet.data.model.User
 import com.example.frompet.databinding.ActivityCommunityAddBinding
+import com.example.frompet.ui.chat.activity.ChatMessageActivity
+import com.example.frompet.ui.chat.dialog.ChatExitDialog
+import com.example.frompet.ui.commnunity.AddExitDialog
 import com.example.frompet.ui.commnunity.community.CommunityActivity
 import com.example.frompet.util.showToast
 import com.google.firebase.auth.FirebaseAuth
@@ -33,13 +37,8 @@ class CommunityAddActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        binding.backBtn.setOnClickListener {
-            finish()
-        }
+        initView()
 
-        binding.btnAddCancel.setOnClickListener {
-            // 취소 다이얼로그 띄우기
-        }
 
         binding.btnAddEnroll.setOnClickListener {
             val titleText = binding.etAddTitle.text.toString()
@@ -87,6 +86,23 @@ class CommunityAddActivity : AppCompatActivity() {
                         Toast.makeText(this, "등록에 실패하였습니다.", Toast.LENGTH_SHORT).show()
                     }
             }
+        }
+    }
+
+    private fun initView() {
+        with(binding) {
+            btnAddCancel.setOnClickListener { showExitDialog() }
+            backBtn.setOnClickListener { backToCommunity()}
+        }
+    }
+
+    private fun backToCommunity() {
+        finish()
+    }
+
+    private fun showExitDialog() {
+        AddExitDialog(this).showExitDialog {
+            finish()
         }
     }
 }
