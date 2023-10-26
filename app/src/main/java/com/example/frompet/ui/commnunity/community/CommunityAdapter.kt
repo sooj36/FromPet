@@ -6,34 +6,23 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frompet.data.model.CommunityData
+import com.example.frompet.data.model.User
 import com.example.frompet.databinding.ItemCommunityBinding
+import com.example.frompet.ui.chat.adapter.ChatMessageAdapter
+import com.example.frompet.ui.setting.FriendsListAdapter
 
-class CommunityAdapter(private val ListClick :(CommunityData) -> Unit) : ListAdapter<CommunityData, CommunityAdapter.CommunityViewHolder>(
-    object : DiffUtil.ItemCallback<CommunityData>() {
-        override fun areItemsTheSame(
-            oldItem: CommunityData,
-            newItem: CommunityData
-        ): Boolean {
-            return oldItem == newItem
-        }
-
-        override fun areContentsTheSame(
-            oldItem: CommunityData,
-            newItem: CommunityData
-        ): Boolean {
-            return oldItem == newItem
-        }
-    }
-) {
+class CommunityAdapter(private val ListClick: (CommunityData) -> Unit) :
+    ListAdapter<CommunityData, CommunityAdapter.CommunityViewHolder>(DiffCallback()) {
 
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+        parent: ViewGroup, viewType: Int
     ): CommunityAdapter.CommunityViewHolder {
-        val binding =
-            ItemCommunityBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CommunityViewHolder(binding)
+        return CommunityViewHolder(
+            ItemCommunityBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            ), ListClick
+        )
     }
 
     override fun onBindViewHolder(holder: CommunityAdapter.CommunityViewHolder, position: Int) {
@@ -42,7 +31,10 @@ class CommunityAdapter(private val ListClick :(CommunityData) -> Unit) : ListAda
     }
 
 
-    inner class CommunityViewHolder(private val binding: ItemCommunityBinding) :
+    inner class CommunityViewHolder(
+        private val binding: ItemCommunityBinding,
+        private val ListClick: (CommunityData) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(CommunityData: CommunityData) {
             binding.tvTitleComm.text = CommunityData.title
@@ -53,6 +45,16 @@ class CommunityAdapter(private val ListClick :(CommunityData) -> Unit) : ListAda
                 ListClick(CommunityData)
             }
 
+        }
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<CommunityData>() {
+        override fun areItemsTheSame(oldItem: CommunityData, newItem: CommunityData): Boolean {
+            return oldItem.title == newItem.title
+        }
+
+        override fun areContentsTheSame(oldItem: CommunityData, newItem: CommunityData): Boolean {
+            return oldItem == newItem
         }
     }
 }

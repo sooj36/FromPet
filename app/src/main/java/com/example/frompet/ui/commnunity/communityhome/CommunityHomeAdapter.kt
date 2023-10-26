@@ -1,4 +1,4 @@
-package com.example.frompet.ui.commnunity.communityHome
+package com.example.frompet.ui.commnunity.communityhome
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -57,6 +57,7 @@ class CommunityHomeAdapter(communicationFragment: List<CommunityHomeData>) :
         fun bind(communityHomeData: CommunityHomeData) {
             binding.ivPetNameComm.load(communityHomeData.pet_logo)
             binding.tvPetNameComm.text = communityHomeData.pet_name
+
 
             binding.communicationId.setOnClickListener {
                 val intent : Intent = Intent(it.context, CommunityActivity::class.java)
