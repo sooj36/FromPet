@@ -1,6 +1,7 @@
 package com.example.frompet.data.repository.user
 
 import com.example.frompet.data.repository.firebase.BaseAuthenticator
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import javax.inject.Inject
@@ -37,7 +38,11 @@ class AuthRepository @Inject constructor(
     }
 
     override suspend fun signInGoogle(idToken: String): FirebaseUser? {
-        return authenticator.sigInGoogle(idToken)
+        return authenticator.signInGoogle(idToken)
+    }
+
+    override suspend fun signInWithCredential(credential: AuthCredential): FirebaseUser? {
+        return authenticator.signInWithCredential(credential)
     }
 
 }
