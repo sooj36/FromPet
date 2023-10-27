@@ -1,19 +1,19 @@
-package com.example.frompet.ui.login
+package com.example.frompet.ui.login.googlelog
 
 import android.content.Intent
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frompet.data.repository.user.UserRepositoryImp
 import com.example.frompet.ui.intro.IntroActivity.Companion.TAG
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import dagger.hilt.android.AndroidEntryPoint
+import com.gun0912.tedpermission.provider.TedPermissionProvider.context
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -36,7 +36,6 @@ class GoogleViewModel @Inject constructor(
         if (idToken.isNotEmpty()) {
             try {
                 Log.e(TAG,"google log st")
-                val credential = GoogleAuthProvider.getCredential(idToken,null)
                 val user = userRepository.signInGoogle(idToken)
                 user?.let {
                     val uid = it.uid
@@ -59,19 +58,27 @@ class GoogleViewModel @Inject constructor(
 
     private fun saveGoogle(uid: String){
         val userDocRef = FirebaseFirestore.getInstance().collection("User").document(uid)
-        val userData = hashMapOf(
-            "username" to "Google 사용자 이름",
-            "email" to "Google 사용자 이메일"
-        )
-        userDocRef.set(userData)
-            .addOnSuccessListener {
-                Log.e(TAG,"succes")
 
-            }
-            .addOnFailureListener { e ->
-                Log.e(TAG,"fail")
-            }
+        // 사용자 정보를 가져올 GoogleSignInAccount
+        val acct = GoogleSignIn.getLastSignedInAccount(context)
 
+        if (acct != null) {
+            val userData = hashMapOf(
+                "username" to acct.displayName,
+                "email" to acct.email
+
+            )
+
+            userDocRef.set(userData)
+                .addOnSuccessListener {
+                    Log.e(TAG, "Success")
+                }
+                .addOnFailureListener { e ->
+                    Log.e(TAG, "Fail: $e")
+                }
+        } else {
+            Log.e(TAG, "Google SignInAccount is null")
+        }
     }
 
     sealed class AllEvents {
@@ -88,7 +95,7 @@ class GoogleViewModel @Inject constructor(
                 }
             }
         }
-        data class GoogleSignIn(val error: Intent):AllEvents()
+        data class GoogleSignIn(val error: Intent): AllEvents()
     }
 
 }

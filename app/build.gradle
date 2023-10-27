@@ -80,6 +80,7 @@ dependencies {
 
     implementation platform('com.google.firebase:firebase-bom:32.3.1') //파이어베이스 붐
     implementation 'com.google.firebase:firebase-analytics-ktx' // 파이어베이스 이용량
+    implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
 
 
 
@@ -100,6 +101,7 @@ dependencies {
     //Dagger Hilt 프레임 워크
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "com.google.dagger:hilt-compiler:2.44"
+
     //로그인 프로그래스바
     implementation 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
     //스택 카드뷰
