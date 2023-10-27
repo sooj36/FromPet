@@ -118,6 +118,9 @@ dependencies {
     //인디케이터 애니메이션
     implementation("com.tbuonomo:dotsindicator:5.0")
 
+    implementation 'kr.co.prnd:readmore-textview:1.0.0'
+    //더보기 라이브러리
+
 
 
 }
