@@ -123,6 +123,7 @@ class ChatMessageAdapter(var context: Context) :
             if (chatMessage.imageUrl.isNullOrEmpty().not()) {
                 ivMessageImage.isVisible = true
                 tvMessage.isVisible = false
+                tvName.text = chatMessage.senderPetName
                 tvTime.text = formatTimeStamp(chatMessage.timestamp)
                 ivMessageImage.load(chatMessage.imageUrl) {
                     error(R.drawable.kakaotalk_20230825_222509794_01)

@@ -6,6 +6,8 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -84,6 +86,42 @@ class SettingProfileActivity : AppCompatActivity() {
         binding.btBack.setOnClickListener {
             onBackPressed()
         }
+        val textWatcherIntroduction = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // 텍스트가 변경되기 전에 호출됩니다.
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // 텍스트가 변경될 때 호출됩니다.
+                val charCount = s?.length ?: 0
+                binding.tvCharCount.text = "$charCount/95" // 글자 수를 업데이트합니다.
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // 텍스트가 변경된 후에 호출됩니다.
+            }
+        }
+
+        val textWatcherPurpose = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // 텍스트가 변경되기 전에 호출됩니다.
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // 텍스트가 변경될 때 호출됩니다.
+                val charCount = s?.length ?: 0
+                binding.tvCharCount2.text = "$charCount/57" // 글자 수를 업데이트합니다.
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // 텍스트가 변경된 후에 호출됩니다.
+            }
+        }
+
+        // EditText에 TextWatcher를 추가합니다.
+        binding.etPetIntroduction.addTextChangedListener(textWatcherIntroduction)
+        binding.etPurpose.addTextChangedListener(textWatcherPurpose)
+
     }
 
     private fun showToast(message: String) {
