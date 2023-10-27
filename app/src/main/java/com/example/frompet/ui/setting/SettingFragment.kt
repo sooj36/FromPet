@@ -21,14 +21,15 @@ import com.bumptech.glide.Glide
 import com.example.frompet.R
 import com.example.frompet.databinding.FragmentSettingBinding
 import com.example.frompet.ui.login.LoginActivity
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.auth.FirebaseAuth
 
 class SettingFragment : Fragment() {
 
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
-    private lateinit var chatSwitch: Switch
-    private lateinit var friendsSwitch: Switch
+    private lateinit var chatSwitch: SwitchMaterial
+    private lateinit var friendsSwitch: SwitchMaterial
 
     private val viewModel: SettingViewModel by viewModels()
     private val fcmTokenManagerViewModel: FCMTokenManagerViewModel by viewModels()
@@ -145,7 +146,7 @@ class SettingFragment : Fragment() {
             // 사용자 로그아웃
             FirebaseAuth.getInstance().signOut()
 
-            // LoginActivity로 이동
+            // LoginActivity로 이동이야
             val intent = Intent(requireActivity(), LoginActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)

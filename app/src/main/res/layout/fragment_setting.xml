@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/light_gray"
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
@@ -100,9 +101,10 @@
             android:id="@+id/tv_modify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="15sp"
             android:textStyle="bold"
             android:text="프로필 수정"
+            android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_modify"
             app:layout_constraintStart_toEndOf="@+id/iv_modify"
             app:layout_constraintTop_toTopOf="@+id/iv_modify" />
@@ -130,17 +132,17 @@
             app:layout_constraintTop_toTopOf="@+id/iv_modify" />
 
 
-
-        <TextView
-            android:id="@+id/tv_friends"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textStyle="bold"
-            android:text="친구 목록"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_friends"
-            app:layout_constraintStart_toEndOf="@+id/iv_friends"
-            app:layout_constraintTop_toTopOf="@+id/iv_friends" />
+            <TextView
+                android:id="@+id/tv_friends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="친구 목록"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_friends"
+                app:layout_constraintStart_toEndOf="@+id/iv_friends"
+                app:layout_constraintTop_toTopOf="@+id/iv_friends" />
 
         <ImageView
             android:id="@+id/iv_friends"
@@ -187,16 +189,17 @@
             app:layout_constraintStart_toStartOf="@+id/view2" />
 
 
-        <TextView
-            android:id="@+id/tv_notification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textStyle="bold"
-            android:text="메시지 알림"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_notification"
-            app:layout_constraintStart_toEndOf="@+id/iv_notification"
-            app:layout_constraintTop_toTopOf="@+id/iv_notification" />
+            <TextView
+                android:id="@+id/tv_notification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="메시지 알림"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_notification"
+                app:layout_constraintStart_toEndOf="@+id/iv_notification"
+                app:layout_constraintTop_toTopOf="@+id/iv_notification" />
 
         <ImageView
             android:id="@+id/iv_notification"
@@ -220,7 +223,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/iv_notification" />
 
-        <Switch
+            <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/chat_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -229,16 +232,17 @@
             app:layout_constraintTop_toTopOf="@+id/iv_notification" />
 
 
-        <TextView
-            android:id="@+id/tv_friends_noti"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textStyle="bold"
-            android:text="친구 신청 알림"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_friends_noti"
-            app:layout_constraintStart_toEndOf="@+id/iv_friends_noti"
-            app:layout_constraintTop_toTopOf="@+id/iv_friends_noti" />
+            <TextView
+                android:id="@+id/tv_friends_noti"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="친구 신청 알림"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_friends_noti"
+                app:layout_constraintStart_toEndOf="@+id/iv_friends_noti"
+                app:layout_constraintTop_toTopOf="@+id/iv_friends_noti" />
 
         <ImageView
             android:id="@+id/iv_friends_noti"
@@ -262,7 +266,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/iv_friends_noti" />
 
-        <Switch
+            <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/friends_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -283,16 +287,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ib_friends_noti" />
 
-        <TextView
-            android:id="@+id/tv_log_out"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textStyle="bold"
-            android:text="로그아웃"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_log_out"
-            app:layout_constraintStart_toEndOf="@+id/iv_log_out"
-            app:layout_constraintTop_toTopOf="@+id/iv_log_out" />
+            <TextView
+                android:id="@+id/tv_log_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="로그아웃"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_log_out"
+                app:layout_constraintStart_toEndOf="@+id/iv_log_out"
+                app:layout_constraintTop_toTopOf="@+id/iv_log_out" />
 
         <ImageView
             android:id="@+id/iv_log_out"
