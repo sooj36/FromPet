@@ -1,6 +1,7 @@
 package com.example.frompet.data.repository.firebase
 
 import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
@@ -19,12 +20,22 @@ class FirebaseAuthenticator : BaseAuthenticator {
         return Firebase.auth.currentUser
     }
 
-    override suspend fun sigInGoogle(idToken: String): FirebaseUser? {
+    override suspend fun signInGoogle(idToken: String): FirebaseUser? {
         val credential: AuthCredential = GoogleAuthProvider.getCredential(idToken, null)
-        return try{
-            Firebase.auth.signInWithCredential(credential).await()
-            Firebase.auth.currentUser
+        return try {
+            val authResult = Firebase.auth.signInWithCredential(credential).await()
+            authResult.user
         }catch (e: Exception){
+            null
+        }
+    }
+
+    override suspend fun signInWithCredential(credential: AuthCredential): FirebaseUser? {
+        return try {
+            val authResult = Firebase.auth.signInWithCredential(credential).await()
+            authResult.user
+        } catch (e: Exception) {
+            // 실패 시 예외 처리
             null
         }
     }

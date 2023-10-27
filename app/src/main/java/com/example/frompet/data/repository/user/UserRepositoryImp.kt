@@ -2,6 +2,8 @@ package com.example.frompet.data.repository.user
 
 import com.example.frompet.data.model.User
 import com.example.frompet.data.repository.firebase.BaseAuthenticator
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
@@ -40,7 +42,17 @@ class UserRepositoryImp @Inject constructor(
     override suspend fun signInGoogle(idToken: String): FirebaseUser? {
         return try {
             val credential = GoogleAuthProvider.getCredential(idToken, null)
-            authenticator.sigInGoogle(credential.toString())
+            authenticator.signInWithCredential(credential)
+        } catch (e: Exception) {
+            // 실패 시 예외 처리
+            null
+        }
+    }
+
+    override suspend fun signInWithCredential(credential: AuthCredential): FirebaseUser? {
+        return try {
+            val authResult = FirebaseAuth.getInstance().signInWithCredential(credential).await()
+            authResult.user
         } catch (e: Exception) {
             // 실패 시 예외 처리
             null
