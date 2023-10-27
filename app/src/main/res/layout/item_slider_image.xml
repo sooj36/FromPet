@@ -20,7 +20,7 @@
             android:layout_height="50dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/badge1" />
+            android:src="@drawable/icon_1_badge" />
 
         <ImageView
             android:id="@+id/iv_badge_2"
@@ -28,7 +28,7 @@
             android:layout_height="50dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/badge2" />
+            android:src="@drawable/icon_2_badge" />
 
         <ImageView
             android:id="@+id/iv_badge_3"
@@ -36,7 +36,7 @@
             android:layout_height="50dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/badge3" />
+            android:src="@drawable/icon_3_badge" />
 
         <ImageView
             android:id="@+id/iv_badge_4"
@@ -44,7 +44,7 @@
             android:layout_height="50dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/badge4" />
+            android:src="@drawable/icon_4_badge" />
 
         <ImageView
             android:id="@+id/iv_badge_5"
@@ -52,7 +52,7 @@
             android:layout_height="50dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/badge5" />
+            android:src="@drawable/icon_5_badge" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
