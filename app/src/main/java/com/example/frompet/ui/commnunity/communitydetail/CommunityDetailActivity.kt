@@ -49,8 +49,6 @@ class CommunityDetailActivity : AppCompatActivity() {
         title.text = communityData?.title
         contents.text = communityData?.contents
 
-
-
         binding.backBtn.setOnClickListener {
             val intent : Intent = Intent(this@CommunityDetailActivity, CommunityActivity::class.java)
             startActivity(intent)

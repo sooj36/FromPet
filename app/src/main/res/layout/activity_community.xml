@@ -42,7 +42,7 @@
             android:layout_marginTop="8dp"
             android:paddingHorizontal="8dp"
             app:checkedChip="@id/chip_all"
-            android:background="#EFA4B5"
+            android:background="@color/beige"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -57,7 +57,7 @@
                 android:text="@string/community_all"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                app:chipBackgroundColor="@color/light_beige" />
+                app:chipBackgroundColor="@color/dark_pink" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_share"
@@ -68,7 +68,7 @@
                 android:padding="10dp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                app:chipBackgroundColor="@color/peach_puff" />
+                app:chipBackgroundColor="@color/light_gray" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_walk"
@@ -78,7 +78,7 @@
                 android:text="@string/community_walk"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                app:chipBackgroundColor="@color/peach_puff" />
+                app:chipBackgroundColor="@color/light_gray" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_love"
@@ -88,7 +88,7 @@
                 android:text="@string/community_love"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                app:chipBackgroundColor="@color/peach_puff" />
+                app:chipBackgroundColor="@color/light_gray" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_exchange"
@@ -98,7 +98,7 @@
                 android:text="@string/community_exchange"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                app:chipBackgroundColor="@color/peach_puff" />
+                app:chipBackgroundColor="@color/light_gray" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_add"
@@ -108,7 +108,7 @@
                 android:text="@string/community_add"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                app:chipBackgroundColor="@color/peach_puff" />
+                app:chipBackgroundColor="@color/light_gray" />
 
 
         </com.google.android.material.chip.ChipGroup>
