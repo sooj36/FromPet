@@ -268,14 +268,14 @@ class MatchSharedViewModel : ViewModel() {
 
 
     fun getTotalMatchedCount(onSuccess: (Int)-> Unit){
-        var totalMatchedCound = 0
+        var totalMatchedCount = 0
         database.addValueEventListener(object :ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach{ userSnapshot->
                     val matchedCountUser = userSnapshot.child("matched").children.count()
-                    totalMatchedCound += matchedCountUser
+                    totalMatchedCount += matchedCountUser
                 }
-                onSuccess(totalMatchedCound)
+                onSuccess(totalMatchedCount / 2)
             }
             override fun onCancelled(error: DatabaseError) {
             }
