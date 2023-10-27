@@ -125,6 +125,15 @@ class GoogleAcceptUpFragment : DialogFragment() {
                             val uid = firebaseUser?.uid
                             if (uid != null) {
                                 Log.e(TAG, "$uid")
+                                val userDocRef = FirebaseFirestore.getInstance().collection("User").document(uid)
+                                userDocRef.get()
+                                    .addOnSuccessListener { documentSnapshot ->
+                                        if(documentSnapshot.exists()){
+                                            startMainActivity()
+                                        }else{
+                                            startMemberInfoActivity()
+                                        }
+                                    }
                             }
 
                         }
