@@ -1,5 +1,6 @@
 package com.example.frompet.data.repository.firebase
 
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 
 interface BaseAuthenticator {
@@ -8,7 +9,10 @@ interface BaseAuthenticator {
 
     suspend fun signInWithEmailPassword(email: String , password: String):FirebaseUser?
 
-    suspend fun sigInGoogle(idToken: String):FirebaseUser?
+    suspend fun signInGoogle(idToken: String): FirebaseUser?
+
+    suspend fun signInWithCredential(credential: AuthCredential): FirebaseUser?
+
 
     fun signOut() : FirebaseUser?
 

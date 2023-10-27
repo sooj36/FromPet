@@ -37,7 +37,7 @@ class CommunityDetailActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             communityData = intent.getParcelableExtra(COMMUNITY_DATA,CommunityData::class.java)
         } else {
-            communityData = intent.getParcelableExtra(COMMUNITY_DATA, CommunityData::class.java)
+            communityData = intent.extras?.getSerializable(COMMUNITY_DATA)as CommunityData?
         }
 
 
