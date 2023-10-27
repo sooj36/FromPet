@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.App" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorOnSurface">@color/dark_gray</item>
+        <item name="colorSecondary">@color/light_beige</item>
+    </style>
+</resources>
