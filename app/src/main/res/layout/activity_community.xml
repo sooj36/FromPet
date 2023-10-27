@@ -42,7 +42,7 @@
             android:layout_marginTop="8dp"
             android:paddingHorizontal="8dp"
             app:checkedChip="@id/chip_all"
-            android:background="#EFA4B5"
+            android:background="@color/beige"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -57,7 +57,7 @@
                 android:text="@string/community_all"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                app:chipBackgroundColor="@color/light_beige" />
+                app:chipBackgroundColor="@color/dark_pink" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_share"
@@ -65,9 +65,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/community_share"
+                android:padding="10dp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                app:chipBackgroundColor="@color/peach_puff" />
+                app:chipBackgroundColor="@color/light_gray" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_walk"
@@ -77,7 +78,7 @@
                 android:text="@string/community_walk"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                app:chipBackgroundColor="@color/peach_puff" />
+                app:chipBackgroundColor="@color/light_gray" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_love"
@@ -87,7 +88,7 @@
                 android:text="@string/community_love"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                app:chipBackgroundColor="@color/peach_puff" />
+                app:chipBackgroundColor="@color/light_gray" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_exchange"
@@ -97,7 +98,7 @@
                 android:text="@string/community_exchange"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                app:chipBackgroundColor="@color/peach_puff" />
+                app:chipBackgroundColor="@color/light_gray" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_add"
@@ -107,9 +108,7 @@
                 android:text="@string/community_add"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                app:chipBackgroundColor="@color/peach_puff" />
-
-
+                app:chipBackgroundColor="@color/light_gray" />
 
 
         </com.google.android.material.chip.ChipGroup>
@@ -125,6 +124,16 @@
             app:layout_constraintTop_toBottomOf="@id/chip_group"
             app:layout_scrollFlags="scroll|exitUntilCollapsed" />
 
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintTop_toBottomOf="@+id/view_line_2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
@@ -133,6 +142,7 @@
             app:layout_constraintTop_toBottomOf="@id/view_line_2"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
+        </ScrollView>
         <ImageView
             android:id="@+id/iv_pen"
             android:layout_width="40dp"

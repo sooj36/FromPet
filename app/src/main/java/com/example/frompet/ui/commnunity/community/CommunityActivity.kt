@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityBinding
@@ -16,6 +18,10 @@ import com.google.firebase.storage.FirebaseStorage
 
 class CommunityActivity : AppCompatActivity() {
 
+    companion object {
+        const val COMMUNITY_DATA = "communityData"
+    }
+
     private var _binding: ActivityCommunityBinding? = null
     private val binding get() = _binding
     private val auth = FirebaseAuth.getInstance()
@@ -24,17 +30,20 @@ class CommunityActivity : AppCompatActivity() {
             //전달하는 데이터
             val intent: Intent = Intent(this, CommunityDetailActivity::class.java)
             Log.d("sooj", "item == ${item}")
-            intent.putExtra("communityData", item)
+            intent.putExtra(COMMUNITY_DATA, item)
             startActivity(intent)
             finish()
         }
     ) }
+
+    private val viewModel : CommunityViewModel by viewModels()
 
     // FirebaseStorage 초기화
     val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         _binding = ActivityCommunityBinding.inflate(layoutInflater)
 
         setContentView(binding?.root)
@@ -65,13 +74,11 @@ class CommunityActivity : AppCompatActivity() {
                     }
                     communityAdapter.submitList(communityList)
                     Log.d("sooj", "커뮤니티 리스트${communityList}")
-
                 }
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show()
             }
-
 
         binding?.backBtn?.setOnClickListener {
             finish()

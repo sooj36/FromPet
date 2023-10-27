@@ -1,11 +1,13 @@
 package com.example.frompet.ui.commnunity.communitydetail
 
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.annotation.RequiresApi
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityDetailBinding
+import com.example.frompet.ui.commnunity.community.CommunityActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -18,6 +20,10 @@ class CommunityDetailActivity : AppCompatActivity() {
 
     private val Detaildb = FirebaseFirestore.getInstance()
 
+    companion object {
+        const val COMMUNITY_DATA = "communityData"
+    }
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +35,9 @@ class CommunityDetailActivity : AppCompatActivity() {
         var communityData : CommunityData?
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            communityData = intent.getParcelableExtra("commuityData",CommunityData::class.java)
+            communityData = intent.getParcelableExtra(COMMUNITY_DATA,CommunityData::class.java)
         } else {
-            communityData = intent.getParcelableExtra("communityData", CommunityData::class.java)
+            communityData = intent.getParcelableExtra(COMMUNITY_DATA, CommunityData::class.java)
         }
 
 
@@ -43,9 +49,9 @@ class CommunityDetailActivity : AppCompatActivity() {
         title.text = communityData?.title
         contents.text = communityData?.contents
 
-
-
         binding.backBtn.setOnClickListener {
+            val intent : Intent = Intent(this@CommunityDetailActivity, CommunityActivity::class.java)
+            startActivity(intent)
             finish()
         }
     }

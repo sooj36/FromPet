@@ -4,8 +4,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.example.frompet.R
 import com.example.frompet.data.model.CommunityData
+import com.example.frompet.data.model.User
 import com.example.frompet.databinding.ActivityCommunityAddBinding
+import com.example.frompet.ui.chat.activity.ChatMessageActivity
+import com.example.frompet.ui.chat.dialog.ChatExitDialog
+import com.example.frompet.ui.commnunity.AddExitDialog
 import com.example.frompet.ui.commnunity.community.CommunityActivity
 import com.example.frompet.util.showToast
 import com.google.firebase.auth.FirebaseAuth
@@ -32,13 +37,8 @@ class CommunityAddActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        binding.backBtn.setOnClickListener {
-            finish()
-        }
+        initView()
 
-        binding.btnAddCancel.setOnClickListener {
-            // 취소 다이얼로그 띄우기
-        }
 
         binding.btnAddEnroll.setOnClickListener {
             val titleText = binding.etAddTitle.text.toString()
@@ -57,7 +57,7 @@ class CommunityAddActivity : AppCompatActivity() {
 
             if (currentUser != null) {
                 if (title.isEmpty() || contents.isEmpty()) {
-                    Toast.makeText(this, "제목과 글을 모두 입력해주세요", Toast.LENGTH_SHORT).show()
+                    showToast(getString(R.string.commu_all_add_plz), Toast.LENGTH_SHORT)
                     return@setOnClickListener
 
                 } else {
@@ -72,8 +72,7 @@ class CommunityAddActivity : AppCompatActivity() {
 
                 //커뮤니티액티비티로 옮김
                 FirebaseFirestore.getInstance().collection("Community")
-                    .document(currentUser.uid)
-                    .set(community)
+                    .add(community)  // add를
                     .addOnSuccessListener {
                         Toast.makeText(this, "등록되었습니다", Toast.LENGTH_SHORT).show()
 
@@ -87,6 +86,23 @@ class CommunityAddActivity : AppCompatActivity() {
                         Toast.makeText(this, "등록에 실패하였습니다.", Toast.LENGTH_SHORT).show()
                     }
             }
+        }
+    }
+
+    private fun initView() {
+        with(binding) {
+            btnAddCancel.setOnClickListener { showExitDialog() }
+            backBtn.setOnClickListener { backToCommunity()}
+        }
+    }
+
+    private fun backToCommunity() {
+        finish()
+    }
+
+    private fun showExitDialog() {
+        AddExitDialog(this).showExitDialog {
+            finish()
         }
     }
 }
