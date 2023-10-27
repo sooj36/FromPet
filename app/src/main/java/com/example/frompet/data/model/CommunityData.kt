@@ -15,4 +15,4 @@ data class CommunityData(
     var uid: String = ""
 ): Parcelable
 
-//    Serializable
+//): Serializable
