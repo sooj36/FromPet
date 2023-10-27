@@ -159,6 +159,11 @@ class MemberInfoActivity : AppCompatActivity() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        // 뒤로 가기 버튼 동작을 비활성화
+        // 아무 동작도 하지 않도록 설정
+    }
     private fun goGallery(){
         val galleryIntent = Intent(Intent.ACTION_PICK)
         galleryIntent.type = "image/*"
