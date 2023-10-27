@@ -48,14 +48,16 @@ class CommunityActivity : AppCompatActivity() {
         _binding = ActivityCommunityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.loadCommunityData()
-        viewModel.loadCommunityList()
-
-
         binding.recyclerview.adapter = communityAdapter
 
-        // Firebase 현재 사용자 가져오기
+        // Firebase 현재 사용자 가져오기 (일단 남겨놈)
         val currentUser = FirebaseAuth.getInstance().currentUser
+
+        viewModel.loadCommunityData()
+
+        viewModel.communityList.observe(this, { communityList ->
+            communityAdapter.submitList(communityList)
+        })
 
 
         binding.backBtn.setOnClickListener {

@@ -18,10 +18,7 @@ class CommunityViewModel : ViewModel() {
 
     // Firebase 현재 사용자 가져오기
     private val currentUserId = auth.currentUser?.uid
-
-
     private val currentUser = FirebaseAuth.getInstance().currentUser
-    private val firestore = FirebaseFirestore.getInstance()
 
     private val _title = MutableLiveData<String?>()
     val title: LiveData<String?> = _title
@@ -44,7 +41,7 @@ class CommunityViewModel : ViewModel() {
         val userId = currentUser?.uid
 
         if (userId != null) {
-            firestore.collection("Community").document(userId).get()
+            communitydb.collection("Community").document(userId).get()
                 .addOnSuccessListener { documentSnapshop ->
                     if (documentSnapshop.exists()) {
                         _title.value = documentSnapshop.getString("title")
