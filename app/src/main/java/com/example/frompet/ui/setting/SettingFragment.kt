@@ -146,7 +146,7 @@ class SettingFragment : Fragment() {
             // 사용자 로그아웃
             FirebaseAuth.getInstance().signOut()
 
-            // LoginActivity로 이동
+            // LoginActivity로 이동이야
             val intent = Intent(requireActivity(), LoginActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
