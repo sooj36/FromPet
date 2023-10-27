@@ -20,7 +20,7 @@
         android:text="@string/comu_thisweekend_matched"
         android:textColor="@color/black"
         android:textSize="20sp"
-        android:textStyle="italic"
+        android:textStyle="bold"
        android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,8 @@
             android:id="@+id/image_frame"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:background="@drawable/frame"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/gallery"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -48,8 +49,8 @@
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/image_slider"
-            android:layout_width="283dp"
-            android:layout_height="166dp"
+            android:layout_width="340dp"
+            android:layout_height="190dp"
             android:src="@drawable/ic_launcher_background"
             app:layout_constraintBottom_toBottomOf="@+id/image_frame"
             app:layout_constraintEnd_toEndOf="parent"
