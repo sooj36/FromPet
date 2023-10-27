@@ -51,7 +51,6 @@ class SettingFragment : Fragment() {
         viewModel.petProfile.observe(viewLifecycleOwner) { petProfile ->
             petProfile?.let {
                binding.ivPet.load(it)//혹시모르니 코일로 바꿔놨습니다 승현님.
-                Log.d("sooj", "${it}")
             }
         }
 
