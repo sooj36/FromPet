@@ -49,11 +49,10 @@ class CommunityActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.recyclerview.adapter = communityAdapter
+//        binding.recyclerview.scrollToPosition()
 
         // Firebase 현재 사용자 가져오기 (일단 남겨놈)
         val currentUser = FirebaseAuth.getInstance().currentUser
-
-        viewModel.loadCommunityData()
 
         viewModel.communityList.observe(this, { communityList ->
             communityAdapter.submitList(communityList)
@@ -69,5 +68,11 @@ class CommunityActivity : AppCompatActivity() {
                 Intent(this@CommunityActivity, CommunityAddActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.loadCommunityListData()
     }
 }
