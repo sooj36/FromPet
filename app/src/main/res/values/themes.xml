@@ -1,10 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.FromPet" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <item name="colorPrimaryDark">@color/black</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/accent_color</item>// 버튼 색
+        <item name="colorPrimaryVariant">@color/secondary_color</item>//상단 바
+        <item name="colorOnPrimary">@color/white</item>// 버튼 글씨 색
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowBackground">@color/secondary_color</item>
     </style>
+
 
     <style name="Theme.FromPet" parent="Base.Theme.FromPet" />
 
