@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:backgroundTint="@color/peach_puff"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/peach_puff">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbarAddPet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
+            android:background="@color/secondary_color"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:navigationIcon="@drawable/icon_back"
             app:title="반려동물 정보 입력" />
@@ -45,10 +45,9 @@
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/bt_SelectPetPhoto"
                 style="@style/Widget.Material3.Button.ElevatedButton"
-                app:srcCompat="@drawable/icon_camera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                />
+                app:srcCompat="@drawable/icon_camera" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayoutAddPetName"
@@ -66,22 +65,18 @@
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayoutBreed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="반려동물 종류">
 
-                <AutoCompleteTextView
-                    android:id="@+id/autoCompleteTextViewPetBreed"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingStart="16dp"
-                    android:paddingTop="17dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="17dp"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
-            </com.google.android.material.textfield.TextInputLayout>
+            <Spinner
+                android:id="@+id/sp_pet_type"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="16dp"
+                android:paddingTop="17dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="17dp">
+
+            </Spinner>
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputPetBirth"

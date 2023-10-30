@@ -4,14 +4,17 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.compose.ui.platform.textInputServiceFactory
-import androidx.navigation.findNavController
+import androidx.compose.ui.graphics.vector.addPathNodes
 import com.bumptech.glide.Glide
 import com.example.frompet.databinding.ActivityMemberInfoBinding
 import com.example.frompet.data.model.User
 import com.example.frompet.MainActivity
 import com.example.frompet.R
+import com.example.frompet.data.model.CommunityHomeData
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -32,11 +35,28 @@ class MemberInfoActivity : AppCompatActivity() {
     private var petGender: String = "" // 성별 정보 저장 변수
     private var petNeuter: String = "" // 중성화 여부 정보 저장 변수
     private var petAge: Int = 0
+    private var petType:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMemberInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val communityHomeData = mutableListOf(
+            CommunityHomeData(R.drawable.dog, "강아지"),
+            CommunityHomeData(R.drawable.cat, "고양이"),
+            CommunityHomeData(R.drawable.raccoon, "라쿤"),
+            CommunityHomeData(R.drawable.fox, "여우"),
+            CommunityHomeData(R.drawable.chick, "새"),
+            CommunityHomeData(R.drawable.pig, "돼지"),
+            CommunityHomeData(R.drawable.snake, "파충류"),
+            CommunityHomeData(R.drawable.fish, "물고기"),
+        )
+        val adapter = MemberInfoAdapter(this,communityHomeData)
+        val spinner = binding.spPetType
+        spinner.adapter = adapter
+
+
 
         binding.btSelectPetPhoto.setOnClickListener {
             goGallery()
@@ -46,7 +66,6 @@ class MemberInfoActivity : AppCompatActivity() {
             val petName = binding.textInputEditTextAddPetName.text.toString()
             val petDescription = binding.textInputEditTextPetDescription.text.toString()
             val petIntroduction = binding.textInputEditTextPetCharacter.text.toString()
-            val petType = binding.autoCompleteTextViewPetBreed.text.toString()
             // Firebase 현재 사용자 가져오기
             val currentUser = FirebaseAuth.getInstance().currentUser
 
@@ -172,6 +191,8 @@ class MemberInfoActivity : AppCompatActivity() {
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
+
+
 }
 
 

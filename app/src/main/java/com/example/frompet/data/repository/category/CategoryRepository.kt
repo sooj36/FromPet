@@ -1,5 +1,7 @@
 package com.example.frompet.data.repository.category
 
-interface CategoryRepository {
+import com.example.frompet.data.model.CommunityHomeData
 
+interface CategoryRepository {
+    suspend fun getCategory(): List<CommunityHomeData>
 }
