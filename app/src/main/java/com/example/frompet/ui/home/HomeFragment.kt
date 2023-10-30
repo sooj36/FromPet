@@ -77,10 +77,13 @@ class HomeFragment : Fragment() {
                         user?.let {
                             // user를 이용하여 원하는 작업 수행
                             viewModel.like(user.uid)
-                            val title = "새로운 좋아요!"
-                            val message = "${user.petName}님이 당신을 좋아합니다."
-                            FCMViewModel.sendFCMNotification(user.uid, title, message)
-
+                            val currentUser = auth.currentUser
+                            firestore.collection("User").document(currentUser?.uid!!).get().addOnSuccessListener { docs ->
+                                val currentUserName = docs.getString("petName") ?:"nothing"
+                                val title = "새로운 좋아요!"
+                                val message = "${currentUserName}님이 당신을 좋아합니다."
+                                FCMViewModel.sendFCMNotification(user.uid, title, message)
+                            }
                             Toast.makeText(requireContext(), "${user.petName}에게 좋아요를 보냈습니다", Toast.LENGTH_SHORT).show()
 
                         }
