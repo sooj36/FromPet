@@ -159,14 +159,14 @@
 
                 <TextView
                     android:id="@+id/tv_pet_des"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:text="@string/activity_detail_petdes"
                     android:textColor="@color/black"
-
                     android:textSize="18sp"
                     android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/iv_pet_des"
                     app:layout_constraintTop_toTopOf="@+id/iv_pet_des" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -192,17 +192,19 @@
 
                 <TextView
                     android:id="@+id/tv_pet_intro"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:text="@string/activity_detail_petintro"
                     android:textColor="@color/black"
-
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/iv_pet_intro"
-                    app:layout_constraintTop_toTopOf="@+id/iv_pet_intro" />
+                    app:layout_constraintTop_toTopOf="@+id/iv_pet_intro"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout

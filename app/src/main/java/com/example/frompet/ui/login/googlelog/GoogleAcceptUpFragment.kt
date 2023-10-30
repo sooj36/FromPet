@@ -33,7 +33,7 @@ class GoogleAcceptUpFragment : DialogFragment() {
         super.onCreate(savedInstanceState)
         //false로 설정해 주면 화면밖 혹은 뒤로가기 버튼시 다이얼로그라 dismiss 되지 않는다.
 
-        isCancelable = true
+        isCancelable = false
     }
 
     override fun onCreateView(
@@ -51,27 +51,31 @@ class GoogleAcceptUpFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val text = "구글 로그인으로 회원가입을 완료했습니다!"
+        val text = "로그인을 하시겠습니까?"
 
         binding.tvSample.text = text
 
         binding.btYes.setOnClickListener {
-            Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "로그인 성공!", Toast.LENGTH_SHORT).show()
             startGoogleSignIn()
         }
         binding.btNo.setOnClickListener {
-
+            dismiss()
         }
 
         viewModel.currentUser.observe(viewLifecycleOwner) { firebaseUser ->
             val uid = firebaseUser?.uid
             if (uid != null) {
                 Log.e(TAG, "$uid")
-                if (userHas()) {
-                    startMainActivity()
-                } else {
-                    startMemberInfoActivity()
-                }
+                val userDocRef = FirebaseFirestore.getInstance().collection("User").document(uid)
+                userDocRef.get()
+                    .addOnSuccessListener { documentSnapshot ->
+                        if (documentSnapshot.exists()) {
+                            startMainActivity()
+                        } else {
+                            startMemberInfoActivity()
+                        }
+                    }
             } else {
                 Log.e(TAG, "null")
             }
@@ -121,22 +125,6 @@ class GoogleAcceptUpFragment : DialogFragment() {
                     Log.e(TAG, "$idToken")
                     if (idToken != null) {
                         viewModel.signInGoogle(idToken)
-                        viewModel.currentUser.observe(viewLifecycleOwner) { firebaseUser ->
-                            val uid = firebaseUser?.uid
-                            if (uid != null) {
-                                Log.e(TAG, "$uid")
-                                val userDocRef = FirebaseFirestore.getInstance().collection("User").document(uid)
-                                userDocRef.get()
-                                    .addOnSuccessListener { documentSnapshot ->
-                                        if(documentSnapshot.exists()){
-                                            startMainActivity()
-                                        }else{
-                                            startMemberInfoActivity()
-                                        }
-                                    }
-                            }
-
-                        }
                     } else {
                         Log.e(TAG, "idToken is null")
                     }
