@@ -1,6 +1,6 @@
 package com.example.frompet.ui.setting
 
-import FCMTokenManagerViewModel
+//import FCMTokenManagerViewModel
 import android.app.AlertDialog
 
 import android.content.Intent
@@ -32,7 +32,7 @@ class SettingFragment : Fragment() {
     private lateinit var friendsSwitch: SwitchMaterial
 
     private val viewModel: SettingViewModel by viewModels()
-    private val fcmTokenManagerViewModel: FCMTokenManagerViewModel by viewModels()
+    //    private val fcmTokenManagerViewModel: FCMTokenManagerViewModel by viewModels()
     private lateinit var progressBar: ProgressBar
 
 
@@ -51,7 +51,8 @@ class SettingFragment : Fragment() {
 
         viewModel.petProfile.observe(viewLifecycleOwner) { petProfile ->
             petProfile?.let {
-               binding.ivPet.load(it)//혹시모르니 코일로 바꿔놨습니다 승현님.
+                binding.ivPet.load(it)//혹시모르니 코일로 바꿔놨습니다 승현님.
+                Log.d("sooj", "${it}")
             }
         }
 
@@ -139,8 +140,8 @@ class SettingFragment : Fragment() {
             // 현재 로그인된 사용자가 있는 경우에만 실행!
             val userId = currentUser.uid
 
-            // FCM 토큰을 삭제하는 코드 추가
-            fcmTokenManagerViewModel.removeFCMToken(userId)
+//            // FCM 토큰을 삭제하는 코드 추가
+//            fcmTokenManagerViewModel.removeFCMToken(userId)
 
             // 사용자 로그아웃
             FirebaseAuth.getInstance().signOut()
