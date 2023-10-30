@@ -1,5 +1,6 @@
 package com.example.frompet.ui.home
 
+//import FCMTokenManagerViewModel
 import HomeBottomSheetFragment
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import com.example.frompet.databinding.FragmentHomeBinding
 import com.example.frompet.MatchSharedViewModel
 import com.example.frompet.R
 import com.example.frompet.data.model.User
+import com.example.frompet.ui.setting.fcm.FCMNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
@@ -37,6 +39,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var manager : CardStackLayoutManager
     private val viewModel: MatchSharedViewModel by viewModels()
+    private val FCMViewModel: FCMNotificationViewModel by viewModels()
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
 
@@ -74,6 +77,10 @@ class HomeFragment : Fragment() {
                         user?.let {
                             // user를 이용하여 원하는 작업 수행
                             viewModel.like(user.uid)
+                            val title = "새로운 좋아요!"
+                            val message = "${user.petName}님이 당신을 좋아합니다."
+                            FCMViewModel.sendFCMNotification(user.uid, title, message)
+
                             Toast.makeText(requireContext(), "${user.petName}에게 좋아요를 보냈습니다", Toast.LENGTH_SHORT).show()
 
                         }
@@ -156,7 +163,7 @@ class HomeFragment : Fragment() {
                 }
             })
         }
-     }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
