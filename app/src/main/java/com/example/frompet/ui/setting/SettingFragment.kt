@@ -23,6 +23,10 @@ import com.example.frompet.databinding.FragmentSettingBinding
 import com.example.frompet.ui.login.LoginActivity
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class SettingFragment : Fragment() {
 
@@ -30,9 +34,12 @@ class SettingFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var chatSwitch: SwitchMaterial
     private lateinit var friendsSwitch: SwitchMaterial
+    private val database = FirebaseDatabase.getInstance().getReference()
+    private val auth = FirebaseAuth.getInstance()
+
+
 
     private val viewModel: SettingViewModel by viewModels()
-    //    private val fcmTokenManagerViewModel: FCMTokenManagerViewModel by viewModels()
     private lateinit var progressBar: ProgressBar
 
 
@@ -108,10 +115,26 @@ class SettingFragment : Fragment() {
 
             if (isChecked) {
                 binding.ivFriendsNoti.setImageResource(R.drawable.icon_alarm_on)
+                database.child("usersToken").child(auth.currentUser?.uid ?: "").child("notificationsEnabled").setValue(true)
             } else {
                 binding.ivFriendsNoti.setImageResource(R.drawable.icon_alarm_off)
+                database.child("usersToken").child(auth.currentUser?.uid ?: "").child("notificationsEnabled").setValue(false)
             }
         }
+        //앱 시작시 리얼타임베이스에서 noti의 상태를 불러와서 버튼에 적용
+        database.child("usersToken").child(auth.currentUser?.uid ?: "")
+            .child("notificationsEnabled").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val notificationsEnabled = snapshot.value as? Boolean ?: true
+                    friendsSwitch.isChecked = notificationsEnabled
+                    if (notificationsEnabled) { //true면 on
+                        binding.ivFriendsNoti.setImageResource(R.drawable.icon_alarm_on)
+                    } else {        //false면 off
+                        binding.ivFriendsNoti.setImageResource(R.drawable.icon_alarm_off)
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {}
+            })
         return binding.root
     }
 
@@ -140,8 +163,8 @@ class SettingFragment : Fragment() {
             // 현재 로그인된 사용자가 있는 경우에만 실행!
             val userId = currentUser.uid
 
-//            // FCM 토큰을 삭제하는 코드 추가
-//            fcmTokenManagerViewModel.removeFCMToken(userId)
+//            // FCM 토큰을 삭제하는 코드 추가 해야함
+
 
             // 사용자 로그아웃
             FirebaseAuth.getInstance().signOut()
