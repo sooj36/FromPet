@@ -26,16 +26,17 @@ class ChatRepositoryImpl : ChatRepository {
 
     override fun loadLastChats(currentUserId: String, otherUserId: String) {
         val chatRoomId = chatRoom(currentUserId, otherUserId)
-        database.child("lastMessages").child(chatRoomId)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val message = snapshot.getValue(ChatMessage::class.java)
-                    _lastChats[chatRoomId]?.value = message
-                }
+        val listener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val message = snapshot.getValue(ChatMessage::class.java)
+                _lastChats[chatRoomId]?.value = message
+            }
 
-                override fun onCancelled(databaseError: DatabaseError) {}
-            })
+            override fun onCancelled(databaseError: DatabaseError) {}
+        }
+        database.child("lastMessages").child(chatRoomId).addValueEventListener(listener)  //여기에 각채팅방의 별도의 valueEventListener를 사용해서 오류해결
     }
+
     override fun loadNewChats(): LiveData<HashMap<String, Boolean>> {
         val currentUserId = auth.currentUser?.uid ?: return _newChats
         database.child("newMessages")
