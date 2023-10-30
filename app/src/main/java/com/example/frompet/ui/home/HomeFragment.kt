@@ -107,13 +107,13 @@ class HomeFragment : Fragment() {
                 }
 
                 if (manager!!.topPosition == homeAdapter.currentList.size) {
-                    // 이것이 마지막 카드인 경우 추가 처리 가능
-                    Toast.makeText(requireContext(), "This is the last card", Toast.LENGTH_SHORT).show()
-
-                    val transaction = parentFragmentManager.beginTransaction()
-                    transaction.replace(R.id.home_container,HomeEmptyFragment())
-                    transaction.addToBackStack(null)
-                    transaction.commit()
+                    if (isResumed) {
+                        Toast.makeText(requireContext(), "This is the last card", Toast.LENGTH_SHORT).show()
+                        val transaction = parentFragmentManager.beginTransaction()
+                        transaction.replace(R.id.home_container, HomeEmptyFragment())
+                        transaction.addToBackStack(null)
+                        transaction.commit()
+                    }
                 }
             }
 
@@ -184,7 +184,7 @@ class HomeFragment : Fragment() {
     private fun getDataFromFirestore() {
         viewModel.getExceptDislikeAndMe(
             onSuccess = { users ->
-                if (users.isEmpty()) {
+                if (users.isEmpty() && isResumed) {
                     homeAdapter.submitList(emptyList())
                     val transaction = parentFragmentManager.beginTransaction()
                     transaction.replace(R.id.home_container, HomeEmptyFragment())
