@@ -106,7 +106,7 @@ class HomeFragment : Fragment() {
                     }
                 }
 
-                if (manager!!.topPosition == homeAdapter.currentList.size) {
+                if (manager.topPosition == homeAdapter.currentList.size) {
                     if (isResumed) {
                         Toast.makeText(requireContext(), "This is the last card", Toast.LENGTH_SHORT).show()
                         val transaction = parentFragmentManager.beginTransaction()
