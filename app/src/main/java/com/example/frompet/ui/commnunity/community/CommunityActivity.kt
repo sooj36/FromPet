@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frompet.data.model.CommunityData
@@ -23,7 +25,7 @@ class CommunityActivity : AppCompatActivity() {
     }
 
     private var _binding: ActivityCommunityBinding? = null
-    private val binding get() = _binding
+    private val binding get() = _binding!!
     private val auth = FirebaseAuth.getInstance()
     private val communityAdapter : CommunityAdapter by lazy { CommunityAdapter(
         ListClick = {item ->
@@ -36,58 +38,41 @@ class CommunityActivity : AppCompatActivity() {
         }
     ) }
 
+    // viewModel 초기화
     private val viewModel : CommunityViewModel by viewModels()
-
     // FirebaseStorage 초기화
     val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         _binding = ActivityCommunityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        setContentView(binding?.root)
+        binding.recyclerview.adapter = communityAdapter
+//        binding.recyclerview.scrollToPosition()
 
-        binding?.recyclerview?.adapter = communityAdapter
-
-
-        // Firebase 현재 사용자 가져오기
+        // Firebase 현재 사용자 가져오기 (일단 남겨놈)
         val currentUser = FirebaseAuth.getInstance().currentUser
 
+        viewModel.communityList.observe(this, { communityList ->
+            communityAdapter.submitList(communityList)
+        })
 
-        // 데이터 가져오기
-        val communitydb = FirebaseFirestore.getInstance()
-        // Firebase 현재 사용자 가져오기
-        val currentUserId = auth.currentUser?.uid
 
-        communitydb.collection("Community")
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                val communityList = mutableListOf<CommunityData>()
-
-                if (querySnapshot.isEmpty.not()) {
-                    for (document in querySnapshot.documents) {
-                        val data = document.toObject(CommunityData::class.java)
-                        data?.let {
-                                communityList.add(it)
-                        }
-                    }
-                    communityAdapter.submitList(communityList)
-                    Log.d("sooj", "커뮤니티 리스트${communityList}")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show()
-            }
-
-        binding?.backBtn?.setOnClickListener {
+        binding.backBtn.setOnClickListener {
             finish()
         }
 
-        binding?.ivPen?.setOnClickListener {
+        binding.ivPen.setOnClickListener {
             val intent: Intent =
                 Intent(this@CommunityActivity, CommunityAddActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.loadCommunityListData()
     }
 }

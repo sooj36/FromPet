@@ -39,7 +39,6 @@ class CommunityAddActivity : AppCompatActivity() {
 
         initView()
 
-
         binding.btnAddEnroll.setOnClickListener {
             val titleText = binding.etAddTitle.text.toString()
             val contentsText = binding.etAddContents.text.toString()
@@ -65,8 +64,13 @@ class CommunityAddActivity : AppCompatActivity() {
                     timeStamp = currentTime.toString()
                 }
 
-                // Communuty 모델 생성
-                val community = CommunityData(title, tag, timeStamp, contents)
+                // Community 모델 생성
+                val community = CommunityData(
+                    title = title,
+                    tag = tag,
+                    contents = contents,
+                    timestamp = timeStamp
+                )
                 community.uid = currentUser.uid
 
 
@@ -93,8 +97,7 @@ class CommunityAddActivity : AppCompatActivity() {
         with(binding) {
             btnAddCancel.setOnClickListener { showExitDialog() }
             backBtn.setOnClickListener { backToCommunity()}
-        }
-    }
+        }    }
 
     private fun backToCommunity() {
         finish()

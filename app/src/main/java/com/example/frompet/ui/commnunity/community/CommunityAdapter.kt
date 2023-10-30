@@ -33,13 +33,13 @@ class CommunityAdapter(private val ListClick: (CommunityData) -> Unit) :
         private val ListClick: (CommunityData) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(CommunityData: CommunityData) {
-            binding.tvTitleComm.text = CommunityData.title
+        fun bind(communityData: CommunityData) {
+            binding.tvTitleComm.text = communityData.title
 //                    binding.chipTag.isChecked = CommunityData.tag.
-            binding.tvContentsComm.text = CommunityData.contents
+            binding.tvContentsComm.text = communityData.contents
 
             binding.linearlayoutAdd.setOnClickListener {
-                ListClick(CommunityData)
+                ListClick(communityData)
             }
 
         }
