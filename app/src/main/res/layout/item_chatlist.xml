@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="15dp"
     android:layout_marginStart="12dp"
-    android:layout_marginBottom="13dp"
+    android:layout_marginBottom="20dp"
     app:cardElevation="10dp"
     android:background="@drawable/gradient_shape"
     tools:context=".ui.chat.fragment.ChatLikeListFragment">
