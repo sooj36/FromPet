@@ -104,7 +104,9 @@
         android:layout_marginBottom="20dp"
         app:srcCompat="@drawable/threedots"
         app:layout_constraintBottom_toTopOf="@id/linearLayout5"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="popupMenu" />
+
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

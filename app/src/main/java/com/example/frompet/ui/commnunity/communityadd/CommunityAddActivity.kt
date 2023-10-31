@@ -69,14 +69,16 @@ class CommunityAddActivity : AppCompatActivity() {
                     title = title,
                     tag = tag,
                     contents = contents,
-                    timestamp = timeStamp
+                    timestamp = timeStamp,
+                    uid = currentUser.uid
                 )
-                community.uid = currentUser.uid
+//                community.uid = currentUser.uid
 
 
                 //커뮤니티액티비티로 옮김
                 FirebaseFirestore.getInstance().collection("Community")
-                    .add(community)  // add를
+                    .document(currentUser.uid)
+                    .set(community)  // add를
                     .addOnSuccessListener {
                         Toast.makeText(this, "등록되었습니다", Toast.LENGTH_SHORT).show()
 
