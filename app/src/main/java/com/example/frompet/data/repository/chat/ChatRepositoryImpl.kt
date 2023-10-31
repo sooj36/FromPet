@@ -63,23 +63,38 @@ class ChatRepositoryImpl : ChatRepository {
 
         database.child("lastMessages").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val lastMessagesMap = mutableMapOf<String, Long>()
+                val timeMap = mutableMapOf<String, Long>()
 
                 chatRoomIds.forEach { chatRoomId ->
                     val message = snapshot.child(chatRoomId).getValue(ChatMessage::class.java)
-                    lastMessagesMap[chatRoomId] = message?.timestamp ?: 0
+                    if (message != null) {
+                        timeMap[chatRoomId] = message.timestamp
+                    } else {
+                        database.child("matchedTimes").child(chatRoomId)
+                            .addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    val matchedTime = snapshot.getValue(Long::class.java)
+                                    matchedTime?.let {
+                                        timeMap[chatRoomId] = it
+                                    }
+                                }
+                                override fun onCancelled(error: DatabaseError) {}
+                            })
+                    }
                 }
 
                 val sortedUsers = user.sortedByDescending { user ->
                     val roomId = chatRoom(currentUserId, user.uid)
-                    lastMessagesMap[roomId] ?: 0
+                    timeMap[roomId] ?: 0
                 }
                 onUpdate(sortedUsers)
             }
+
             override fun onCancelled(error: DatabaseError) {
             }
         })
     }
+
     override fun goneNewMessages(chatRoomId: String) {
         val currentUserId = auth.currentUser?.uid ?: return
         database.child("newMessages").child(chatRoomId).child(currentUserId).setValue(false)
