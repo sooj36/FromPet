@@ -3,11 +3,14 @@ package com.example.frompet.ui.home
 //import FCMTokenManagerViewModel
 import HomeBottomSheetFragment
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.ScaleAnimation
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
@@ -91,7 +94,29 @@ class HomeFragment : Fragment() {
                                 val message = "${currentUserName}님이 당신을 좋아합니다."
                                 FCMViewModel.sendFCMNotification(user.uid, title, message)
                             }
-                            Toast.makeText(requireContext(), "${user.petName}에게 좋아요를 보냈습니다", Toast.LENGTH_SHORT).show()
+
+                            val btLike = binding.btLike
+                            btLike.setImageResource(R.drawable.icon_sel_heart)
+
+                            // ImageButton 크기 조절 애니메이션 적용
+                            val scaleAnimation = ScaleAnimation(
+                                1f, 1.2f, 1f, 1.2f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
+                                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f // 중심 위치
+                            )
+                            scaleAnimation.duration = 200 // 애니메이션 지속 시간 (밀리초)
+                            scaleAnimation.fillAfter = true // 애니메이션 이후 상태 유지
+                            btLike.startAnimation(scaleAnimation)
+
+                            Handler().postDelayed({
+                                btLike.setImageResource(R.drawable.icon_unsel_heart)
+                                val restoreAnimation = ScaleAnimation(
+                                    1.2f, 1f, 1.2f, 1f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
+                                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f // 중심 위치
+                                )
+                                restoreAnimation.duration = 200 // 애니메이션 지속 시간 (밀리초)
+                                restoreAnimation.fillAfter = false // 애니메이션 이후 상태 유지
+                                btLike.startAnimation(restoreAnimation)
+                            }, 500) // 500밀리초(0.5초) 후에 복원
 
                         }
 
@@ -101,7 +126,31 @@ class HomeFragment : Fragment() {
                         val user = homeAdapter.currentList[manager.topPosition -1]
                         user?.let {
                             viewModel.dislike(user.uid)
-                            Toast.makeText(requireContext(), "${user.petName}(을)를 거절했습니다", Toast.LENGTH_SHORT).show()
+
+                            val btLike = binding.btDislike
+                            btLike.setImageResource(R.drawable.icon_sel_cross)
+
+                            // ImageButton 크기 조절 애니메이션 적용
+                            val scaleAnimation = ScaleAnimation(
+                                1f, 1.2f, 1f, 1.2f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
+                                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f // 중심 위치
+                            )
+                            scaleAnimation.duration = 200 // 애니메이션 지속 시간 (밀리초)
+                            scaleAnimation.fillAfter = true // 애니메이션 이후 상태 유지
+                            btLike.startAnimation(scaleAnimation)
+
+                            Handler().postDelayed({
+                                btLike.setImageResource(R.drawable.icon_unsel_cross)
+                                val restoreAnimation = ScaleAnimation(
+                                    1.2f, 1f, 1.2f, 1f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
+                                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f // 중심 위치
+                                )
+                                restoreAnimation.duration = 200 // 애니메이션 지속 시간 (밀리초)
+                                restoreAnimation.fillAfter = false // 애니메이션 이후 상태 유지
+                                btLike.startAnimation(restoreAnimation)
+                            }, 500) // 500밀리초(0.5초) 후에 복원
+
+
                         }
 
                     }
