@@ -64,7 +64,7 @@ class HomeFragment : Fragment() {
         getDataFromFirestore()
         checkAndShowSwipeTutorial()
 
-        binding.btnCloseTutorial.setOnClickListener {
+        binding.btComplete.setOnClickListener {
             binding.tutorialOverlay.visibility = View.GONE
             setTutorialShown()
         }
@@ -213,12 +213,15 @@ class HomeFragment : Fragment() {
         }
     }
     private fun checkAndShowSwipeTutorial() {
-       checkIfTutorialShow { isShown ->
-           if (!isShown){
-               binding.tutorialOverlay.visibility = View.VISIBLE
-           }
-       }
+        _binding?.let { binding ->
+            checkIfTutorialShow { isShown ->
+                if (!isShown) {
+                    binding.tutorialOverlay.visibility = View.VISIBLE
+                }
+            }
+        }
     }
+
     private fun checkIfTutorialShow(onComplete: (Boolean) -> Unit) {
         currentUser?.let {
             database.child("usersTutorial").child(it.uid).child("isTutorialShown").get()
@@ -235,11 +238,6 @@ class HomeFragment : Fragment() {
          database.child("usersTutorial").child(it.uid).child("isTutorialShown").setValue(true)
         }
     }
-
-
-
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

@@ -4,4 +4,9 @@
         <item name="colorOnSurface">@color/black</item>
         <item name="colorSecondary">@color/light_beige</item>
     </style>
+    <style name="SwitchTheme" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="colorControlActivated">@color/lip_pink</item>
+        <item name="android:colorForeground">@color/dark_gray</item>
+    </style>
+
 </resources>
