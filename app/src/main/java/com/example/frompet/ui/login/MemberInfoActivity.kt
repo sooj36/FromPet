@@ -4,17 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.compose.ui.graphics.vector.addPathNodes
 import com.bumptech.glide.Glide
 import com.example.frompet.databinding.ActivityMemberInfoBinding
 import com.example.frompet.data.model.User
 import com.example.frompet.MainActivity
 import com.example.frompet.R
-import com.example.frompet.data.model.CommunityData
 import com.example.frompet.data.model.CommunityHomeData
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.auth.FirebaseAuth
@@ -132,7 +127,9 @@ class MemberInfoActivity : AppCompatActivity() {
                     spinnerPetType,
                     selectedNeuterId.toString()
                 )
-                val com = CommunityData()
+
+
+                val com = CommunityHomeData(R.drawable.dog, "강아지", currentUser.uid)
                 com.uid = currentUser.uid
                 FirebaseFirestore.getInstance().collection("Animal")
                     .document(collectionName as String)

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.frompet.MatchSharedViewModel
 import com.example.frompet.R
@@ -25,6 +26,11 @@ class CommunityHomeFragment : Fragment() {
     private lateinit var adapter : CommunityHomeAdapter
     private lateinit var communityHomeData : MutableList<CommunityHomeData>
     private val viewModel : MatchSharedViewModel by viewModels()
+    private val _viewModel by lazy {
+        ViewModelProvider(
+            this
+        )[CategoryViewModel::class.java]
+    }
     private val imageSliderAdapter: ImageSliderAdapter by lazy { ImageSliderAdapter() }
 
     override fun onCreateView(
