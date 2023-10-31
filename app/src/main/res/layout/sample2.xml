@@ -76,7 +76,7 @@
         android:id="@+id/tutorialOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+
         android:background="#66000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="상대방의 사진을 클릭하면 프로필을 볼 수 있습니다."
+            android:text="상대방의 사진을 클릭하면 프로필을 볼 수 있습니다!"
             android:textColor="#FFFFFF"
             android:layout_marginTop="15dp"
             android:textSize="16sp"
@@ -142,7 +142,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/bt_complete"
+            android:id="@+id/btnCloseTutorial"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
