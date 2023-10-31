@@ -56,6 +56,12 @@ class SettingFragment : Fragment() {
         _binding = FragmentSettingBinding.inflate(inflater, container, false)
         progressBar = binding.progressBar
 
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel.petProfile.observe(viewLifecycleOwner) { petProfile ->
             petProfile?.let {
                 binding.ivPet.load(it)//혹시모르니 코일로 바꿔놨습니다 승현님.
@@ -135,7 +141,6 @@ class SettingFragment : Fragment() {
                 }
                 override fun onCancelled(error: DatabaseError) {}
             })
-        return binding.root
     }
 
     private fun showLogoutDialog() {
