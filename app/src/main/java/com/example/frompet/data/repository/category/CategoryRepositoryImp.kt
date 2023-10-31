@@ -2,11 +2,13 @@ package com.example.frompet.data.repository.category
 
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunityHomeData
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
 class CategoryRepositoryImp(
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val  firebaseAuth: FirebaseAuth
 ): CategoryRepository{
     override suspend fun getCategory(): List<CommunityHomeData> {
         val communityHomeData = mutableListOf(
