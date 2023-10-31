@@ -70,7 +70,7 @@ class ChatRepositoryImpl : ChatRepository {
                     if (message != null) {
                         timeMap[chatRoomId] = message.timestamp
                     } else {
-                        database.child("matchedTimes").child(chatRoomId)
+                        database.child("matched").child(chatRoomId)
                             .addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(snapshot: DataSnapshot) {
                                     val matchedTime = snapshot.getValue(Long::class.java)
