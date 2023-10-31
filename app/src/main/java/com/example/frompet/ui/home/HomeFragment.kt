@@ -61,7 +61,7 @@ class HomeFragment : Fragment() {
         getDataFromFirestore()
         checkAndShowSwipeTutorial()
 
-        binding.btnCloseTutorial.setOnClickListener {
+        binding.btComplete.setOnClickListener {
             binding.tutorialOverlay.visibility = View.GONE
             setTutorialShown()
         }
