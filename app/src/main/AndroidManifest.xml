@@ -25,6 +25,8 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FromPet"
         tools:targetApi="31">
+        <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/splash" />
+        <meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/white" />
         <activity
             android:name=".ui.setting.ProgressDialog"
             android:exported="false" />

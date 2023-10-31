@@ -229,7 +229,7 @@
                 android:layout_gravity="top|start"
                 android:layout_margin="10dp"
                 android:padding="1dp"
-                android:src="@drawable/back"
+                android:src="@drawable/icon_back"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
