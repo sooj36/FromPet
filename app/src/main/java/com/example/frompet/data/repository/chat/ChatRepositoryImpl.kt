@@ -15,6 +15,7 @@ class ChatRepositoryImpl : ChatRepository {
     private val auth = FirebaseAuth.getInstance()
     private val _lastChats = HashMap<String, MutableLiveData<ChatMessage?>>()
     private val _newChats = MutableLiveData<HashMap<String, Boolean>>()
+    private val listenersMap = HashMap<String, ValueEventListener>()
 
     override fun chatRoom(uid1: String, uid2: String): String {
         return if (uid1 > uid2) "$uid1+$uid2" else "$uid2+$uid1"
@@ -26,15 +27,21 @@ class ChatRepositoryImpl : ChatRepository {
 
     override fun loadLastChats(currentUserId: String, otherUserId: String) {
         val chatRoomId = chatRoom(currentUserId, otherUserId)
+
+        listenersMap[chatRoomId]?.let {
+            database.child("lastMessages").child(chatRoomId).removeEventListener(it)
+        }
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val message = snapshot.getValue(ChatMessage::class.java)
                 _lastChats[chatRoomId]?.value = message
             }
-
             override fun onCancelled(databaseError: DatabaseError) {}
         }
-        database.child("lastMessages").child(chatRoomId).addValueEventListener(listener)  //여기에 각채팅방의 별도의 valueEventListener를 사용해서 오류해결
+
+        database.child("lastMessages").child(chatRoomId).addValueEventListener(listener)
+
+        listenersMap[chatRoomId] = listener
     }
 
     override fun loadNewChats(): LiveData<HashMap<String, Boolean>> {
