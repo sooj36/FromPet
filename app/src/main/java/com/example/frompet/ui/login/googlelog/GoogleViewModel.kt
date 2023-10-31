@@ -23,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GoogleViewModel @Inject constructor(
     private val userRepository: UserRepositoryImp,
-    private var mGoogleSignInClient: GoogleSignInClient,
+    var mGoogleSignInClient: GoogleSignInClient,
     private val auth: FirebaseAuth
 ): ViewModel() {
     private val _firebaseUser = MutableLiveData<FirebaseUser?>()

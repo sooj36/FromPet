@@ -4,16 +4,25 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.frompet.databinding.ActivityLoginBinding
 import com.example.frompet.MainActivity
-import com.example.frompet.ui.login.googlelog.GoogleAcceptUpFragment
+import com.example.frompet.R
+import com.example.frompet.ui.intro.IntroActivity
+import com.example.frompet.ui.login.googlelog.GoogleViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -21,13 +30,17 @@ import kotlinx.coroutines.launch
 class LoginActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "랄라라"
-        private const val RC_SIGN_IN = 9001
+        private const val RC_SIGN_IN = 1
+
     }
 
     private var _binding: ActivityLoginBinding? = null
     private val binding get() = _binding!!
     private val viewModel by lazy {
         ViewModelProvider(this)[LoginViewModel::class.java]
+    }
+    private val _viewModel by lazy {
+        ViewModelProvider(this)[GoogleViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,16 +60,18 @@ class LoginActivity : AppCompatActivity() {
                 viewModel.signInUser(email, password)
 
             }
-            binding?.apply {
+
                 loginGoogle.setOnClickListener {
                     Log.d(TAG, "Google Sign-In button clicked")
-                    val fragment = GoogleAcceptUpFragment.newInstance()
+                    startGoogleSignIn()
+                    lifecycleScope.launch {
+                        val delayMilliseconds = 3000L
+                        delay(delayMilliseconds)
+                        showSnackbar("로그인 되었습니다. 로그인 버튼을 다시 눌러주세요")
+                    }
 
-                    val transaction = supportFragmentManager.beginTransaction()
-                    transaction.add(fragment, "GoogleAcceptUpFragment")
-                    transaction.commit()
                 }
-            }
+
 
             signUpTxt.setOnClickListener {
                 val intent = Intent(this@LoginActivity, SingUpActivity::class.java)
@@ -129,10 +144,69 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun startGoogleSignIn() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            // 이미 로그인한 사용자가 있으면 MainActivity로 이동
+            startMainActivity()
+        } else {
+            // Google 로그인 진행
+            val webClientId = getString(R.string.web_client_id)
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(webClientId)
+                .requestEmail()
+                .build()
+            _viewModel.mGoogleSignInClient.signOut().addOnCompleteListener {
+                // 사용자가 로그아웃된 후 로그인 프로세스 시작
+                val signInIntent = _viewModel.mGoogleSignInClient.signInIntent
+                startActivityForResult(signInIntent, RC_SIGN_IN)
+            }
+        }
+    }
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.d(IntroActivity.TAG, "onActivityResult: requestCode = $requestCode, resultCode = $resultCode")
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                try {
+                    val account = task.getResult(ApiException::class.java)
+                    val idToken = account.idToken
+                    Log.e(IntroActivity.TAG, "$idToken")
+                    if (idToken != null) {
+                        _viewModel.signInGoogle(idToken)
+                    } else {
+                        Log.e(IntroActivity.TAG, "idToken is null")
+                    }
+                } catch (e: ApiException) {
+                    Log.e(IntroActivity.TAG, "Google sign-in failed", e)
+                }
+            } else {
+                Log.e(IntroActivity.TAG, "Google sign-in result is not OK")
+            }
+        }
+
+    }
+
 
     private fun showSnackbar(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
+    private fun startMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+    private fun startMemberInfoActivity() {
+        val intent = Intent(this, MemberInfoActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel
+    }
 }
 

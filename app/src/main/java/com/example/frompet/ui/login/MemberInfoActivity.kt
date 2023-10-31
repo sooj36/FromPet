@@ -14,6 +14,7 @@ import com.example.frompet.databinding.ActivityMemberInfoBinding
 import com.example.frompet.data.model.User
 import com.example.frompet.MainActivity
 import com.example.frompet.R
+import com.example.frompet.data.model.CommunityData
 import com.example.frompet.data.model.CommunityHomeData
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.auth.FirebaseAuth
@@ -29,13 +30,13 @@ class MemberInfoActivity : AppCompatActivity() {
     private var _binding: ActivityMemberInfoBinding? = null
     private val binding get() = _binding!!
     private val PICK_IMAGE_FROM_ALBUM = 1
+
     // FirebaseStorage 초기화
     val storage = FirebaseStorage.getInstance()
     private var petProfile: String? = null
     private var petGender: String = "" // 성별 정보 저장 변수
-    private var petNeuter: String = "" // 중성화 여부 정보 저장 변수
     private var petAge: Int = 0
-    private var petType:String = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +53,7 @@ class MemberInfoActivity : AppCompatActivity() {
             CommunityHomeData(R.drawable.snake, "파충류"),
             CommunityHomeData(R.drawable.fish, "물고기"),
         )
-        val adapter = MemberInfoAdapter(this,communityHomeData)
+        val adapter = MemberInfoAdapter(this, communityHomeData)
         val spinner = binding.spPetType
         spinner.adapter = adapter
 
@@ -77,6 +78,22 @@ class MemberInfoActivity : AppCompatActivity() {
                     showToast(getString(R.string.profile_image_choose))
                 }
 
+                if (petName.isEmpty()) {
+                    showToast("펫 이름을 입력하세요.")
+                    return@setOnClickListener
+                }
+
+                if (petDescription.isEmpty()) {
+                    showToast("펫 특징을 입력하세요.")
+                    return@setOnClickListener
+                }
+
+                if (petIntroduction.isEmpty()) {
+                    showToast("펫 소개를 입력하세요.")
+                    return@setOnClickListener
+                }
+
+
                 val selectedGenderId = binding.toggleButtonPetGender.checkedButtonId
                 if (selectedGenderId == R.id.buttonHe) {
                     petGender = "남"
@@ -84,18 +101,47 @@ class MemberInfoActivity : AppCompatActivity() {
                     petGender = "여"
                 }
 
-                val selectedNeuterId = binding.toggleButtonNeuter.checkedButtonId
-                if (selectedNeuterId == R.id.buttonNeuter) {
-                    petNeuter = "중성화"
-                } else if (selectedNeuterId == R.id.buttonNoNeuter) {
-                    petNeuter = "중성화 안함"
+                val selectedNeuterId = when (binding.toggleButtonNeuter.checkedButtonId) {
+                    R.id.buttonNeuter -> "중성화"
+                    R.id.buttonNoNeuter -> "중성화 안함"
+                    else -> " "
+                }
+
+                val spinnerPetType = communityHomeData[spinner.selectedItemPosition].pet_name
+
+                val collectionName = when(spinnerPetType){
+                    "강아지" -> "Dog"
+                    "고양이" -> "Cat"
+                    "라쿤" -> "Racoon"
+                    "여우" -> "Fox"
+                    "새" -> "Bird"
+                    "돼지" -> "Pig"
+                    "파충류" ->"Reptiles"
+                    "물고기" -> "Fish"
+                    else -> {}
                 }
 
                 // User 모델을 생성
                 val user = User(
-                    petAge, petDescription, petGender, petIntroduction, petName, petProfile?.toString(), petType
+                    petAge,
+                    petDescription,
+                    petGender,
+                    petIntroduction,
+                    petName,
+                    petProfile?.toString(),
+                    spinnerPetType,
+                    selectedNeuterId.toString()
                 )
-                user.uid = currentUser.uid
+                val com = CommunityData()
+                com.uid = currentUser.uid
+                FirebaseFirestore.getInstance().collection("Animal")
+                    .document(collectionName as String)
+                    .set(com)
+                    .addOnSuccessListener {
+                    }
+                    .addOnFailureListener {
+
+                    }
 
 
                 // Firestore의 "User" 컬렉션에 사용자 정보 저장
@@ -127,7 +173,8 @@ class MemberInfoActivity : AppCompatActivity() {
                 binding.textInputPetBirthText.setText(selectDate)
 
                 // 선택한 날짜를 이용하여 나이를 계산하고 petAge 변수에 할당
-                val birthDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(selectDate)
+                val birthDate =
+                    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(selectDate)
                 if (birthDate != null) {
                     val currentDate = Date()
                     val ageMilliseconds = currentDate.time - birthDate.time
@@ -148,10 +195,14 @@ class MemberInfoActivity : AppCompatActivity() {
             }
         }
     }
+
     // contentUpload() 함수 내부에서 이미지를 Firebase Storage에 업로드할 수 있습니다.
     private fun contentUpload(uri: String?) {
         uri?.let { petProfileUri ->
-            val timestamp = SimpleDateFormat(getString(R.string.member_info_timestamp), Locale.getDefault()).format(Date())
+            val timestamp = SimpleDateFormat(
+                getString(R.string.member_info_timestamp),
+                Locale.getDefault()
+            ).format(Date())
             val fileName = "IMAGE_$timestamp.png"
             // 서버 스토리지에 접근하기
             val storageRef = storage.reference.child("images").child(fileName)
@@ -183,18 +234,19 @@ class MemberInfoActivity : AppCompatActivity() {
         // 뒤로 가기 버튼 동작을 비활성화
         // 아무 동작도 하지 않도록 설정
     }
-    private fun goGallery(){
+
+    private fun goGallery() {
         val galleryIntent = Intent(Intent.ACTION_PICK)
         galleryIntent.type = "image/*"
-        startActivityForResult(galleryIntent,PICK_IMAGE_FROM_ALBUM)
+        startActivityForResult(galleryIntent, PICK_IMAGE_FROM_ALBUM)
     }
+
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
 
 }
-
 
 fun StorageReference.putFile(petProfileUri: String): UploadTask {
     val file = Uri.parse(petProfileUri) // 문자열 URI를 Uri 객체로 변환
