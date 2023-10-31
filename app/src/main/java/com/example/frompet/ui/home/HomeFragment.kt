@@ -186,11 +186,6 @@ class HomeFragment : Fragment() {
          database.child("usersTutorial").child(it.uid).child("isTutorialShown").setValue(true)
         }
     }
-
-
-
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

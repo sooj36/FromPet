@@ -34,7 +34,6 @@ class CommunityActivity : AppCompatActivity() {
             Log.d("sooj", "item == ${item}")
             intent.putExtra(COMMUNITY_DATA, item)
             startActivity(intent)
-            finish()
         }
     ) }
 

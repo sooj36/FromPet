@@ -70,7 +70,7 @@ class ChatLikeListFragment : Fragment() {
                 users?.let {
                     (rvChatList.adapter as ChatListAdapter).submitList(it)
 
-                    val text = "${it.size}명이 나를 좋아해요"
+                    val text = "${it.size}마리가 나를 좋아해요"
                     val spannable = SpannableStringBuilder(text)
                     val colorSpan = ForegroundColorSpan(ContextCompat.getColor(context?:return@let, R.color.lip_pink))
                     spannable.setSpan(colorSpan, 0, "${it.size}".length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
