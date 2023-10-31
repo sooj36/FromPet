@@ -19,7 +19,9 @@ import com.example.frompet.R
 import com.example.frompet.data.model.User
 import com.example.frompet.ui.setting.fcm.FCMNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
@@ -40,14 +42,14 @@ class HomeFragment : Fragment() {
     private lateinit var manager : CardStackLayoutManager
     private val viewModel: MatchSharedViewModel by viewModels()
     private val FCMViewModel: FCMNotificationViewModel by viewModels()
-    private val auth = FirebaseAuth.getInstance()
+    private val currentUser = FirebaseAuth.getInstance().currentUser
     private val firestore = FirebaseFirestore.getInstance()
+
+    private val database = FirebaseDatabase.getInstance().reference
 
     private val homeAdapter by lazy {
         HomeAdapter(this@HomeFragment)
     }
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,12 +59,18 @@ class HomeFragment : Fragment() {
 
         init()
         getDataFromFirestore()
+        checkAndShowSwipeTutorial()
+
+        binding.btnCloseTutorial.setOnClickListener {
+            binding.tutorialOverlay.visibility = View.GONE
+            setTutorialShown()
+        }
+
 
 
         return binding.root
     }
-
-    private fun init() {
+      private fun init() {
         manager = CardStackLayoutManager(requireContext(), object : CardStackListener{
             override fun onCardDragging(direction: Direction?, ratio: Float) {
 
@@ -77,7 +85,6 @@ class HomeFragment : Fragment() {
                         user?.let {
                             // user를 이용하여 원하는 작업 수행
                             viewModel.like(user.uid)
-                            val currentUser = auth.currentUser
                             firestore.collection("User").document(currentUser?.uid!!).get().addOnSuccessListener { docs ->
                                 val currentUserName = docs.getString("petName") ?:"nothing"
                                 val title = "새로운 좋아요!"
@@ -116,24 +123,13 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
+            override fun onCardRewound() {}
 
+            override fun onCardCanceled() {}
 
-            override fun onCardRewound() {
+            override fun onCardAppeared(view: View?, position: Int) {}
 
-            }
-
-            override fun onCardCanceled() {
-
-
-            }
-
-            override fun onCardAppeared(view: View?, position: Int) {
-
-            }
-
-            override fun onCardDisappeared(view: View?, position: Int) {
-
-            }
+            override fun onCardDisappeared(view: View?, position: Int) {}
 
         })
         manager.setVisibleCount(3)
@@ -167,6 +163,33 @@ class HomeFragment : Fragment() {
             })
         }
     }
+    private fun checkAndShowSwipeTutorial() {
+       checkIfTutorialShow { isShown ->
+           if (!isShown){
+               binding.tutorialOverlay.visibility = View.VISIBLE
+           }
+       }
+    }
+    private fun checkIfTutorialShow(onComplete: (Boolean) -> Unit) {
+        currentUser?.let {
+            database.child("usersTutorial").child(it.uid).child("isTutorialShown").get()
+                .addOnSuccessListener { snapShot->
+                    val isTutorialShown = snapShot.getValue(Boolean::class.java)?:false
+                    onComplete(isTutorialShown)
+                }
+                .addOnFailureListener{ onComplete(false) }
+        }
+    }
+
+    private fun setTutorialShown() {
+        currentUser?.let {
+         database.child("usersTutorial").child(it.uid).child("isTutorialShown").setValue(true)
+        }
+    }
+
+
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -177,10 +200,6 @@ class HomeFragment : Fragment() {
         val bottomSheetFragment = HomeBottomSheetFragment.newInstance(user)
         bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
     }
-
-
-
-
     private fun getDataFromFirestore() {
         viewModel.getExceptDislikeAndMe(
             onSuccess = { users ->
@@ -199,12 +218,6 @@ class HomeFragment : Fragment() {
             }
         )
     }
-
-
-
-
-
-
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
