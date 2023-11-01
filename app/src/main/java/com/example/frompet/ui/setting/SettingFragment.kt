@@ -131,8 +131,6 @@ class SettingFragment : Fragment() {
                 override fun onCancelled(error: DatabaseError) {}
             })
 
-
-
         binding.friendsSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
 
             if (isChecked) {
