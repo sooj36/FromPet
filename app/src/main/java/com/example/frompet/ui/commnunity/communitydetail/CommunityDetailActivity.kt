@@ -4,10 +4,13 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.isVisible
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityDetailBinding
@@ -25,9 +28,11 @@ class CommunityDetailActivity : AppCompatActivity() {
 
     private val store = FirebaseFirestore.getInstance()
 
+   private  var communityData : CommunityData? = null
 
     companion object {
         const val COMMUNITY_DATA = "communityData"
+        const val DOCS_ID = "docsId"
     }
 
 
@@ -36,16 +41,20 @@ class CommunityDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         _binding = ActivityCommunityDetailBinding.inflate(layoutInflater)
 
-
         setContentView(binding.root)
 
-        // Intent에서 데이터 가져옴
-        var communityData: CommunityData? = intent.getParcelableExtra("docsId")
 
+        communityData = intent.getParcelableExtra(DOCS_ID)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             communityData = intent.getParcelableExtra(COMMUNITY_DATA, CommunityData::class.java)
         } else {
-            communityData = intent.getExtras()?.getSerializable(COMMUNITY_DATA) as CommunityData?
+            communityData = intent.extras?.getSerializable(COMMUNITY_DATA) as CommunityData?
+        }
+
+
+        binding.btnDone.setOnClickListener {
+            // ed-> tv , 파베 , 완료btn 숨기기
+            updateCommunity(communityData?.docsId)
         }
 
 
@@ -58,8 +67,6 @@ class CommunityDetailActivity : AppCompatActivity() {
         contents.text = communityData?.contents
 
         binding.backBtn.setOnClickListener {
-            val intent: Intent = Intent(this@CommunityDetailActivity, CommunityActivity::class.java)
-            startActivity(intent)
             finish()
         }
 
@@ -84,7 +91,14 @@ class CommunityDetailActivity : AppCompatActivity() {
                 }
 
                 R.id.cut -> {
-                    // cut 항목에 대한 처리 추가
+                    binding.updateTitle.setText(communityData?.title.toString())
+                    binding.updateContents.setText(communityData?.contents.toString())
+
+                    binding.tvDetailTitle.isVisible = false
+                    binding.tvDetailContents.isVisible = false
+                    binding.updateTitle.isVisible = true
+                    binding.updateContents.isVisible = true
+                    binding.btnDone.isVisible = true
                     true
                 }
 
@@ -95,6 +109,28 @@ class CommunityDetailActivity : AppCompatActivity() {
     }
 
 
+
+    // 수정
+    private fun updateCommunity(docsId: String?) {
+        if (docsId != null) {
+            store.collection("Community")
+                .document(docsId)
+                .update("title", binding.updateTitle.text.toString(), "contents", binding.updateContents.text.toString() )
+                .addOnSuccessListener {
+                    showToast("게시글을 수정되었습니다", Toast.LENGTH_SHORT)
+                    finish()
+                }
+                .addOnFailureListener {
+                    showToast("게시글이 수정 권한이 없습니다", Toast.LENGTH_SHORT)
+                }
+        }
+
+
+        }
+
+
+
+    // 삭제
     private fun deleteCommunity(docsId: String?) {
         if (docsId != null) {
             store.collection("Community")

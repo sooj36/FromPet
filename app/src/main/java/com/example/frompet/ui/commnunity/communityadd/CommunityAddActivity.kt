@@ -26,9 +26,12 @@ class CommunityAddActivity : AppCompatActivity() {
     private var tag: String = "" // 카테고리
     private var timeStamp: String = "" // 시간
     private var contents: String = "" // 내용
-    private var docsId : String? = null // 문서id
+    private var docsId: String? = null // 문서id
 
-    private val store = FirebaseFirestore.getInstance()
+
+    companion object {
+        const val DOCS_ID = "docsId"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,15 +78,16 @@ class CommunityAddActivity : AppCompatActivity() {
 
 
                 //커뮤니티액티비티로 옮김
-                val communityCollection = store.collection("Community")
-                    communityCollection.add(community)
-                    .addOnSuccessListener {docId ->
+                val communityCollection = FirebaseFirestore.getInstance().collection("Community")
+                communityCollection
+                    .add(community)
+                    .addOnSuccessListener { docId ->
                         community.docsId = docId.id
                         docId.set(community)
                         Toast.makeText(this, "등록되었습니다", Toast.LENGTH_SHORT).show()
 
                         val dataIntent = Intent()
-                        dataIntent.putExtra("docsId", community.docsId)
+                        dataIntent.putExtra(DOCS_ID, community.docsId)
                         setResult(RESULT_OK, dataIntent)
                         finish()
                     }
@@ -98,8 +102,9 @@ class CommunityAddActivity : AppCompatActivity() {
     private fun initView() {
         with(binding) {
             btnAddCancel.setOnClickListener { showExitDialog() }
-            backBtn.setOnClickListener { backToCommunity()}
-        }    }
+            backBtn.setOnClickListener { backToCommunity() }
+        }
+    }
 
     private fun backToCommunity() {
         finish()
