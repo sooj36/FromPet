@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -16,6 +17,7 @@ import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityDetailBinding
 import com.example.frompet.ui.commnunity.community.CommunityActivity
 import com.example.frompet.util.showToast
+import com.google.android.material.chip.ChipGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -45,10 +47,12 @@ class CommunityDetailActivity : AppCompatActivity() {
 
 
         communityData = intent.getParcelableExtra(DOCS_ID)
+        Log.d("sooj", "잘 뜨니...?222 ${communityData}")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             communityData = intent.getParcelableExtra(COMMUNITY_DATA, CommunityData::class.java)
+            Log.d("sooj", "잘 뜨니...?${communityData}")
         } else {
-            communityData = intent.extras?.getSerializable(COMMUNITY_DATA) as CommunityData?
+            communityData = intent.extras?.getParcelable(COMMUNITY_DATA) as CommunityData?
         }
 
 
@@ -76,6 +80,7 @@ class CommunityDetailActivity : AppCompatActivity() {
         binding.threedots.setOnClickListener {
             showPopup(it, communityData?.docsId) // 팝업 메뉴 표시
         }
+
 
     }
 
@@ -117,7 +122,7 @@ class CommunityDetailActivity : AppCompatActivity() {
                     binding.updateContents.text.toString()
                 )
                 .addOnSuccessListener {
-                    showToast("게시글을 수정되었습니다", Toast.LENGTH_SHORT)
+                    showToast("게시글이 수정되었습니다", Toast.LENGTH_SHORT)
                     finish()
                 }
                 .addOnFailureListener {
