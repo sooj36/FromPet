@@ -31,11 +31,13 @@ class ChatRepositoryImpl : ChatRepository {
         listenersMap[chatRoomId]?.let {
             database.child("lastMessages").child(chatRoomId).removeEventListener(it)
         }
+
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val message = snapshot.getValue(ChatMessage::class.java)
                 _lastChats[chatRoomId]?.value = message
             }
+
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 

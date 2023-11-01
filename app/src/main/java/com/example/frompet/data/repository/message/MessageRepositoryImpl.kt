@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 import java.util.Date
 import java.util.Locale
 
-class MessageRepositoryImpl : MessageRepository {
+class MessageRepositoryImpl : MessageRepository { //22-25번쨰는 싱글톤코드같은것들은 생성자에 프로퍼티로 넣어야함
     private val database = FirebaseDatabase.getInstance().reference
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
@@ -105,6 +105,15 @@ class MessageRepositoryImpl : MessageRepository {
             database.child("typingStatus").child(currentId).child(receiverId).get().await()
         return snapshot.getValue(Boolean::class.java) ?: false
     }
+
+    override suspend fun setUserChatStatus(chatRoomUid: String, isInChat: Boolean) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            val userStatusRef = database.child("chatRooms").child(chatRoomUid).child("users").child(userId).child("status")
+            userStatusRef.setValue(isInChat)
+        }
+    }
+
 
     override suspend fun getCurrentUserId(): String? {
         return auth.currentUser?.uid

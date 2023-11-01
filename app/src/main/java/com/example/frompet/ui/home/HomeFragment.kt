@@ -24,7 +24,6 @@ import com.example.frompet.ui.setting.fcm.FCMNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
@@ -44,7 +43,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var manager : CardStackLayoutManager
     private val viewModel: MatchSharedViewModel by viewModels()
-    private val FCMViewModel: FCMNotificationViewModel by viewModels()
+    private val fcmViewModel: FCMNotificationViewModel by viewModels()
     private val currentUser = FirebaseAuth.getInstance().currentUser
     private val firestore = FirebaseFirestore.getInstance()
 
@@ -92,7 +91,7 @@ class HomeFragment : Fragment() {
                                 val currentUserName = docs.getString("petName") ?:"nothing"
                                 val title = "새로운 좋아요!"
                                 val message = "${currentUserName}님이 당신을 좋아합니다."
-                                FCMViewModel.sendFCMNotification(user.uid, title, message)
+                                fcmViewModel.sendFCMNotification(user.uid, title, message)
                             }
 
                             val btLike = binding.btLike

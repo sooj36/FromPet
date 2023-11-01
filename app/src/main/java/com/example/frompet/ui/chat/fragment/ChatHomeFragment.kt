@@ -40,8 +40,6 @@ class ChatHomeFragment : Fragment() {
                 }
             }
         }
-
-
     companion object {
         const val USER = "user"
     }
