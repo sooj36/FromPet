@@ -30,8 +30,6 @@ class MyMessageViewHolder(private val binding: ItemMyMessageBinding,
     private val firestore = FirebaseFirestore.getInstance()
     private val chatRoomId = messageViewModel.chatRoom(auth.currentUser?.uid?:"", user.uid)
 
-
-
     fun bind(chatMessage: ChatMessage) = with(binding) {
         if (chatMessage.imageUrl.isNullOrEmpty().not()) {
             ivMessageImage.isVisible = true
