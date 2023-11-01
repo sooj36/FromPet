@@ -56,6 +56,12 @@ class SettingFragment : Fragment() {
         _binding = FragmentSettingBinding.inflate(inflater, container, false)
         progressBar = binding.progressBar
 
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel.petProfile.observe(viewLifecycleOwner) { petProfile ->
             petProfile?.let {
                 binding.ivPet.load(it)//혹시모르니 코일로 바꿔놨습니다 승현님.
@@ -103,13 +109,27 @@ class SettingFragment : Fragment() {
             startActivity(intent)
         }
         binding.chatSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-
             if (isChecked) {
                 binding.ivNotification.setImageResource(R.drawable.icon_alarm_on)
+                database.child("usersToken").child(auth.currentUser?.uid ?: "").child("chatNotificationsEnabled").setValue(true)
             } else {
                 binding.ivNotification.setImageResource(R.drawable.icon_alarm_off)
+                database.child("usersToken").child(auth.currentUser?.uid ?: "").child("chatNotificationsEnabled").setValue(false)
             }
         }
+        database.child("usersToken").child(auth.currentUser?.uid ?: "")
+            .child("chatNotificationsEnabled").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val chatNotificationsEnabled = snapshot.value as? Boolean ?: true
+                    chatSwitch.isChecked = chatNotificationsEnabled
+                    if (chatNotificationsEnabled) {
+                        binding.ivNotification.setImageResource(R.drawable.icon_alarm_on)
+                    } else {
+                        binding.ivNotification.setImageResource(R.drawable.icon_alarm_off)
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {}
+            })
 
         binding.friendsSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
 
@@ -135,7 +155,6 @@ class SettingFragment : Fragment() {
                 }
                 override fun onCancelled(error: DatabaseError) {}
             })
-        return binding.root
     }
 
     private fun showLogoutDialog() {
