@@ -26,7 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userRepository: UserRepositoryImp,
-    private var mGoogleSignInClient: GoogleSignInClient,
+    var mGoogleSignInClient: GoogleSignInClient,
     private val auth: FirebaseAuth
 ):ViewModel() {
     companion object {
@@ -161,30 +161,6 @@ class LoginViewModel @Inject constructor(
         }
 
     }
-  /*  fun signInGoogle(idToken: String) = viewModelScope.launch{
-        if (idToken.isNotEmpty()) {
-            try {
-                Log.e(TAG,"google log st")
-                val user = userRepository.signInGoogle(idToken)
-                user?.let {
-                    Log.e(TAG,"google login suc")
-                    _firebaseUser.postValue(it)
-                    eventsChannel.send(AllEvents.Message("Google로 로그인 되었습니다."))
-                    val uid = it.uid
-                    uid?.let {
-                        saveGoogle(uid)
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e(TAG,"google log err")
-                eventsChannel.send(AllEvents.Error("Google 로그인 중 오류가 발생"))
-            }
-        } else {
-            // idToken이 비어있는 경우에 대한 처리
-            Log.e(TAG,"google log empty")
-            eventsChannel.send(AllEvents.Error("Google 로그인 중 오류가 발생"))
-        }
-    }*/
 
     private fun saveGoogle(uid: String){
         val userDocRef = FirebaseFirestore.getInstance().collection("User").document(uid)
