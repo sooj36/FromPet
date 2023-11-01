@@ -14,6 +14,7 @@ import com.example.frompet.databinding.ActivityMainBinding
 import com.example.frompet.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import android.Manifest
+import androidx.appcompat.app.AppCompatDelegate
 
 class MainActivity : AppCompatActivity() {
     //    private val fcmTokenManagerViewModel by lazy {
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.myBottomNav.itemIconTintList = null
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
 
 
