@@ -48,7 +48,7 @@ class CommunityActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.recyclerview.adapter = communityAdapter
-//        binding.recyclerview.scrollToPosition()
+        binding.recyclerview.scrollToPosition(0) // 수정 예정ㅊ
 
         // Firebase 현재 사용자 가져오기 (일단 남겨놈)
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -66,6 +66,11 @@ class CommunityActivity : AppCompatActivity() {
             val intent: Intent =
                 Intent(this@CommunityActivity, CommunityAddActivity::class.java)
             startActivity(intent)
+        }
+
+        val chipLove = binding.chipLove
+        binding.chipGroup.setOnClickListener {
+            chipLove.chipBackgroundColor
         }
     }
 
