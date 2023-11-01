@@ -3,7 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="hot_pink">#F61D5D</color>
-    <color name="orenge">#F35C50</color>
+    <color name="orange">#F35C50</color>
     <color name="navy">#1B273F</color>
     <color name="green">#799468</color>
     <color name="dark_pink">#946872</color>
@@ -12,7 +12,7 @@
     <color name="light_beige">#DCBAB7</color>
     <color name="beige">#DCB8AB</color>
     <color name="peach_puff">#F4D1B1</color>
-    <color name="light_orenge">#F68531</color>
+    <color name="light_orange">#F68531</color>
     <color name="light_gray">#F4F5F9</color>
     <color name="gray">#D5D5D5</color>
     <color name="background">#FEE48D</color>

@@ -53,8 +53,11 @@ class CommunityDetailActivity : AppCompatActivity() {
 
 
         binding.btnDone.setOnClickListener {
-            // ed-> tv , 파베 , 완료btn 숨기기
             updateCommunity(communityData?.docsId)
+        }
+
+        binding.chipTag.setOnClickListener {
+            // 칩 태그 클릭 했을 때
         }
 
 

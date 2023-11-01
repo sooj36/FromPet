@@ -4,11 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.compose.ui.Modifier
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityAddBinding
 import com.example.frompet.ui.commnunity.AddExitDialog
 import com.example.frompet.util.showToast
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -23,10 +26,17 @@ class CommunityAddActivity : AppCompatActivity() {
 
     // data class
     private var title: String = "" // 제목
-    private var tag: String = "" // 카테고리
+    private var tag: Boolean = false // 카테고리
     private var timeStamp: String = "" // 시간
     private var contents: String = "" // 내용
     private var docsId: String? = null // 문서id
+
+    // CHIP
+    private var chipAll : Boolean = true
+    private var chipShare : Boolean = false
+    private var chipLove : Boolean = false
+    private var chipWalk : Boolean = false
+    private var chipExchange : Boolean = false
 
 
     companion object {
@@ -44,11 +54,6 @@ class CommunityAddActivity : AppCompatActivity() {
         binding.btnAddEnroll.setOnClickListener {
             val titleText = binding.etAddTitle.text.toString()
             val contentsText = binding.etAddContents.text.toString()
-            val tagShare = binding.chipShare.tag
-            val tagWalk = binding.chipWalk.tag
-            val tagLove = binding.chipLove.tag
-            val tagExchange = binding.chipExchange.tag
-            val tagAdd = binding.chipAdd.tag
 
             title = titleText
             contents = contentsText
@@ -95,7 +100,21 @@ class CommunityAddActivity : AppCompatActivity() {
                         // 정보 저장 실패
                         Toast.makeText(this, "등록에 실패하였습니다.", Toast.LENGTH_SHORT).show()
                     }
+                }
+        }
+        ChipGroup.OnCheckedChangeListener { group, checkedId ->
+            binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
+                val checkedChip = binding.root.findViewById<Chip>(checkedId)
+
+                tag = when (checkedChip?.id) {
+                    binding.chipLove.id -> true
+                    binding.chipShare.id -> false
+                    binding.chipWalk.id -> false
+                    binding.chipExchange.id -> false
+                    else -> false
+                }
             }
+
         }
     }
 
@@ -115,4 +134,8 @@ class CommunityAddActivity : AppCompatActivity() {
             finish()
         }
     }
+
+
+
+
 }
