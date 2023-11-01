@@ -64,13 +64,25 @@ class LoginActivity : AppCompatActivity() {
                 loginGoogle.setOnClickListener {
                     Log.d(TAG, "Google Sign-In button clicked")
                     startGoogleSignIn()
-                    lifecycleScope.launch {
-                        val delayMilliseconds = 3000L
-                        delay(delayMilliseconds)
-                        showSnackbar("로그인 되었습니다. 로그인 버튼을 다시 눌러주세요")
-                    }
-
                 }
+
+            _viewModel.currentUser.observe(this@LoginActivity) { firebaseUser ->
+                val uid = firebaseUser?.uid
+                if (uid != null) {
+                    Log.e(TAG, "$uid")
+                    val userDocRef = FirebaseFirestore.getInstance().collection("User").document(uid)
+                    userDocRef.get()
+                        .addOnSuccessListener { documentSnapshot ->
+                            if (documentSnapshot.exists()) {
+                                startMainActivity()
+                            } else {
+                                startMemberInfoActivity()
+                            }
+                        }
+                } else {
+                    Log.e(TAG, "null")
+                }
+            }
 
 
             signUpTxt.setOnClickListener {
@@ -203,6 +215,27 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+    private fun checkFirestoreForUserInfo() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        currentUser?.uid?.let { uid ->
+            val userDocRef = FirebaseFirestore.getInstance().collection("User").document(uid)
+            userDocRef.get()
+                .addOnSuccessListener { documentSnapshot ->
+                    if (documentSnapshot.exists()) {
+                        // 사용자 정보가 Firestore에 있는 경우, MainActivity로 이동
+                        startMainActivity()
+                    } else {
+                        // 사용자 정보가 Firestore에 없는 경우, MemberInfoActivity로 이동
+                        startMemberInfoActivity()
+                    }
+                }
+                .addOnFailureListener {
+                    // Firestore에서 데이터를 가져오는 동안 오류가 발생한 경우
+                    // 오류 처리 코드를 추가하세요
+                }
+        }
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
