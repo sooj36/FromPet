@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -25,14 +26,15 @@ class ChatHomeAdapter(
     var context: Context,
     private val chatViewModel: ChatViewModel,
     private val lifecycleOwner: LifecycleOwner,
-) :
-    ListAdapter<User, ChatHomeAdapter.ChatHomeViewHolder>(DiffCallback()) {
+) : ListAdapter<User, ChatHomeAdapter.ChatHomeViewHolder>(DiffCallback()) {
 
     var onChatItemClick: ((User) -> Unit)? = null
+    private val sdf = SimpleDateFormat("a HH:mm", Locale.KOREA).apply {
+        timeZone = TimeZone.getTimeZone("Asia/Seoul")
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatHomeViewHolder {
-        val binding =
-            ItemChathomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemChathomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ChatHomeViewHolder(binding)
     }
 
@@ -43,8 +45,8 @@ class ChatHomeAdapter(
 
     inner class ChatHomeViewHolder(private val binding: ItemChathomeBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindItems(user: User) = with(binding) {
 
+        fun bindItems(user: User) = with(binding) {
             tvChatTitle.text = user.petName
             user.petProfile.let {
                 ivPetProfile.load(it) {
@@ -56,10 +58,9 @@ class ChatHomeAdapter(
             }
             val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
             val chatRoomId = chatViewModel.chatRoom(currentUserId, user.uid)
-            chatViewModel.loadLastChats(currentUserId, user.uid)
 
-            val liveData = chatViewModel.lastChatLiveData(chatRoomId)
-            liveData.observe(lifecycleOwner) { lastMessage ->
+            chatViewModel.loadLastChats(currentUserId, user.uid)
+            chatViewModel.lastChatLiveData(chatRoomId).observe(lifecycleOwner) { lastMessage ->
                 if (lastMessage?.imageUrl != null) {
                     tvLastmessage.text = "(사진)"
                 } else {
@@ -68,10 +69,11 @@ class ChatHomeAdapter(
                 lastMessage?.let {
                     val formatTime = formatTimeStamp(it.timestamp)
                     tvLastTime.text = formatTime
-                }?:run{
+                } ?: run {
                     tvLastTime.text = ""
                 }
             }
+
             chatViewModel.newChats.observe(lifecycleOwner) { newMessages ->
                 val hasNewMessage = newMessages[chatRoomId] ?: false
                 if (hasNewMessage) {
@@ -80,11 +82,11 @@ class ChatHomeAdapter(
                     tvNewMessage.visibility = View.GONE
                 }
             }
+
             root.setOnClickListener {
                 onChatItemClick?.invoke(user)
             }
         }
-
     }
 
     class DiffCallback : DiffUtil.ItemCallback<User>() {
@@ -104,8 +106,6 @@ class ChatHomeAdapter(
     }
 
     private fun formatTimeStamp(timestamp: Long): String {
-        val sdf = SimpleDateFormat("a HH:mm", Locale.KOREA)
-        sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
         return sdf.format(Date(timestamp))
     }
 }

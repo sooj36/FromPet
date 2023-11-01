@@ -8,6 +8,11 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
 }
+//프로퍼티선언하고 저장한 키값 불러옴
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+
 
 android {
     namespace 'com.example.frompet'
@@ -19,8 +24,11 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+//        buildConfigField "String", "FCM_API_KEY", properties["fcm_api_key"]
+        //로컬프로퍼티에 API값
+//        manifestPlaceholders["fcm_key"] = localProperties.getProperty('FCM_API_KEY')
     }
 
     buildTypes {

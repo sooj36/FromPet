@@ -4,12 +4,15 @@ import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.frompet.R
 import com.example.frompet.databinding.ActivitySingUpBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -49,6 +52,39 @@ class SingUpActivity : AppCompatActivity() {
                 val intent = Intent(this@SingUpActivity, LoginActivity::class.java)
                 startActivity(intent)
             }
+        }
+        binding.userEmailEtv.addTextChangedListener(textWatcher)
+        binding.userPasswordEtv.addTextChangedListener(textWatcher)
+        binding.confirmPasswordEtv.addTextChangedListener(textWatcher)
+
+        checkButtonState()
+    }
+    private val textWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            checkButtonState()
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            // 이전 텍스트 변경
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            // 텍스트 변경 중
+        }
+    }
+    private fun checkButtonState() {
+        val userEmailText = binding.userEmailEtv.text.toString()
+        val userPasswordText = binding.userPasswordEtv.text.toString()
+        val confirmPasswordText = binding.confirmPasswordEtv.text.toString()
+
+        if (userEmailText.isNotEmpty() && userPasswordText.isNotEmpty() && confirmPasswordText.isNotEmpty()) {
+            // 모든 EditText가 값이 있을 때 버튼 스타일 변경
+            binding.signUpButton.setBackgroundResource(R.drawable.custom_button_background)
+            binding.signUpButton.setTextColor(resources.getColor(R.color.white))
+        } else {
+            // 하나 이상의 EditText가 비어 있을 때 버튼 스타일 초기화
+            binding.signUpButton.setBackgroundResource(R.drawable.button_background)
+            binding.signUpButton.setTextColor(resources.getColor(R.color.black))
         }
     }
     private fun registerObservers() {

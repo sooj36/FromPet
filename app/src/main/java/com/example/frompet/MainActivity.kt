@@ -29,8 +29,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.myBottomNav.itemIconTintList = null
 
-        // FCM 설정 및 토큰 가져오기
-//        FCMTokenManagerViewModel().getFirebaseToken()
+
+
 
         // Android 13 PostNotification 처리
         checkAppPushNotification()
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             setStartApp()
         }
-//        fcmTokenManagerViewModel.retrieveAndSaveFCMToken()
+//        fcmTokenManagerViewModel.retrieveAndSaveFCMToken() 해야함
         /* viewModel.user.observe(this) { firebaseUser ->
              if (firebaseUser != null) {
                  val uid = firebaseUser.uid
