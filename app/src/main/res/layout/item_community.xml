@@ -36,7 +36,9 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chip_tag"/>
+        app:layout_constraintTop_toBottomOf="@id/chip_tag"
+        android:maxLines="1"
+        android:ellipsize="end"/>
 
     <TextView
         android:id="@+id/tv_contents_comm"
@@ -48,7 +50,11 @@
         app:layout_constraintTop_toBottomOf="@id/tv_title_comm"
         android:layout_marginTop="10dp"
         android:layout_marginStart="20dp"
+        android:maxLines="1"
+        android:ellipsize="end"
         />
+
+
 
         <View
             android:id="@+id/view_line"
