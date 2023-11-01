@@ -10,14 +10,14 @@ class CategoryRepositoryImp(
 ): CategoryRepository{
     override suspend fun getCategory(): List<CommunityHomeData> {
         return mutableListOf(
-            CommunityHomeData(R.drawable.dog, "강아지"),
-            CommunityHomeData(R.drawable.cat, "고양이"),
-            CommunityHomeData(R.drawable.raccoon, "라쿤"),
-            CommunityHomeData(R.drawable.fox, "여우"),
-            CommunityHomeData(R.drawable.chick, "새"),
-            CommunityHomeData(R.drawable.pig, "돼지"),
-            CommunityHomeData(R.drawable.snake, "파충류"),
-            CommunityHomeData(R.drawable.fish, "물고기")
+            CommunityHomeData("dog", "강아지"),
+            CommunityHomeData("cat", "고양이"),
+            CommunityHomeData("raccoon", "라쿤"),
+            CommunityHomeData("fox", "여우"),
+            CommunityHomeData("chick", "새"),
+            CommunityHomeData("pig", "돼지"),
+            CommunityHomeData("snake", "파충류"),
+            CommunityHomeData("fish", "물고기"),
         )
     }
 
@@ -27,7 +27,7 @@ class CategoryRepositoryImp(
         for (document in querySnapshot.documents){
             val animalName = document.getString("name") ?: ""
             val animalImage = getAnimalImage(animalName)
-            animalCategory.add(CommunityHomeData(animalImage,animalName))
+            animalCategory.add(CommunityHomeData(animalImage.toString(),animalName))
 
         }
         return animalCategory
