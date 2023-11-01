@@ -21,7 +21,10 @@ import com.example.frompet.data.model.User
 import com.example.frompet.ui.chat.utils.ChatItemConverter
 import com.example.frompet.ui.chat.viewmodel.ChatViewModel
 import com.example.frompet.ui.chat.viewmodel.MessageViewModel
+import com.example.frompet.ui.setting.fcm.FCMNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class ChatMessageActivity : AppCompatActivity() {
@@ -30,10 +33,18 @@ class ChatMessageActivity : AppCompatActivity() {
     private val messageViewModel: MessageViewModel by viewModels()
     private val chatViewModel: ChatViewModel by viewModels()
     private val matchSharedViewModel: MatchSharedViewModel by viewModels()
+    private val fcmViewModel: FCMNotificationViewModel by viewModels()
+    private lateinit var user: User
+
+
     private lateinit var receiverId: String
     private lateinit var adapter: ChatMessageAdapter
     private val chatItemConverter = ChatItemConverter()
     private val auth = FirebaseAuth.getInstance()
+    private val firestore = FirebaseFirestore.getInstance()
+
+    private val database = FirebaseDatabase.getInstance().reference
+
     private val typingTimeoutHandler = Handler(Looper.getMainLooper())
     private val typingTimeoutRunnable = Runnable {
         messageViewModel.setTypingStatus(receiverId, false)
@@ -46,6 +57,7 @@ class ChatMessageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        user = intent.getParcelableExtra(USER) ?: User()
         binding = ActivityChatMessageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -69,7 +81,7 @@ class ChatMessageActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        adapter = ChatMessageAdapter(this@ChatMessageActivity)
+        adapter = ChatMessageAdapter(this@ChatMessageActivity,fcmViewModel,messageViewModel,user)
         with(binding) {
             rvMessage.adapter = adapter
             val layoutManager = LinearLayoutManager(this@ChatMessageActivity)
@@ -136,10 +148,26 @@ class ChatMessageActivity : AppCompatActivity() {
 
         with(binding) {
             fun sendMessage() {
-                val message = etMessage.text.toString()
+                var message = etMessage.text.toString()
                 if (message.isNotEmpty()) {
                     messageViewModel.sendMessage(user.uid, message)
                     etMessage.text.clear()
+                    // 메시지 길이 제한
+                    if (message.length > 40) {
+                        message = message.substring(0, 40) + "..."
+                    }
+                    firestore.collection("User").document(currentUserId).get()
+                        .addOnSuccessListener { docs ->
+                            val currentUserName = docs.getString("petName") ?: "알 수 없음"
+                            val title = "${currentUserName}님에게 새로운 메시지"
+                            fcmViewModel.sendFCMChatNotification(
+                                chatRoomId,
+                                auth.currentUser?.uid ?: "",
+                                user.uid,
+                                title,
+                                message
+                            )
+                        }
                 }
             }
             etMessage.setOnKeyListener { _, keyCode, event ->
@@ -209,6 +237,28 @@ class ChatMessageActivity : AppCompatActivity() {
             }
         }
     }
+    override fun onResume() {
+        super.onResume()
+        val user: User? = intent.getParcelableExtra(USER)
+        user?.let {
+            val currentUserId = auth.currentUser?.uid ?: return
+            val chatRoomId = messageViewModel.chatRoom(currentUserId, it.uid)
+            messageViewModel.updateUserChatStatus(chatRoomId, true)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val user: User? = intent.getParcelableExtra(USER)
+        user?.let {
+            val currentUserId = auth.currentUser?.uid ?: return
+            val chatRoomId = messageViewModel.chatRoom(currentUserId, it.uid)
+            messageViewModel.updateUserChatStatus(chatRoomId, false)
+        }
+    }
+
+
+
 
     override fun onBackPressed() {
         handleBackAction()

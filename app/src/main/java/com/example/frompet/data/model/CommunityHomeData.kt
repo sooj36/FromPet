@@ -1,10 +1,11 @@
 package com.example.frompet.data.model
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import com.google.firebase.database.Exclude
 
-@Parcelize
+
 data class CommunityHomeData(
     val pet_logo: Int,
-    val pet_name: String
-): Parcelable
+    val pet_name: String,
+    var uid: String=""
+){
+}

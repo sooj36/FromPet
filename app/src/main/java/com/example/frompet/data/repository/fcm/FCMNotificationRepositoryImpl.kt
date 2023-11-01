@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class FCMNotificationRepositoryImpl {
     private val database = FirebaseDatabase.getInstance().getReference()
     //특정사용자에게 알림을 보내는 함수
-    fun sendNotificationToUser(uid: String, title: String, message: String) {
+    fun sendNotification(uid: String, title: String, message: String) {
         //해당 사용자의 정보를 가져옵니다.
         database.child("usersToken").child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -32,6 +32,32 @@ class FCMNotificationRepositoryImpl {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+
+    fun sendChatNotification(chatRoomUid: String, senderUid: String, receiverUid: String, title: String, message: String) {
+        database.child("chatRooms").child(chatRoomUid).child("users").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                //서로 채팅방 상태가져옴 true인지 false인지
+                val senderStatus = snapshot.child(senderUid).child("status").value as? Boolean ?: false
+                val receiverStatus = snapshot.child(receiverUid).child("status").value as? Boolean ?: false
+                //부정연산자로 상태를 체크한다음에 실제 true로 들어와있어도 서로 false바꿔주기때문에 둘다 false면  || 실행안되서 메시지안감 나머지는 한개라도 true면 ||이게 true로 되기때문에 메시지감
+                if (!senderStatus || !receiverStatus) {
+                    // 상대방의 알림 설정 확인
+                    database.child("usersToken").child(receiverUid).child("chatNotificationsEnabled").addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val chatNotificationsEnabled = snapshot.value as? Boolean ?: true
+                            // 알림이 활성화되어 있으면 알림을 보냄
+                            if (chatNotificationsEnabled) {
+                                sendNotification(receiverUid, title, message)
+                            }
+                        }
+                        override fun onCancelled(error: DatabaseError) {}
+                    })
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
 
     //FCM서버에 알림을 보내는 함수
     private suspend fun sendFCM(token: String, title: String, message: String) {
@@ -57,5 +83,7 @@ class FCMNotificationRepositoryImpl {
             Log.d("FCM", "Failed send : ${response.errorBody()?.string()}")
         }
     }
+
+
 
 }
