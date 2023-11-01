@@ -8,14 +8,4 @@ data class CommunityHomeData(
     val pet_name: String,
     var uid: String=""
 ){
-    constructor():this(0,"")
-
-    @Exclude
-    fun toMap():Map<String,Any>{
-        return mapOf(
-            "pet_logo" to pet_logo,
-            "pet_name" to pet_name,
-            "uid" to uid
-        )
-    }
 }
