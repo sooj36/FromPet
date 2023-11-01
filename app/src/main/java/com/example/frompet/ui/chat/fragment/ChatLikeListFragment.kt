@@ -3,14 +3,19 @@ package com.example.frompet.ui.chat.fragment
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.frompet.MatchSharedViewModel
+import com.example.frompet.R
 import com.example.frompet.ui.chat.adapter.ChatListAdapter
 import com.example.frompet.databinding.FragmentChatListBinding
 import com.example.frompet.ui.chat.activity.ChatUserDetailActivity
@@ -64,9 +69,16 @@ class ChatLikeListFragment : Fragment() {
             matchSharedViewModel.likeList.observe(viewLifecycleOwner) { users ->
                 users?.let {
                     (rvChatList.adapter as ChatListAdapter).submitList(it)
-                    binding.tvLikeMe?.text = "${it.size}명이 나를 좋아해요"
+
+                    val text = "${it.size}마리가 나를 좋아해요"
+                    val spannable = SpannableStringBuilder(text)
+                    val colorSpan = ForegroundColorSpan(ContextCompat.getColor(context?:return@let, R.color.lip_pink))
+                    spannable.setSpan(colorSpan, 0, "${it.size}".length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                    binding.tvLikeMe?.text = spannable
                 }
             }
+
             matchSharedViewModel.loadlike()
 
         }
@@ -77,4 +89,3 @@ class ChatLikeListFragment : Fragment() {
         super.onDestroyView()
     }
 }
-

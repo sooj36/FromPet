@@ -56,6 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:textStyle="bold"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_pet" />
@@ -65,6 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -224,7 +226,8 @@
             android:id="@+id/chat_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_notification"
+                android:theme="@style/SwitchTheme"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_notification"
             app:layout_constraintEnd_toEndOf="@+id/ib_notification"
             app:layout_constraintTop_toTopOf="@+id/iv_notification" />
 
@@ -267,6 +270,7 @@
             android:id="@+id/friends_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+                android:theme="@style/SwitchTheme"
             app:layout_constraintBottom_toBottomOf="@+id/iv_friends_noti"
             app:layout_constraintEnd_toEndOf="@+id/ib_friends_noti"
             app:layout_constraintTop_toTopOf="@+id/iv_friends_noti" />

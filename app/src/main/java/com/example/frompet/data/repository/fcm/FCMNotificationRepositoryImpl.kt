@@ -17,24 +17,22 @@ class FCMNotificationRepositoryImpl {
     private val database = FirebaseDatabase.getInstance().getReference()
     //특정사용자에게 알림을 보내는 함수
     fun sendNotificationToUser(uid: String, title: String, message: String) {
-
-        //사용자의 FCM 토큰을 가져오기위해 쿼리를 보냄
-        database.child("usersToken").child(uid).child("fcmToken").addListenerForSingleValueEvent(object :
-            ValueEventListener {
+        //해당 사용자의 정보를 가져옵니다.
+        database.child("usersToken").child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val token = snapshot.value as? String
-                token?.let {
-                    //알림을 보내는  작업을 백그라운드 스레드에서 실행하는코드
+                val token = snapshot.child("fcmToken").value as? String
+                val notificationsEnabled = snapshot.child("notificationsEnabled").value as? Boolean ?: true
+                // 알림이 활성화되어 있고, 토큰이 null이 아닌 경우에만 FCM 알림을 보내는 로직
+                if (notificationsEnabled && token != null) {
                     CoroutineScope(Dispatchers.IO).launch {
-                        sendFCM(it, title, message)
+                        sendFCM(token, title, message)
                     }
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {}
-
         })
     }
+
     //FCM서버에 알림을 보내는 함수
     private suspend fun sendFCM(token: String, title: String, message: String) {
 

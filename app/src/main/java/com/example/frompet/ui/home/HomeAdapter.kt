@@ -36,9 +36,9 @@ class HomeAdapter(homeFragment: HomeFragment) : ListAdapter<User, HomeAdapter.Ho
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: User) = with(binding) {
             ivPetImage.load(item.petProfile)
+            tvAgePet.text = item.petAge.toString()
             tvNamePet.text = item.petName
             tvTypePet.text = item.petType
-
 
         }
     }

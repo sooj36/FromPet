@@ -22,14 +22,12 @@ class FCMTokenManager {
             tokenToDatabase(uid, token)
         }
     }
-    //사용자의 uid와 Fcm토큰을 리얼타임에 저장하는 함수
+    //사용자의 uid와 Fcm토큰을 리얼타임에 저장하는 함수,상태도 저장함(알림을 받을 수 있는 상태)
     fun tokenToDatabase(uid: String, token: String?) {
         if (token != null) {
             database.child("usersToken").child(uid).child("fcmToken").setValue(token)
         }
     }
-
-
     fun removeFCMToken(userId: String) {
         database.child(userId).removeValue()
             .addOnCompleteListener(OnCompleteListener<Void> { task ->

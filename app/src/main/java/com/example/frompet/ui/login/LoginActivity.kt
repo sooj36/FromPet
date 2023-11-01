@@ -3,13 +3,17 @@ package com.example.frompet.ui.login
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.frompet.databinding.ActivityLoginBinding
 import com.example.frompet.MainActivity
+import com.example.frompet.R
 import com.example.frompet.ui.login.googlelog.GoogleAcceptUpFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
@@ -68,6 +72,33 @@ class LoginActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+        binding.userEmailEtv.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                checkButtonState()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // 이전 텍스트 변경
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // 텍스트 변경 중
+            }
+        })
+
+        binding.userPasswordEtv.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                checkButtonState()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // 이전 텍스트 변경
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // 텍스트 변경 중
+            }
+        })
     }
 
     private fun registerObservers() {
@@ -126,6 +157,20 @@ class LoginActivity : AppCompatActivity() {
                     else -> {}
                 }
             }
+        }
+    }
+    private fun checkButtonState() {
+        val userEmailText = binding.userEmailEtv.text.toString()
+        val userPasswordText = binding.userPasswordEtv.text.toString()
+
+        if (userEmailText.isNotEmpty() && userPasswordText.isNotEmpty()) {
+            // 두 EditText 모두 값이 있을 때 버튼 스타일 변경
+            binding.signInButton.setBackgroundResource(R.drawable.custom_button_background)
+            binding.signInButton.setTextColor(ContextCompat.getColor(this@LoginActivity, R.color.white))
+        } else {
+            // 하나 이상의 EditText가 비어 있을 때 버튼 스타일 초기화
+            binding.signInButton.setBackgroundResource(R.drawable.button_background)
+            binding.signInButton.setTextColor(ContextCompat.getColor(this@LoginActivity, R.color.black))
         }
     }
 

@@ -31,6 +31,8 @@ class ChatListAdapter(private val context: Context, private val onUserClick: (Us
             binding.apply {
                 tvUserName.text = user.petName
                 tvUserType.text = user.petType
+                tvUserAge.text = "${user.petAge.toString()}세"
+
                 user.petProfile?.let {
                     profileArea.load(it){
                         error(R.drawable.kakaotalk_20230825_222509794_01)

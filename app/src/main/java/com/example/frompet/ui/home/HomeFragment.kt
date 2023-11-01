@@ -3,11 +3,14 @@ package com.example.frompet.ui.home
 //import FCMTokenManagerViewModel
 import HomeBottomSheetFragment
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.ScaleAnimation
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
@@ -19,7 +22,9 @@ import com.example.frompet.R
 import com.example.frompet.data.model.User
 import com.example.frompet.ui.setting.fcm.FCMNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
@@ -40,14 +45,14 @@ class HomeFragment : Fragment() {
     private lateinit var manager : CardStackLayoutManager
     private val viewModel: MatchSharedViewModel by viewModels()
     private val FCMViewModel: FCMNotificationViewModel by viewModels()
-    private val auth = FirebaseAuth.getInstance()
+    private val currentUser = FirebaseAuth.getInstance().currentUser
     private val firestore = FirebaseFirestore.getInstance()
+
+    private val database = FirebaseDatabase.getInstance().reference
 
     private val homeAdapter by lazy {
         HomeAdapter(this@HomeFragment)
     }
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,12 +62,18 @@ class HomeFragment : Fragment() {
 
         init()
         getDataFromFirestore()
+        checkAndShowSwipeTutorial()
+
+        binding.btComplete.setOnClickListener {
+            binding.tutorialOverlay.visibility = View.GONE
+            setTutorialShown()
+        }
+
 
 
         return binding.root
     }
-
-    private fun init() {
+      private fun init() {
         manager = CardStackLayoutManager(requireContext(), object : CardStackListener{
             override fun onCardDragging(direction: Direction?, ratio: Float) {
 
@@ -77,11 +88,35 @@ class HomeFragment : Fragment() {
                         user?.let {
                             // user를 이용하여 원하는 작업 수행
                             viewModel.like(user.uid)
-                            val title = "새로운 좋아요!"
-                            val message = "${user.petName}님이 당신을 좋아합니다."
-                            FCMViewModel.sendFCMNotification(user.uid, title, message)
+                            firestore.collection("User").document(currentUser?.uid!!).get().addOnSuccessListener { docs ->
+                                val currentUserName = docs.getString("petName") ?:"nothing"
+                                val title = "새로운 좋아요!"
+                                val message = "${currentUserName}님이 당신을 좋아합니다."
+                                FCMViewModel.sendFCMNotification(user.uid, title, message)
+                            }
 
-                            Toast.makeText(requireContext(), "${user.petName}에게 좋아요를 보냈습니다", Toast.LENGTH_SHORT).show()
+                            val btLike = binding.btLike
+                            btLike.setImageResource(R.drawable.icon_sel_heart)
+
+                            // ImageButton 크기 조절 애니메이션 적용
+                            val scaleAnimation = ScaleAnimation(
+                                1f, 1.2f, 1f, 1.2f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
+                                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f // 중심 위치
+                            )
+                            scaleAnimation.duration = 200 // 애니메이션 지속 시간 (밀리초)
+                            scaleAnimation.fillAfter = true // 애니메이션 이후 상태 유지
+                            btLike.startAnimation(scaleAnimation)
+
+                            Handler().postDelayed({
+                                btLike.setImageResource(R.drawable.icon_unsel_heart)
+                                val restoreAnimation = ScaleAnimation(
+                                    1.2f, 1f, 1.2f, 1f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
+                                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f // 중심 위치
+                                )
+                                restoreAnimation.duration = 200 // 애니메이션 지속 시간 (밀리초)
+                                restoreAnimation.fillAfter = false // 애니메이션 이후 상태 유지
+                                btLike.startAnimation(restoreAnimation)
+                            }, 500) // 500밀리초(0.5초) 후에 복원
 
                         }
 
@@ -91,7 +126,31 @@ class HomeFragment : Fragment() {
                         val user = homeAdapter.currentList[manager.topPosition -1]
                         user?.let {
                             viewModel.dislike(user.uid)
-                            Toast.makeText(requireContext(), "${user.petName}(을)를 거절했습니다", Toast.LENGTH_SHORT).show()
+
+                            val btLike = binding.btDislike
+                            btLike.setImageResource(R.drawable.icon_sel_cross)
+
+                            // ImageButton 크기 조절 애니메이션 적용
+                            val scaleAnimation = ScaleAnimation(
+                                1f, 1.2f, 1f, 1.2f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
+                                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f // 중심 위치
+                            )
+                            scaleAnimation.duration = 200 // 애니메이션 지속 시간 (밀리초)
+                            scaleAnimation.fillAfter = true // 애니메이션 이후 상태 유지
+                            btLike.startAnimation(scaleAnimation)
+
+                            Handler().postDelayed({
+                                btLike.setImageResource(R.drawable.icon_unsel_cross)
+                                val restoreAnimation = ScaleAnimation(
+                                    1.2f, 1f, 1.2f, 1f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
+                                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f // 중심 위치
+                                )
+                                restoreAnimation.duration = 200 // 애니메이션 지속 시간 (밀리초)
+                                restoreAnimation.fillAfter = false // 애니메이션 이후 상태 유지
+                                btLike.startAnimation(restoreAnimation)
+                            }, 500) // 500밀리초(0.5초) 후에 복원
+
+
                         }
 
                     }
@@ -103,34 +162,23 @@ class HomeFragment : Fragment() {
                     }
                 }
 
-                if (manager!!.topPosition == homeAdapter.currentList.size) {
-                    // 이것이 마지막 카드인 경우 추가 처리 가능
-                    Toast.makeText(requireContext(), "This is the last card", Toast.LENGTH_SHORT).show()
-
-                    val transaction = parentFragmentManager.beginTransaction()
-                    transaction.replace(R.id.home_container,HomeEmptyFragment())
-                    transaction.addToBackStack(null)
-                    transaction.commit()
+                if (manager.topPosition == homeAdapter.currentList.size) {
+                    if (isResumed) {
+                        Toast.makeText(requireContext(), "This is the last card", Toast.LENGTH_SHORT).show()
+                        val transaction = parentFragmentManager.beginTransaction()
+                        transaction.replace(R.id.home_container, HomeEmptyFragment())
+                        transaction.addToBackStack(null)
+                        transaction.commit()
+                    }
                 }
             }
+            override fun onCardRewound() {}
 
+            override fun onCardCanceled() {}
 
-            override fun onCardRewound() {
+            override fun onCardAppeared(view: View?, position: Int) {}
 
-            }
-
-            override fun onCardCanceled() {
-
-
-            }
-
-            override fun onCardAppeared(view: View?, position: Int) {
-
-            }
-
-            override fun onCardDisappeared(view: View?, position: Int) {
-
-            }
+            override fun onCardDisappeared(view: View?, position: Int) {}
 
         })
         manager.setVisibleCount(3)
@@ -164,7 +212,32 @@ class HomeFragment : Fragment() {
             })
         }
     }
+    private fun checkAndShowSwipeTutorial() {
+        _binding?.let { binding ->
+            checkIfTutorialShow { isShown ->
+                if (!isShown) {
+                    binding.tutorialOverlay.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
 
+    private fun checkIfTutorialShow(onComplete: (Boolean) -> Unit) {
+        currentUser?.let {
+            database.child("usersTutorial").child(it.uid).child("isTutorialShown").get()
+                .addOnSuccessListener { snapShot->
+                    val isTutorialShown = snapShot.getValue(Boolean::class.java)?:false
+                    onComplete(isTutorialShown)
+                }
+                .addOnFailureListener{ onComplete(false) }
+        }
+    }
+
+    private fun setTutorialShown() {
+        currentUser?.let {
+         database.child("usersTutorial").child(it.uid).child("isTutorialShown").setValue(true)
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -174,14 +247,10 @@ class HomeFragment : Fragment() {
         val bottomSheetFragment = HomeBottomSheetFragment.newInstance(user)
         bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
     }
-
-
-
-
     private fun getDataFromFirestore() {
         viewModel.getExceptDislikeAndMe(
             onSuccess = { users ->
-                if (users.isEmpty()) {
+                if (users.isEmpty() && isResumed) {
                     homeAdapter.submitList(emptyList())
                     val transaction = parentFragmentManager.beginTransaction()
                     transaction.replace(R.id.home_container, HomeEmptyFragment())
@@ -196,12 +265,6 @@ class HomeFragment : Fragment() {
             }
         )
     }
-
-
-
-
-
-
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()

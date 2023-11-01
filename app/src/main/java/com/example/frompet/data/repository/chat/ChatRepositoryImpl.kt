@@ -15,6 +15,7 @@ class ChatRepositoryImpl : ChatRepository {
     private val auth = FirebaseAuth.getInstance()
     private val _lastChats = HashMap<String, MutableLiveData<ChatMessage?>>()
     private val _newChats = MutableLiveData<HashMap<String, Boolean>>()
+    private val listenersMap = HashMap<String, ValueEventListener>()
 
     override fun chatRoom(uid1: String, uid2: String): String {
         return if (uid1 > uid2) "$uid1+$uid2" else "$uid2+$uid1"
@@ -26,16 +27,23 @@ class ChatRepositoryImpl : ChatRepository {
 
     override fun loadLastChats(currentUserId: String, otherUserId: String) {
         val chatRoomId = chatRoom(currentUserId, otherUserId)
-        database.child("lastMessages").child(chatRoomId)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val message = snapshot.getValue(ChatMessage::class.java)
-                    _lastChats[chatRoomId]?.value = message
-                }
 
-                override fun onCancelled(databaseError: DatabaseError) {}
-            })
+        listenersMap[chatRoomId]?.let {
+            database.child("lastMessages").child(chatRoomId).removeEventListener(it)
+        }
+        val listener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val message = snapshot.getValue(ChatMessage::class.java)
+                _lastChats[chatRoomId]?.value = message
+            }
+            override fun onCancelled(databaseError: DatabaseError) {}
+        }
+
+        database.child("lastMessages").child(chatRoomId).addValueEventListener(listener)
+
+        listenersMap[chatRoomId] = listener
     }
+
     override fun loadNewChats(): LiveData<HashMap<String, Boolean>> {
         val currentUserId = auth.currentUser?.uid ?: return _newChats
         database.child("newMessages")
@@ -62,23 +70,38 @@ class ChatRepositoryImpl : ChatRepository {
 
         database.child("lastMessages").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val lastMessagesMap = mutableMapOf<String, Long>()
+                val timeMap = mutableMapOf<String, Long>()
 
                 chatRoomIds.forEach { chatRoomId ->
                     val message = snapshot.child(chatRoomId).getValue(ChatMessage::class.java)
-                    lastMessagesMap[chatRoomId] = message?.timestamp ?: 0
+                    if (message != null) {
+                        timeMap[chatRoomId] = message.timestamp
+                    } else {
+                        database.child("matched").child(chatRoomId)
+                            .addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    val matchedTime = snapshot.getValue(Long::class.java)
+                                    matchedTime?.let {
+                                        timeMap[chatRoomId] = it
+                                    }
+                                }
+                                override fun onCancelled(error: DatabaseError) {}
+                            })
+                    }
                 }
 
                 val sortedUsers = user.sortedByDescending { user ->
                     val roomId = chatRoom(currentUserId, user.uid)
-                    lastMessagesMap[roomId] ?: 0
+                    timeMap[roomId] ?: 0
                 }
                 onUpdate(sortedUsers)
             }
+
             override fun onCancelled(error: DatabaseError) {
             }
         })
     }
+
     override fun goneNewMessages(chatRoomId: String) {
         val currentUserId = auth.currentUser?.uid ?: return
         database.child("newMessages").child(chatRoomId).child(currentUserId).setValue(false)
