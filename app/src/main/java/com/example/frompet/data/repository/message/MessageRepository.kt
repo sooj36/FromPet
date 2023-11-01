@@ -27,6 +27,9 @@ interface MessageRepository {
 
     suspend fun getUserProfile(userId: String): User?
 
+    suspend fun setUserChatStatus(chatRoomUid: String, isInChat: Boolean)
+
+
 
     fun addChatMessagesListener(chatRoomId: String, onMessagesUpdated: (List<ChatMessage>) -> Unit)
 

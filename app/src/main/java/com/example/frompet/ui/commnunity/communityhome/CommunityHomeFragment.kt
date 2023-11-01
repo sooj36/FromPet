@@ -83,16 +83,20 @@ class CommunityHomeFragment : Fragment() {
         val handler = Handler(Looper.getMainLooper())
         val runnable = object : Runnable {
             override fun run() {
-                _binding?.let {binding->
-                    val nextItem = (binding.imageSlider.currentItem + 1) % imageSliderAdapter.itemCount
-                    binding.imageSlider.setCurrentItem(nextItem, true)
-                    handler.postDelayed(this, 3000)
+                _binding?.let { binding ->
+                    val itemCount = imageSliderAdapter.itemCount
+                    if (itemCount > 0) {
+                        val nextItem = (binding.imageSlider.currentItem + 1) % itemCount
+                        binding.imageSlider.setCurrentItem(nextItem, true)
+                        handler.postDelayed(this, 3000)
+                    }
                 }
             }
         }
         handler.postDelayed(runnable, 3000)
     }
-private fun startNoticeTextAniMation(){
+
+    private fun startNoticeTextAniMation(){
     val slideUp = AnimationUtils.loadAnimation(context, R.anim.slide_up)
     val slideDown = AnimationUtils.loadAnimation(context, R.anim.slide_down)
 
