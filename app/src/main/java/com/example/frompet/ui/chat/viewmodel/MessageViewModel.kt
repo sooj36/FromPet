@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class MessageViewModel : ViewModel() {
-    private val repository: MessageRepository = MessageRepositoryImpl()
+    private val repository: MessageRepository = MessageRepositoryImpl()//뷰모델안에서는 구현체가 누군지몰라도 된다 생성자를 뷰모델팩토리로 넘겨야한다(레파지토리를넣어야함)
     private val _chatMessages = MutableLiveData<List<ChatMessage>>()
     val chatMessages: LiveData<List<ChatMessage>> get() = _chatMessages
 
@@ -59,6 +59,11 @@ class MessageViewModel : ViewModel() {
     fun setTypingStatus(receiverId: String, isTyping: Boolean) = viewModelScope.launch {
         repository.setTypingStatus(receiverId, isTyping)
     }
+
+    fun updateUserChatStatus(chatRoomUid: String, isInChat: Boolean) = viewModelScope.launch {
+        repository.setUserChatStatus(chatRoomUid, isInChat)
+    }
+
 
 
     fun observeChatMessages(chatRoomId: String) {
