@@ -2,9 +2,12 @@ package com.example.frompet.ui.home
 
 //import FCMTokenManagerViewModel
 import HomeBottomSheetFragment
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.util.Pair
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +15,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -20,6 +24,7 @@ import com.example.frompet.databinding.FragmentHomeBinding
 import com.example.frompet.MatchSharedViewModel
 import com.example.frompet.R
 import com.example.frompet.data.model.User
+import com.example.frompet.ui.chat.activity.ChatClickUserDetailActivity
 import com.example.frompet.ui.setting.fcm.FCMNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -68,6 +73,7 @@ class HomeFragment : Fragment() {
             binding.tutorialOverlay.visibility = View.GONE
             setTutorialShown()
         }
+
 
 
 
@@ -194,12 +200,24 @@ class HomeFragment : Fragment() {
             addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
                 override fun onChildViewAttachedToWindow(view: View) {
                     val imageView: ImageView = view.findViewById(R.id.iv_pet_image)
+                    val petName: TextView = view.findViewById(R.id.tv_name_pet)
+                    val petAge: TextView = view.findViewById(R.id.tv_age_pet)
+                    val petType: TextView = view.findViewById(R.id.tv_type_pet)
                     imageView.setOnClickListener {
                         val currentPosition = manager.topPosition
                         if (currentPosition < homeAdapter.currentList.size) {
                             val user = homeAdapter.currentList[currentPosition]
                             user?.let {
-                                showBottomSheet(it)
+                                val intent = Intent(requireActivity(), HomeDetailPage::class.java)
+                                intent.putExtra(ChatClickUserDetailActivity.USER, user)
+                                val options: ActivityOptions = ActivityOptions.makeSceneTransitionAnimation(
+                                    requireActivity(),
+                                    Pair.create(petName, "petNameTransition"),
+                                    Pair.create(petAge, "petAgeTransition"),
+                                    Pair.create(petType, "petTypeTransition"),
+                                    Pair.create(imageView, "imageTransition")
+                                )
+                                startActivity(intent, options.toBundle())
                             }
                         }
                     }
