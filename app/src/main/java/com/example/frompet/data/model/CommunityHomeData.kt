@@ -4,11 +4,11 @@ import com.google.firebase.database.Exclude
 
 
 data class CommunityHomeData(
-    val pet_logo: String,
+    val pet_logo: Int,
     val pet_name: String,
     var uid: String=""
 ){
-    constructor():this("","")
+    constructor():this(0,"")
 
     @Exclude
     fun toMap():Map<String,Any>{

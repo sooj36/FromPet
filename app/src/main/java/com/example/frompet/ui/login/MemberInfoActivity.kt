@@ -39,14 +39,14 @@ class MemberInfoActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val communityHomeData = mutableListOf(
-            CommunityHomeData("dog", "강아지"),
-            CommunityHomeData("cat", "고양이"),
-            CommunityHomeData("raccoon", "라쿤"),
-            CommunityHomeData("fox", "여우"),
-            CommunityHomeData("chick", "새"),
-            CommunityHomeData("pig", "돼지"),
-            CommunityHomeData("snake", "파충류"),
-            CommunityHomeData("fish", "물고기"),
+            CommunityHomeData(R.drawable.dog, "강아지"),
+            CommunityHomeData(R.drawable.cat, "고양이"),
+            CommunityHomeData(R.drawable.raccoon, "라쿤"),
+            CommunityHomeData(R.drawable.fox, "여우"),
+            CommunityHomeData(R.drawable.chick, "새"),
+            CommunityHomeData(R.drawable.pig, "돼지"),
+            CommunityHomeData(R.drawable.snake, "파충류"),
+            CommunityHomeData(R.drawable.fish, "물고기"),
         )
         val adapter = MemberInfoAdapter(this, communityHomeData)
         val spinner = binding.spPetType
@@ -128,7 +128,7 @@ class MemberInfoActivity : AppCompatActivity() {
                     selectedNeuterId.toString()
                 )
 
-                val com = CommunityHomeData(petLogo, spinnerPetType, currentUser.uid)
+       /*         val com = CommunityHomeData(petLogo, spinnerPetType, currentUser.uid)
                 val data = com.toMap()
                 FirebaseFirestore.getInstance().collection(collectionName as String)
                     .add(data)
@@ -136,7 +136,7 @@ class MemberInfoActivity : AppCompatActivity() {
                     }
                     .addOnFailureListener {
 
-                    }
+                    }*/
 
                 user.uid = currentUser.uid
                 // Firestore의 "User" 컬렉션에 사용자 정보 저장

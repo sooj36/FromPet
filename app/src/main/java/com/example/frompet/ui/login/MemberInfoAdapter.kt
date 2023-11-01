@@ -32,9 +32,7 @@ class MemberInfoAdapter(private val context: Context, private val data: List<Com
         val textView = view.findViewById<TextView>(R.id.sp_pet)
 
         val item = data[position]
-        val imageResourceName = item.pet_logo // 이미지 리소스 이름을 가져옴
-        val imageResourceId = context.resources.getIdentifier(imageResourceName, "drawable", context.packageName)
-        imageView.setImageResource(imageResourceId)
+        imageView.setImageResource(item.pet_logo)
         textView.text = item.pet_name
 
         return view
