@@ -34,6 +34,8 @@ class ChatMessageActivity : AppCompatActivity() {
     private val chatViewModel: ChatViewModel by viewModels()
     private val matchSharedViewModel: MatchSharedViewModel by viewModels()
     private val fcmViewModel: FCMNotificationViewModel by viewModels()
+    private lateinit var user: User
+
 
     private lateinit var receiverId: String
     private lateinit var adapter: ChatMessageAdapter
@@ -55,6 +57,7 @@ class ChatMessageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        user = intent.getParcelableExtra(USER) ?: User()
         binding = ActivityChatMessageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -78,7 +81,7 @@ class ChatMessageActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        adapter = ChatMessageAdapter(this@ChatMessageActivity)
+        adapter = ChatMessageAdapter(this@ChatMessageActivity,fcmViewModel,messageViewModel,user)
         with(binding) {
             rvMessage.adapter = adapter
             val layoutManager = LinearLayoutManager(this@ChatMessageActivity)
