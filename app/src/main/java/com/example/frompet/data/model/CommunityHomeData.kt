@@ -4,8 +4,7 @@ import com.google.firebase.database.Exclude
 
 
 data class CommunityHomeData(
-    val pet_logo: Int,
-    val pet_name: String,
+    val petLogo: Int,
+    val petType: String,
     var uid: String=""
-){
-}
+)

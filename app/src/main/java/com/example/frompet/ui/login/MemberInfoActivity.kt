@@ -102,8 +102,8 @@ class MemberInfoActivity : AppCompatActivity() {
                     else -> " "
                 }
 
-                val spinnerPetType = communityHomeData[spinner.selectedItemPosition].pet_name
-                val petLogo = communityHomeData[spinner.selectedItemPosition].pet_logo
+                val spinnerPetType = communityHomeData[spinner.selectedItemPosition].petType
+                val petLogo = communityHomeData[spinner.selectedItemPosition].petLogo
                 val collectionName = when (spinnerPetType) {
                     "강아지" -> "Dog"
                     "고양이" -> "Cat"

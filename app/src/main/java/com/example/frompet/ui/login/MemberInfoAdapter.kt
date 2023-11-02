@@ -32,8 +32,8 @@ class MemberInfoAdapter(private val context: Context, private val data: List<Com
         val textView = view.findViewById<TextView>(R.id.sp_pet)
 
         val item = data[position]
-        imageView.setImageResource(item.pet_logo)
-        textView.text = item.pet_name
+        imageView.setImageResource(item.petLogo)
+        textView.text = item.petType
 
         return view
     }
