@@ -60,6 +60,7 @@ class CommunityHomeAdapter(communicationFragment: List<CommunityHomeData>) :
 
 
             binding.communicationId.setOnClickListener {
+                communityHomeData.pet_name
                 val intent : Intent = Intent(it.context, CommunityActivity::class.java)
                 it.context.startActivity(intent)
             }
