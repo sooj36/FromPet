@@ -64,9 +64,16 @@
             android:text="@string/community_walk"
             android:textColor="@color/black"
             android:textStyle="bold"
-            app:chipBackgroundColor="@color/beige"
+            app:chipBackgroundColor="@color/chip_background"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:chipStartPadding="10dp"
+            app:chipEndPadding="10dp"
+            app:chipIcon="@drawable/splash"
+            app:chipIconEnabled="true"
+            android:checked="true"
+            android:clickable="false"
+            android:checkable="false"/>
 
         <View
             android:id="@+id/detail_view_line2"
