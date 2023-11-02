@@ -2,6 +2,7 @@ package com.example.frompet.ui.home
 
 //import FCMTokenManagerViewModel
 import HomeBottomSheetFragment
+import android.app.Activity
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
@@ -18,18 +19,24 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frompet.databinding.FragmentHomeBinding
 import com.example.frompet.MatchSharedViewModel
 import com.example.frompet.R
+import com.example.frompet.data.model.Filter
 import com.example.frompet.data.model.User
 import com.example.frompet.ui.chat.activity.ChatClickUserDetailActivity
 import com.example.frompet.ui.setting.fcm.FCMNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
@@ -38,11 +45,8 @@ import com.yuyakaido.android.cardstackview.Direction
 class HomeFragment : Fragment() {
 
     companion object {
-        const val MATCHED_USERS = "matchedUser"
         const val USER = "user"
-        const val ACTION = "action"
-        const val MATCH = "match"
-        const val DISLIKE = "dislike"
+        const val FILTER_DATA ="filter_data"
 
     }
 
@@ -51,15 +55,27 @@ class HomeFragment : Fragment() {
     private lateinit var manager : CardStackLayoutManager
     private val viewModel: MatchSharedViewModel by viewModels()
     private val fcmViewModel: FCMNotificationViewModel by viewModels()
-    private val filterViewModel: HomeFilterViewModel by viewModels { HomeFilterViewModelFactory() }
+    private val filterViewModel: HomeFilterViewModel by activityViewModels()
+
 
     private val currentUser = FirebaseAuth.getInstance().currentUser
     private val firestore = FirebaseFirestore.getInstance()
 
     private val database = FirebaseDatabase.getInstance().reference
 
+
     private val homeAdapter by lazy {
         HomeAdapter(this@HomeFragment)
+    }
+    private val filterActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == Activity.RESULT_OK){
+                val filterData = result.data?.getParcelableExtra<Filter>(FILTER_DATA)
+                filterData?.let {
+                                      filterViewModel.filterUsers(it)
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -69,7 +85,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         init()
-        getDataFromFirestore()
+
         checkAndShowSwipeTutorial()
 
         binding.btComplete.setOnClickListener {
@@ -77,8 +93,13 @@ class HomeFragment : Fragment() {
             setTutorialShown()
         }
 
+        filterViewModel.loadFilteredUsers()
 
-
+        filterViewModel.filteredUsers.observe(viewLifecycleOwner) { users ->
+            if (users.isEmpty()) {
+                showEmptyScreen()
+            }
+        }
 
 
         return binding.root
@@ -98,6 +119,7 @@ class HomeFragment : Fragment() {
                         user?.let {
                             // user를 이용하여 원하는 작업 수행
                             viewModel.like(user.uid)
+                            filterViewModel.userSwiped(it.uid)
                             firestore.collection("User").document(currentUser?.uid!!).get().addOnSuccessListener { docs ->
                                 val currentUserName = docs.getString("petName") ?:"nothing"
                                 val title = "새로운 좋아요!"
@@ -136,7 +158,7 @@ class HomeFragment : Fragment() {
                         val user = homeAdapter.currentList[manager.topPosition -1]
                         user?.let {
                             viewModel.dislike(user.uid)
-
+                            filterViewModel.userSwiped(it.uid)
                             val btLike = binding.btDislike
                             btLike.setImageResource(R.drawable.icon_sel_cross)
 
@@ -255,38 +277,56 @@ class HomeFragment : Fragment() {
          database.child("usersTutorial").child(it.uid).child("isTutorialShown").setValue(true)
         }
     }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
+        filterViewModel.filteredUsers.observe(viewLifecycleOwner){users->
+            homeAdapter.submitList(users)
+            Log.d("filter"," 홈으로 다시돌아올떄 리스트필터:${users}")
+
+            val currentFragment = parentFragmentManager.findFragmentById(R.id.home_container)
+
+            if (users.isEmpty()) {
+                if (currentFragment !is HomeEmptyFragment) {
+                    showEmptyScreen()
+                }
+            } else {
+                if (currentFragment is HomeEmptyFragment) {
+                    parentFragmentManager.beginTransaction().remove(currentFragment).commit()
+                }
+            }
+        }
+        filterViewModel.loadFilteredUsers()
 
         ivFilter.setOnClickListener {
             val intent = Intent(requireContext(), HomeFilterActivity::class.java)
-            startActivity(intent)
+            filterActivityResultLauncher.launch(intent)
+
         }
-
     }
-
-
-
-    private fun getDataFromFirestore() {
-        viewModel.getExceptDislikeAndMe(
-            onSuccess = { users ->
-                if (users.isEmpty() && isResumed) {
-                    homeAdapter.submitList(emptyList())
-                    val transaction = parentFragmentManager.beginTransaction()
-                    transaction.replace(R.id.home_container, HomeEmptyFragment())
-                    transaction.addToBackStack(null)
-                    transaction.commit()
-                } else {
-                    homeAdapter.submitList(users)
-                }
-            },
-            onFailure = { e ->
-                Log.e("shsh", "Error getting documents: ", e)
-            }
-        )
-    }
+    private fun showEmptyScreen() {
+        val currentFragment = parentFragmentManager.findFragmentById(R.id.home_container)
+        if (currentFragment !is HomeEmptyFragment) {
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.home_container, HomeEmptyFragment())
+            transaction.commit()
+        }}
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
     }
+
+
+    //        private fun getDataFromFirestore() {
+//
+//        viewModel.getExceptDislikeAndMe(
+//            onSuccess = { users ->
+//                    homeAdapter.submitList(users)
+//            },
+//            onFailure = { e ->
+//                Log.e("shsh", "Error getting documents: ", e)
+//            }
+//        )
+//    }
 }

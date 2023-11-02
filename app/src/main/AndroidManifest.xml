@@ -28,9 +28,6 @@
             android:name=".ui.home.HomeFilterActivity"
             android:exported="false" />
         <activity android:name=".ui.home.HomeDetailPage" />
-        <activity
-            android:name=".ui.chat.activity.ChatHomeActivity"
-            android:exported="false" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -63,6 +60,10 @@
             android:exported="false" />
         <activity
             android:name=".ui.commnunity.communitydetail.CommunityDetailActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.commnunity.communitydetail.CommunityDetailUpdateActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
