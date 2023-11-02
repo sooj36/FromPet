@@ -4,22 +4,16 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.view.isVisible
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityDetailBinding
-import com.example.frompet.ui.commnunity.community.CommunityActivity
 import com.example.frompet.util.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlin.math.log
 
 class CommunityDetailActivity : AppCompatActivity() {
 
@@ -55,23 +49,15 @@ class CommunityDetailActivity : AppCompatActivity() {
 
         }
 
-
-        binding.btnDone.setOnClickListener {
-            updateCommunity(communityData?.docsId)
-        }
-
-        binding.chipTag.setOnClickListener {
-            // 칩 태그 클릭 했을 때
-        }
-
-
         // 화면에 표시
         val title = binding.tvDetailTitle
         val contents = binding.tvDetailContents
+        val tag = binding.chipTag
 
         // CommunityData에서 가져오기
         title.text = communityData?.title
         contents.text = communityData?.contents
+        tag.text = communityData?.tag
 
         binding.backBtn.setOnClickListener {
             finish()
@@ -109,39 +95,12 @@ class CommunityDetailActivity : AppCompatActivity() {
     }
 
 
-    // 수정
-    private fun updateCommunity(docsId: String?) {
-        if (docsId != null) {
-            store.collection("Community")
-                .document(docsId)
-                .update(
-                    "title",
-                    binding.updateTitle.text.toString(),
-                    "contents",
-                    binding.updateContents.text.toString()
-                )
-                .addOnSuccessListener {
-                    showToast("게시글을 수정되었습니다", Toast.LENGTH_SHORT)
-                    finish()
-                }
-                .addOnFailureListener {
-                    showToast("게시글이 수정 권한이 없습니다", Toast.LENGTH_SHORT)
-                }
-        }
-    }
 
     private fun updateVisible() {
-        binding.updateTitle.setText(communityData?.title.toString())
-        binding.updateContents.setText(communityData?.contents.toString())
-
-        binding.tvDetailTitle.isVisible = false
-        binding.tvDetailContents.isVisible = false
-        binding.updateTitle.isVisible = true
-        binding.updateContents.isVisible = true
-        binding.btnDone.isVisible = true
-        binding.etDetailComments.isVisible = false
-        binding.btnDetailEnroll.isVisible = false
-        binding.threedots.isVisible = false
+        val intent : Intent = Intent(this, CommunityDetailUpdateActivity::class.java)
+        intent.putExtra(COMMUNITY_DATA, communityData)
+        startActivity(intent)
+        finish()
     }
 
 
@@ -156,7 +115,7 @@ class CommunityDetailActivity : AppCompatActivity() {
                     finish()
                 }
                 .addOnFailureListener {
-                    showToast("게시글이 삭제가 실패하였습니다", Toast.LENGTH_SHORT)
+                    showToast("해당 작성자만 게시글 삭제가 가능합니다", Toast.LENGTH_SHORT)
                 }
         }
     }

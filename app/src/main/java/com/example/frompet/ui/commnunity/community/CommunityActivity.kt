@@ -14,6 +14,7 @@ import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityBinding
 import com.example.frompet.ui.commnunity.communityadd.CommunityAddActivity
 import com.example.frompet.ui.commnunity.communitydetail.CommunityDetailActivity
+import com.example.frompet.ui.commnunity.communitydetail.CommunityDetailUpdateActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -31,9 +32,10 @@ class CommunityActivity : AppCompatActivity() {
         ListClick = {item ->
             //전달하는 데이터
             val intent: Intent = Intent(this, CommunityDetailActivity::class.java)
-            Log.d("sooj", "item == ${item}")
+            Log.d("sooj", "item ${item}")
             intent.putExtra(COMMUNITY_DATA, item)
             startActivity(intent)
+
         }
     ) }
 
@@ -48,7 +50,7 @@ class CommunityActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.recyclerview.adapter = communityAdapter
-        binding.recyclerview.scrollToPosition(0) // 수정 예정ㅊ
+        binding.recyclerview.scrollToPosition(0) // 수정 예정
 
         // Firebase 현재 사용자 가져오기 (일단 남겨놈)
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -70,7 +72,7 @@ class CommunityActivity : AppCompatActivity() {
 
         val chipLove = binding.chipLove
         binding.chipGroup.setOnClickListener {
-            chipLove.chipBackgroundColor
+            //'사랑' 게시글만
         }
     }
 

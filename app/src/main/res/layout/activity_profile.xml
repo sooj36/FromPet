@@ -160,7 +160,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_pet_gender" />
+                app:layout_constraintTop_toBottomOf="@+id/et_pet_neuter" />
 
 
             <EditText
@@ -299,6 +299,35 @@
                 android:textSize="12sp"
                 app:layout_constraintBottom_toTopOf="@+id/et_purpose"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/textView33"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:paddingStart="15dp"
+                android:text="중성화 여부"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/et_pet_neuter"
+                app:layout_constraintStart_toStartOf="@+id/et_pet_neuter" />
+
+            <TextView
+                android:id="@+id/et_pet_neuter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:background="@color/white"
+                android:hint="중성화 여부"
+                android:inputType="text"
+                android:padding="10dp"
+                android:paddingStart="15dp"
+                android:textColor="@color/gray"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_pet_gender" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -78,7 +78,7 @@
     <string name="comu_notice">[공지]</string>
     <string name="comu_notice_text">공지텍스트</string>
     <string name="comu_thisweekend_matched">이번주 매칭왕</string>
-    <string name="commu_all_add_plz">제목과 글을 모두 입력해주세요</string>
+    <string name="commu_all_add_plz">제목과 글을 모두 입력하고,\n 1개의 태그를 선택해주세요</string>
     <string name="home_friend_find">친구를 찾고 있습니다.</string>
     <string name="login_with_Google">Google 계정으로 로그인</string>
     <string name="enter_a_comment">댓글을 입력하세요</string>
@@ -102,4 +102,12 @@
 
 
 
+    <string name="category_dog">강아지</string>
+    <string name="category_cat">고양이</string>
+    <string name="category_raccoon">라쿤</string>
+    <string name="category_fox">여우</string>
+    <string name="category_chick">새</string>
+    <string name="category_pig">돼지</string>
+    <string name="category_snake">파충류</string>
+    <string name="category_fish">물고기</string>
 </resources>
