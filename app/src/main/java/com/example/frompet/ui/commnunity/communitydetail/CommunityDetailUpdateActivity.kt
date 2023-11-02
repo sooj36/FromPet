@@ -3,8 +3,10 @@ package com.example.frompet.ui.commnunity.communitydetail
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.example.frompet.R
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityDetailUpdateBinding
 import com.example.frompet.util.showToast
@@ -19,6 +21,8 @@ class CommunityDetailUpdateActivity : AppCompatActivity() {
     private val currentUser = FirebaseAuth.getInstance().currentUser
     private val store = FirebaseFirestore.getInstance()
     private var communityData: CommunityData? = null
+
+    private var tag: String = ""
 
     companion object {
         const val COMMUNITY_DATA = "communityData"
@@ -35,37 +39,64 @@ class CommunityDetailUpdateActivity : AppCompatActivity() {
 
         communityData = intent.getParcelableExtra(CommunityDetailActivity.DOCS_ID)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            communityData = intent.getParcelableExtra(CommunityDetailActivity.COMMUNITY_DATA, CommunityData::class.java)
+            communityData = intent.getParcelableExtra(
+                CommunityDetailActivity.COMMUNITY_DATA,
+                CommunityData::class.java
+            )
         } else {
-            communityData = intent.extras?.getParcelable(CommunityDetailActivity.COMMUNITY_DATA) as CommunityData?
+            communityData =
+                intent.extras?.getParcelable(CommunityDetailActivity.COMMUNITY_DATA) as CommunityData?
         }
+        Log.d("sooj", "데이터 ${communityData}")
 
-        // 화면에 표시
-        val title = binding.updateTitle
-        val contents = binding.updateContents
 
-        // CommunityData에서 가져오기
-        title.setText(communityData?.title)
-        contents.setText(communityData?.contents)
+        var tag = communityData?.tag
 
-        binding.backBtn.setOnClickListener {
-            finish()
-        }
 
-        binding.btnDone.setOnClickListener {
-            updateCommunity(communityData?.docsId)
+        with(binding) {
+
+            updateTitle.setText(communityData?.title)
+            updateContents.setText(communityData?.contents)
+
+            backBtn.setOnClickListener {
+                finish()
+            }
+
+            btnDone.setOnClickListener {
+                updateCommunity(communityData?.docsId)
+            }
+
+            when (tag) {
+                "나눔" -> chipGroup.check(R.id.chip_share)
+                "산책" -> chipGroup.check(R.id.chip_walk)
+                "사랑" -> chipGroup.check(R.id.chip_love)
+                "정보교환" -> chipGroup.check(R.id.chip_exchange)
+            }
+
+
+            chipGroup.setOnCheckedChangeListener { group, checkedId ->
+                when (checkedId) {
+                    R.id.chip_share -> tag = "나눔"
+                    R.id.chip_walk -> tag = "산책"
+                    R.id.chip_love -> tag = "사랑"
+                    R.id.chip_exchange -> tag = "정보교환"
+                }
+            }
+
+
         }
     }
 
     private fun updateCommunity(docsId: String?) {
-        if (docsId != null) {
+        if (docsId != null) { // 널이면 add
             store.collection("Community")
                 .document(docsId)
                 .update(
                     "title",
                     binding.updateTitle.text.toString(),
                     "contents",
-                    binding.updateContents.text.toString()
+                    binding.updateContents.text.toString(),
+                    "tag", binding.chipGroup
                 )
                 .addOnSuccessListener {
                     showToast("게시글이 수정되었습니다", Toast.LENGTH_SHORT)
