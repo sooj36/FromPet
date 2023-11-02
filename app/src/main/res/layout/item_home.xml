@@ -30,7 +30,7 @@
         <View
             android:id="@+id/view6"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="180dp"
             android:background="@drawable/ground_gradient"
             app:layout_constraintBottom_toTopOf="@+id/view4"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +40,7 @@
             android:id="@+id/view4"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:background="#EFB9B6"
+            android:background="@color/light_beige"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -86,6 +86,17 @@
             app:layout_constraintStart_toEndOf="@+id/tv_name_pet"
             app:layout_constraintTop_toTopOf="@+id/tv_name_pet" />
 
+        <ImageButton
+            android:id="@+id/ib_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_pet_image"
+            app:layout_constraintEnd_toEndOf="@+id/view6"
+            app:srcCompat="@drawable/icon_up" />
+
         <FrameLayout
             android:id="@+id/left_overlay"
             android:layout_width="match_parent"
@@ -97,19 +108,19 @@
                 android:layout_gravity="center"
                 android:src="@drawable/like" />
 
-        </FrameLayout>
+            <FrameLayout
+                android:id="@+id/right_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/right_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/dislike" />
+            </FrameLayout>
 
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:src="@drawable/dislike"
-                />
+
         </FrameLayout>
 
 

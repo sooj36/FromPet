@@ -23,6 +23,9 @@ class HomeDetailPage : AppCompatActivity() {
         user?.let {
             displayUserInfo(it)
         }
+        binding.backBtn.setOnClickListener {
+            onBackPressed()
+        }
 
     }
 

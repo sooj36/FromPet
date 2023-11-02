@@ -102,17 +102,6 @@ class CommunityAddActivity : AppCompatActivity() {
             }
         }
 
-    /*         if (currentUser != null) {
-                if (title.isEmpty() || contents.isEmpty()) {
-                    showToast(getString(R.string.commu_all_add_plz), Toast.LENGTH_SHORT)
-                    return@setOnClickListener
-
-                } else {
-                    val currentTime = System.currentTimeMillis()
-                    timeStamp = currentTime.toString()
-                }*/
-
-
 
     }
 

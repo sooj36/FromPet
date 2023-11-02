@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar2"
+        android:id="@+id/home_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
@@ -17,14 +17,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/main_icon"
+            tools:layout_editor_absoluteX="16dp" />
+
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
-            android:text="홈 페이지"
+            android:text="FromPet"
             android:textSize="20dp"
-            android:textColor="#000"
+            android:textColor="@color/main_color"
             android:textStyle="bold" />
         <ImageView
             android:layout_gravity="end"
@@ -43,7 +49,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2"
+        app:layout_constraintTop_toBottomOf="@+id/home_toolbar"
         tools:listitem="@layout/item_home" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
