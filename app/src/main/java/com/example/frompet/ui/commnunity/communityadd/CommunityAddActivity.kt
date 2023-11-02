@@ -40,15 +40,28 @@ class CommunityAddActivity : AppCompatActivity() {
 
         initView()
 
+        binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId) {
+                R.id.chip_share -> tag = "나눔"
+                R.id.chip_walk -> tag = "산책"
+                R.id.chip_love -> tag = "사랑"
+                R.id.chip_exchange -> tag = "정보교환"
+            }
+        }
+
+
         binding.btnAddEnroll.setOnClickListener {
-            val titleText = binding.etAddTitle.text.toString()
-            val contentsText = binding.etAddContents.text.toString()
-            val chipTag = binding.chipGroup.tag.toString()
+            with(binding) {
+                val titleText = etAddTitle.text.toString()
+                val contentsText = etAddContents.text.toString()
 
-            title = titleText
-            contents = contentsText
-            tag = chipTag
+                // chips 초기화
+                val chipsId = mutableListOf<String>()
 
+                title = titleText
+                contents = contentsText
+
+            }
             // Firebase 현재 사용자 가져오기
             val currentUser = FirebaseAuth.getInstance().currentUser
 
@@ -88,19 +101,8 @@ class CommunityAddActivity : AppCompatActivity() {
                         finish()
                     }
                     .addOnFailureListener {
-                        // 정보 저장 실패
                         Toast.makeText(this, "등록에 실패하였습니다", Toast.LENGTH_SHORT).show()
                     }
-
-                val chips = listOf(
-                    R.id.chip_share to "1",
-                    R.id.chip_walk to "2",
-                    R.id.chip_love to "3",
-                    R.id.chip_exchange to "4"
-                )
-
-
-
             }
         }
     }
@@ -121,8 +123,4 @@ class CommunityAddActivity : AppCompatActivity() {
             finish()
         }
     }
-
-
-
-
 }
