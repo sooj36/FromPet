@@ -73,6 +73,9 @@ class SettingProfileActivity : AppCompatActivity() {
         ViewModel.petDescription.observe(this) { petIntroduction ->
             binding.etPetIntroduction.setText(petIntroduction)
         }
+        ViewModel.petNeuter.observe(this) { petNeuter ->
+            binding.etPetNeuter.setText(petNeuter)
+        }
 
         binding.ibProfile.setOnClickListener {
             val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -136,6 +139,7 @@ class SettingProfileActivity : AppCompatActivity() {
         updatedPetAge: Int,
         updatedPetIntroduction: String,
         updatedPetDescription: String,
+        updatedPetNeuter: String,
         uri: Uri?
     ) {
         val userDocRef = FirebaseFirestore.getInstance().collection("User").document(userId)
@@ -147,6 +151,7 @@ class SettingProfileActivity : AppCompatActivity() {
         updateMap["petAge"] = updatedPetAge
         updateMap["petIntroduction"] = updatedPetIntroduction
         updateMap["petDescription"] = updatedPetDescription
+        updateMap["petNeuter"] = updatedPetNeuter
 
         if (uri != null) {
             // 이미지 선택한 경우 이미지 URL도 업데이트
@@ -184,6 +189,7 @@ class SettingProfileActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Log.e("lee", "사용자 정보 업데이트 실패", e)
                 showToast("사용자 정보 업데이트 실패")
+                onBackPressed()
             }
     }
 
@@ -194,11 +200,11 @@ class SettingProfileActivity : AppCompatActivity() {
         val updatedPetAge = binding.etPetAge.text.toString().toInt()
         val updatedPetIntroduction = binding.etPurpose.text.toString()
         val updatedPetDescription = binding.etPetIntroduction.text.toString()
-
+        val updatedPetNeuter = binding.etPetNeuter.text.toString()
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 
         userId?.let {
-            updateUserProfile(it, updatedPetName, updatedPetType, updatedPetGender, updatedPetAge, updatedPetIntroduction, updatedPetDescription, selectedImageUri)
+            updateUserProfile(it, updatedPetName, updatedPetType, updatedPetGender, updatedPetAge, updatedPetIntroduction, updatedPetDescription,updatedPetNeuter, selectedImageUri)
         }
     }
 

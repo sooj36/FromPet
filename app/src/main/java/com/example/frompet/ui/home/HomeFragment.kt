@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -203,10 +204,8 @@ class HomeFragment : Fragment() {
             addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
                 override fun onChildViewAttachedToWindow(view: View) {
                     val imageView: ImageView = view.findViewById(R.id.iv_pet_image)
-                    val petName: TextView = view.findViewById(R.id.tv_name_pet)
-                    val petAge: TextView = view.findViewById(R.id.tv_age_pet)
-                    val petType: TextView = view.findViewById(R.id.tv_type_pet)
-                    imageView.setOnClickListener {
+                    val imageButton: ImageButton = view.findViewById(R.id.ib_up)
+                    imageButton.setOnClickListener {
                         val currentPosition = manager.topPosition
                         if (currentPosition < homeAdapter.currentList.size) {
                             val user = homeAdapter.currentList[currentPosition]
@@ -215,9 +214,6 @@ class HomeFragment : Fragment() {
                                 intent.putExtra(ChatClickUserDetailActivity.USER, user)
                                 val options: ActivityOptions = ActivityOptions.makeSceneTransitionAnimation(
                                     requireActivity(),
-                                    Pair.create(petName, "petNameTransition"),
-                                    Pair.create(petAge, "petAgeTransition"),
-                                    Pair.create(petType, "petTypeTransition"),
                                     Pair.create(imageView, "imageTransition")
                                 )
                                 startActivity(intent, options.toBundle())
