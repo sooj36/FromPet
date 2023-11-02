@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -18,6 +19,7 @@ import com.example.frompet.ui.commnunity.community.CommunityActivity
 import com.example.frompet.util.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlin.math.log
 
 class CommunityDetailActivity : AppCompatActivity() {
 
@@ -47,8 +49,10 @@ class CommunityDetailActivity : AppCompatActivity() {
         communityData = intent.getParcelableExtra(DOCS_ID)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             communityData = intent.getParcelableExtra(COMMUNITY_DATA, CommunityData::class.java)
+
         } else {
-            communityData = intent.extras?.getSerializable(COMMUNITY_DATA) as CommunityData?
+            communityData = intent.extras?.getParcelable(COMMUNITY_DATA) as CommunityData?
+
         }
 
 
