@@ -88,5 +88,12 @@
     <string name="home_tutor_swipe_left">왼쪽 스와이프는 \n상대방에게 좋아요를 보낼 수 있습니다.</string>
     <string name="home_tutor_swipe_right">오른쪽 스와이프는 \n상대방을 패스할 수 있습니다.\n한번 패스한 상대는 다시는 보이지 않습니다.</string>
 
-
+    <string name="category_dog">강아지</string>
+    <string name="category_cat">고양이</string>
+    <string name="category_raccoon">라쿤</string>
+    <string name="category_fox">여우</string>
+    <string name="category_chick">새</string>
+    <string name="category_pig">돼지</string>
+    <string name="category_snake">파충류</string>
+    <string name="category_fish">물고기</string>
 </resources>
