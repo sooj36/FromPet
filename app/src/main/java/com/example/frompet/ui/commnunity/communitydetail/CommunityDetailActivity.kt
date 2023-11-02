@@ -4,22 +4,16 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.view.isVisible
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityDetailBinding
-import com.example.frompet.ui.commnunity.community.CommunityActivity
 import com.example.frompet.util.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlin.math.log
 
 class CommunityDetailActivity : AppCompatActivity() {
 
@@ -54,7 +48,6 @@ class CommunityDetailActivity : AppCompatActivity() {
             communityData = intent.extras?.getParcelable(COMMUNITY_DATA) as CommunityData?
 
         }
-
 
         binding.chipTag.setOnClickListener {
             // 칩 태그 클릭 했을 때
@@ -125,7 +118,7 @@ class CommunityDetailActivity : AppCompatActivity() {
                     finish()
                 }
                 .addOnFailureListener {
-                    showToast("게시글이 삭제가 실패하였습니다", Toast.LENGTH_SHORT)
+                    showToast("해당 작성자만 게시글 삭제가 가능합니다", Toast.LENGTH_SHORT)
                 }
         }
     }

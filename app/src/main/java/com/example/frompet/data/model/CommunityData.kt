@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class CommunityData(
     var title: String = "",
-    var tag: Boolean = false,
+    var tag: String = "",
     val timestamp: String = "",
     var contents: String = "",
     var uid: String = "",

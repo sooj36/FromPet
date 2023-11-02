@@ -72,7 +72,7 @@ class CommunityDetailUpdateActivity : AppCompatActivity() {
                     finish()
                 }
                 .addOnFailureListener {
-                    showToast("게시글이 수정 권한이 없습니다", Toast.LENGTH_SHORT)
+                    showToast("게시글 수정 권한이 없습니다", Toast.LENGTH_SHORT)
                 }
         }
     }
