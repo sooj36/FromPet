@@ -89,7 +89,6 @@
         android:id="@+id/tutorialOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         android:background="#66000000"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
