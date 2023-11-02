@@ -35,7 +35,7 @@ class CommunityAdapter(private val ListClick: (CommunityData) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(communityData: CommunityData) {
             binding.tvTitleComm.text = communityData.title
-//                    binding.chipTag.isChecked = CommunityData.tag.
+            binding.chipTag.text = communityData.tag.toString()
             binding.tvContentsComm.text = communityData.contents
 
             binding.linearlayoutAdd.setOnClickListener {

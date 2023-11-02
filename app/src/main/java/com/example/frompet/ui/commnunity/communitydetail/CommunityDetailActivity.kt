@@ -49,18 +49,15 @@ class CommunityDetailActivity : AppCompatActivity() {
 
         }
 
-        binding.chipTag.setOnClickListener {
-            // 칩 태그 클릭 했을 때
-        }
-
-
         // 화면에 표시
         val title = binding.tvDetailTitle
         val contents = binding.tvDetailContents
+        val tag = binding.chipTag
 
         // CommunityData에서 가져오기
         title.text = communityData?.title
         contents.text = communityData?.contents
+        tag.text = communityData?.tag
 
         binding.backBtn.setOnClickListener {
             finish()

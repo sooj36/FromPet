@@ -72,7 +72,7 @@ class CommunityActivity : AppCompatActivity() {
 
         val chipLove = binding.chipLove
         binding.chipGroup.setOnClickListener {
-            chipLove.chipBackgroundColor
+            //'사랑' 게시글만
         }
     }
 
