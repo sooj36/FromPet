@@ -108,6 +108,7 @@ class CommunityDetailActivity : AppCompatActivity() {
 
     private fun updateVisible() {
         val intent : Intent = Intent(this, CommunityDetailUpdateActivity::class.java)
+        intent.putExtra(COMMUNITY_DATA, communityData)
         startActivity(intent)
         finish()
     }

@@ -32,6 +32,7 @@ class CommunityActivity : AppCompatActivity() {
         ListClick = {item ->
             //전달하는 데이터
             val intent: Intent = Intent(this, CommunityDetailActivity::class.java)
+            Log.d("sooj", "item ${item}")
             intent.putExtra(COMMUNITY_DATA, item)
             startActivity(intent)
 
