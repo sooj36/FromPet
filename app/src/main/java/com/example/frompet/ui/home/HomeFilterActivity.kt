@@ -1,20 +1,32 @@
 package com.example.frompet.ui.home
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
 import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
 import com.example.frompet.R
-import com.example.frompet.data.model.CommunityHomeData
+import com.example.frompet.data.model.Filter
 import com.example.frompet.databinding.ActivityHomeFilterBinding
-import com.example.frompet.ui.login.MemberInfoAdapter
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class HomeFilterActivity : AppCompatActivity() {
     private var _binding: ActivityHomeFilterBinding? = null
-    private val filterViewModel: HomeFilterViewModel by viewModels { HomeFilterViewModelFactory() }
+    private val filterViewModel: HomeFilterViewModel by viewModels()
+    private val database : FirebaseDatabase = FirebaseDatabase.getInstance()
+    private val store :FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val currentUser = FirebaseAuth.getInstance().currentUser?.uid?:""
     private val binding get() = _binding!!
+    companion object {
+        const val USER = "user"
+        const val FILTER_DATA ="filter_data"
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,31 +37,29 @@ class HomeFilterActivity : AppCompatActivity() {
             finish()
         }
 
-        val communityHomeData = mutableListOf(
-            CommunityHomeData(R.drawable.dog, "강아지"),
-            CommunityHomeData(R.drawable.cat, "고양이"),
-            CommunityHomeData(R.drawable.raccoon, "라쿤"),
-            CommunityHomeData(R.drawable.fox, "여우"),
-            CommunityHomeData(R.drawable.chick, "새"),
-            CommunityHomeData(R.drawable.pig, "돼지"),
-            CommunityHomeData(R.drawable.snake, "파충류"),
-            CommunityHomeData(R.drawable.fish, "물고기"),
-        )
-        val adapter = MemberInfoAdapter(this, communityHomeData)
-        val spinner = binding.spPetType
-        spinner.adapter = adapter
-        binding.chipGroup.setOnCheckedChangeListener { chipGroup, checkedId ->
-            val selectedGender = when (checkedId) {
-                R.id.chip_all -> "모든 성별"
-                R.id.chip_male -> "수컷"
-                R.id.chip_female -> "암컷"
-                else -> ""
-            }
-        }
+        val adapter =ArrayAdapter.createFromResource(this,R.array.pet_types,android.R.layout.simple_spinner_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spPetType.adapter=adapter
+
 
 
         binding.btComplete.setOnClickListener {
+            val selectedPetType = binding.spPetType.selectedItem.toString()
+            val selectedGenderChipId = binding.chipGroup.checkedChipId
+            val selectedGender: String? = when (selectedGenderChipId) {
+                R.id.chip_all -> "all"
+                R.id.chip_male -> "남"
+                R.id.chip_female -> "여"
+                else -> "all"
+            }
 
+            val filter = Filter(petType = selectedPetType, petGender = selectedGender)
+            Log.d("filter","$selectedPetType,펫성별:$selectedGender")
+            filterViewModel.filterUsers(filter)
+            val result = Intent()
+            result.putExtra(FILTER_DATA, filter)
+            setResult(Activity.RESULT_OK,result)
+            finish()
         }
     }
-    }
+}

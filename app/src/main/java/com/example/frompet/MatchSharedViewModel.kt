@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.frompet.data.model.User
+import com.example.frompet.ui.home.HomeFilterViewModel
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
@@ -26,6 +27,7 @@ class MatchSharedViewModel : ViewModel() {
 
     private val database = FirebaseDatabase.getInstance().getReference("likeUsers")
     private val disLikeDb = FirebaseDatabase.getInstance().getReference("dislikeList")
+    private val filterDb =FirebaseDatabase.getInstance().getReference("filteredUsers")
 
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -33,6 +35,7 @@ class MatchSharedViewModel : ViewModel() {
     fun like(targetUserId: String) {
         val currentUserId = auth.currentUser?.uid ?: return
         database.child(targetUserId).child("likedBy").child(currentUserId).setValue(true)
+//        filterDb.child(currentUserId).child(targetUserId).removeValue()
     }
 
     fun dislike(targetUserId: String) {
@@ -79,74 +82,74 @@ class MatchSharedViewModel : ViewModel() {
         })
     }
 
-    fun loadAlreadyActionUsers(load: (List<String>) -> Unit) {
-        val currentUserId = auth.currentUser?.uid ?: return
-        val exceptIds = mutableListOf<String>()
-
-        disLikeDb.child(currentUserId).addListenerForSingleValueEvent(object : ValueEventListener {  //디스라이크유저 불러오기
-            override fun onDataChange(snapshot: DataSnapshot) {
-
-                snapshot.children.forEach { childSnapshot ->
-                    val userId = childSnapshot.key
-                    userId?.let { exceptIds.add(it) }
-                }
-                database.addListenerForSingleValueEvent(object : ValueEventListener { //likeby노드에 내유아디가 들어가서 전체순회
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        snapshot.children.forEach { userSnapshot ->
-                            val userId = userSnapshot.key
-                            if (userSnapshot.child("likedBy").hasChild(currentUserId)) {
-                                userId?.let { exceptIds.add(it) }
-
-                            }
-                        }
-                        database.child(currentUserId).child("matched").addListenerForSingleValueEvent(object : ValueEventListener { //매치된유저불러오기
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                snapshot.children.forEach { childSnapshot ->
-                                    val userId = childSnapshot.key
-                                    userId?.let { exceptIds.add(it) }
-                                }
-                                load(exceptIds)
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {}
-                        })
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {}
-                })
-            }
-
-            override fun onCancelled(error: DatabaseError) {}
-        })
-    }
-
-
-    fun getExceptDislikeAndMe(onSuccess: (List<User>) -> Unit, onFailure: (Exception) -> Unit) {
-        val allUsersData = mutableListOf<User>()
-        val currentUserId = auth.currentUser?.uid
-
-        loadAlreadyActionUsers { exceptionUsers ->
-
-            firestore.collection("User")
-                .get()
-                .addOnSuccessListener { querySnapshot ->
-                    if (querySnapshot.isEmpty.not()) {
-                        for (document in querySnapshot.documents) {
-                            val user = document.toObject(User::class.java)
-                            user?.let {
-                                if (it.uid != currentUserId && it.uid !in exceptionUsers) {
-                                    allUsersData.add(it)
-                                }
-                            }
-                        }
-                        onSuccess(allUsersData)
-                    }
-                }
-                .addOnFailureListener { e ->
-                    onFailure(e)
-                }
-        }
-    }
+//    fun loadAlreadyActionUsers(load: (List<String>) -> Unit) {
+//        val currentUserId = auth.currentUser?.uid ?: return
+//        val exceptIds = mutableListOf<String>()
+//
+//        disLikeDb.child(currentUserId).addListenerForSingleValueEvent(object : ValueEventListener {  //디스라이크유저 불러오기
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//
+//                snapshot.children.forEach { childSnapshot ->
+//                    val userId = childSnapshot.key
+//                    userId?.let { exceptIds.add(it) }
+//                }
+//                database.addListenerForSingleValueEvent(object : ValueEventListener { //likeby노드에 내유아디가 들어가서 전체순회
+//                    override fun onDataChange(snapshot: DataSnapshot) {
+//                        snapshot.children.forEach { userSnapshot ->
+//                            val userId = userSnapshot.key
+//                            if (userSnapshot.child("likedBy").hasChild(currentUserId)) {
+//                                userId?.let { exceptIds.add(it) }
+//
+//                            }
+//                        }
+//                        database.child(currentUserId).child("matched").addListenerForSingleValueEvent(object : ValueEventListener { //매치된유저불러오기
+//                            override fun onDataChange(snapshot: DataSnapshot) {
+//                                snapshot.children.forEach { childSnapshot ->
+//                                    val userId = childSnapshot.key
+//                                    userId?.let { exceptIds.add(it) }
+//                                }
+//                                load(exceptIds)
+//                            }
+//
+//                            override fun onCancelled(error: DatabaseError) {}
+//                        })
+//                    }
+//
+//                    override fun onCancelled(error: DatabaseError) {}
+//                })
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {}
+//        })
+//    }
+//
+//
+//    fun getExceptDislikeAndMe(onSuccess: (List<User>) -> Unit, onFailure: (Exception) -> Unit) {
+//        val allUsersData = mutableListOf<User>()
+//        val currentUserId = auth.currentUser?.uid
+//
+//        loadAlreadyActionUsers { exceptionUsers ->
+//
+//            firestore.collection("User")
+//                .get()
+//                .addOnSuccessListener { querySnapshot ->
+//                    if (querySnapshot.isEmpty.not()) {
+//                        for (document in querySnapshot.documents) {
+//                            val user = document.toObject(User::class.java)
+//                            user?.let {
+//                                if (it.uid != currentUserId && it.uid !in exceptionUsers) {
+//                                    allUsersData.add(it)
+//                                }
+//                            }
+//                        }
+//                        onSuccess(allUsersData)
+//                    }
+//                }
+//                .addOnFailureListener { e ->
+//                    onFailure(e)
+//                }
+//        }
+//    }
 
     fun matchUser(otherUserUid: String) {
         val currentUserId = auth.currentUser?.uid ?: return
@@ -165,9 +168,7 @@ class MatchSharedViewModel : ViewModel() {
         _likeList.value = currentLikes
         Log.d("jun", "매치된후라이크리스트:${_likeList.value}")
         loadlike()
-
     }
-
 
     fun loadMatchedUsers() {
         val currentUserId = auth.currentUser?.uid ?: return
@@ -265,8 +266,6 @@ class MatchSharedViewModel : ViewModel() {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
-
-
     fun getTotalMatchedCount(onSuccess: (Int)-> Unit){
         var totalMatchedCount = 0
         database.addValueEventListener(object :ValueEventListener {
@@ -282,7 +281,6 @@ class MatchSharedViewModel : ViewModel() {
 
         })
     }
-
 }
 
 
