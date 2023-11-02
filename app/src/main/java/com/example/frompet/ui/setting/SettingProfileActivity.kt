@@ -187,13 +187,13 @@ class SettingProfileActivity : AppCompatActivity() {
             }
     }
 
-    private fun onProfileUpdateClick() {
-        val updatedPetName = binding.etPetName.text.toString()
-        val updatedPetType = binding.etPetType.text.toString()
-        val updatedPetGender = binding.etPetGender.text.toString()
-        val updatedPetAge = binding.etPetAge.text.toString().toInt()
-        val updatedPetIntroduction = binding.etPurpose.text.toString()
-        val updatedPetDescription = binding.etPetIntroduction.text.toString()
+    private fun onProfileUpdateClick() = with(binding) {
+        val updatedPetName = etPetName.text.toString()
+        val updatedPetType = etPetType.text.toString()
+        val updatedPetGender = etPetGender.text.toString()
+        val updatedPetAge = etPetAge.text.toString().toInt()
+        val updatedPetIntroduction = etPurpose.text.toString()
+        val updatedPetDescription = etPetIntroduction.text.toString()
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 
