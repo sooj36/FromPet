@@ -48,27 +48,27 @@
             android:layout_height="wrap_content"
             tools:context="com.example.frompet.ui.commnunity.communityhome.CommunityHomeFragment">
 
-            <TextView
-                android:id="@+id/tv_this_weekend_king"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/comu_thisweekend_matched"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/tv_this_weekend_king"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/comu_thisweekend_matched"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+       android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout9"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
                 <androidx.viewpager2.widget.ViewPager2
@@ -80,51 +80,51 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-                    android:id="@+id/dots_indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+            android:id="@+id/dots_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:dotsColor="@color/gray"
+            app:dotsSize="10dp"
+            app:dotsSpacing="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:selectedDotColor="@color/accent_color" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    android:layout_marginTop="45dp"
-                    app:dotsColor="@color/gray"
-                    app:layout_constraintEnd_toEndOf="@+id/image_slider"
-                    app:layout_constraintStart_toStartOf="@+id/image_slider"
-                    app:layout_constraintTop_toBottomOf="@+id/image_slider"
-                    app:selectedDotColor="@color/warm_blue" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cons_border_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout7"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_notice"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:layout_marginTop="30dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="10dp"
+                android:text="@string/comu_notice"
+                android:textColor="@color/black"
+                android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
+                app:layout_constraintTop_toBottomOf="@+id/dots_indicator" />
 
-                <TextView
-                    android:id="@+id/tv_notice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="@string/comu_notice"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/dots_indicator" />
-
-                <TextView
-                    android:id="@+id/tv_notice_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:text="@string/comu_notice_text"
-                    android:textSize="15sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_notice"
-                    app:layout_constraintStart_toEndOf="@+id/tv_notice"
-                    app:layout_constraintTop_toTopOf="@+id/tv_notice" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tv_notice_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/comu_notice_text"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_notice"
+                app:layout_constraintStart_toEndOf="@+id/tv_notice"
+                app:layout_constraintTop_toTopOf="@+id/tv_notice" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/communicationrecyclerView"
@@ -137,6 +137,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
