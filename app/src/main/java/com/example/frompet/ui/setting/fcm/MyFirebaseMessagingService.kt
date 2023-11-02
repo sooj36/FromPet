@@ -9,7 +9,6 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.frompet.R
-import com.example.frompet.ui.chat.activity.ChatHomeActivity
 import com.example.frompet.ui.chat.fragment.ChatHomeFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -58,22 +57,22 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             }
             notificationManager.createNotificationChannel(channel)
         }
-        val intent = Intent(this,ChatHomeActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(
-            this,
-            0,
-            intent,
-            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
-        )
+//        val intent = Intent(this,ChatHomeActivity::class.java)
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//        val pendingIntent = PendingIntent.getActivity(
+//            this,
+//            0,
+//            intent,
+//            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+//        )
 
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.mipmap.notiicon)            //아이콘
+            .setSmallIcon(R.drawable.splash)            //아이콘
             .setContentTitle(title)           //알림데이터모델에 제목
             .setContentText(message)         //알림데이터모델에 메시지
             .setPriority(NotificationCompat.PRIORITY_HIGH)        //중요도
             .setAutoCancel(true)         //클릭했을때 자동사라짐
-            .setContentIntent(pendingIntent)
+//            .setContentIntent(pendingIntent)
 
         val notificationId = System.currentTimeMillis().toInt() //알림 Id 생성 현재시간으로 사용해서 각 알림에 고유한 id생성,알림 동시에 오더라도 각각별도로 표시
         notificationManager.notify(notificationId, notificationBuilder.build()) //알람을 표시 알람id식별하고 builder를 사용하여 알림내용 구성

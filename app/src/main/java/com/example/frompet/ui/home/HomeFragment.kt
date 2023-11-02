@@ -17,6 +17,7 @@ import android.view.animation.ScaleAnimation
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
@@ -49,6 +50,8 @@ class HomeFragment : Fragment() {
     private lateinit var manager : CardStackLayoutManager
     private val viewModel: MatchSharedViewModel by viewModels()
     private val fcmViewModel: FCMNotificationViewModel by viewModels()
+    private val filterViewModel: HomeFilterViewModel by viewModels { HomeFilterViewModelFactory() }
+
     private val currentUser = FirebaseAuth.getInstance().currentUser
     private val firestore = FirebaseFirestore.getInstance()
 
@@ -72,6 +75,7 @@ class HomeFragment : Fragment() {
             binding.tutorialOverlay.visibility = View.GONE
             setTutorialShown()
         }
+
 
 
 
@@ -255,15 +259,18 @@ class HomeFragment : Fragment() {
          database.child("usersTutorial").child(it.uid).child("isTutorialShown").setValue(true)
         }
     }
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
-    }
-    private fun showBottomSheet(user: User) {
+        ivFilter.setOnClickListener {
+            val intent = Intent(requireContext(), HomeFilterActivity::class.java)
+            startActivity(intent)
+        }
 
-        val bottomSheetFragment = HomeBottomSheetFragment.newInstance(user)
-        bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
     }
+
+
+
     private fun getDataFromFirestore() {
         viewModel.getExceptDislikeAndMe(
             onSuccess = { users ->
