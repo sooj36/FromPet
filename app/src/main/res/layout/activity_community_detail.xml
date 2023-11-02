@@ -42,22 +42,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/chip_tag" />
 
-        <EditText
-            android:id="@+id/update_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:gravity="center"
-            android:hint="@string/community_detail_title"
-            android:textColor="@color/black"
-            android:background="@color/light_gray"
-            android:textSize="23sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/chip_tag" />
 
         <View
             android:id="@+id/detail_view_line_1"
@@ -109,21 +93,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/detail_view_line2" />
 
-        <EditText
-            android:id="@+id/update_contents"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
-            android:background="@color/light_gray"
-            android:hint="@string/community_detail_comment"
-            android:textColor="@color/black"
-            android:textSize="17sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_view_line2"
-            android:visibility="gone"/>
-
 
     </LinearLayout>
 
@@ -138,19 +107,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/threedots"
         android:visibility="visible"/>
-
-    <ImageView
-        android:id="@+id/btn_done"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="20dp"
-        android:contentDescription="@string/popupmenu"
-        app:layout_constraintBottom_toTopOf="@id/linearLayout5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/done"
-        android:visibility="gone"/>
-
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -55,8 +55,8 @@ class CommunityHomeAdapter(communicationFragment: List<CommunityHomeData>) :
     class CommunicationViewHolder(private val binding: ItemCoummunicationBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(communityHomeData: CommunityHomeData) {
-            binding.ivPetNameComm.load(communityHomeData.pet_logo)
-            binding.tvPetNameComm.text = communityHomeData.pet_name
+            binding.ivPetNameComm.load(communityHomeData.petLogo)
+            binding.tvPetNameComm.text = communityHomeData.petType
 
 
             binding.communicationId.setOnClickListener {

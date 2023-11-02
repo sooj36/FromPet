@@ -47,25 +47,19 @@ class CommunityDetailActivity : AppCompatActivity() {
 
 
         communityData = intent.getParcelableExtra(DOCS_ID)
-        Log.d("sooj", "잘 뜨니...?222 ${communityData}")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             communityData = intent.getParcelableExtra(COMMUNITY_DATA, CommunityData::class.java)
-            Log.d("sooj", "잘 뜨니...?${communityData}")
         } else {
             communityData = intent.extras?.getParcelable(COMMUNITY_DATA) as CommunityData?
         }
 
-
-        binding.btnDone.setOnClickListener {
-            updateCommunity(communityData?.docsId)
-        }
 
         binding.chipTag.setOnClickListener {
             // 칩 태그 클릭 했을 때
         }
 
 
-        // 화면에 표시
+        // 화면,에 표시
         val title = binding.tvDetailTitle
         val contents = binding.tvDetailContents
 
@@ -110,39 +104,10 @@ class CommunityDetailActivity : AppCompatActivity() {
     }
 
 
-    // 수정
-    private fun updateCommunity(docsId: String?) {
-        if (docsId != null) {
-            store.collection("Community")
-                .document(docsId)
-                .update(
-                    "title",
-                    binding.updateTitle.text.toString(),
-                    "contents",
-                    binding.updateContents.text.toString()
-                )
-                .addOnSuccessListener {
-                    showToast("게시글이 수정되었습니다", Toast.LENGTH_SHORT)
-                    finish()
-                }
-                .addOnFailureListener {
-                    showToast("게시글이 수정 권한이 없습니다", Toast.LENGTH_SHORT)
-                }
-        }
-    }
-
     private fun updateVisible() {
-        binding.updateTitle.setText(communityData?.title.toString())
-        binding.updateContents.setText(communityData?.contents.toString())
-
-        binding.tvDetailTitle.isVisible = false
-        binding.tvDetailContents.isVisible = false
-        binding.updateTitle.isVisible = true
-        binding.updateContents.isVisible = true
-        binding.btnDone.isVisible = true
-        binding.etDetailComments.isVisible = false
-        binding.btnDetailEnroll.isVisible = false
-        binding.threedots.isVisible = false
+        val intent : Intent = Intent(this, CommunityDetailUpdateActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
 
