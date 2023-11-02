@@ -20,7 +20,7 @@ class CommunityAddActivity : AppCompatActivity() {
     private val binding get() = _binding!!
 
     // FirebaseStorage 초기화
-    val storage = FirebaseStorage.getInstance()
+    private val storage = FirebaseStorage.getInstance()
 
     // data class
     private var title: String = "" // 제목
@@ -44,12 +44,21 @@ class CommunityAddActivity : AppCompatActivity() {
         initView()
 
 
-        binding.btnAddEnroll.setOnClickListener {
-            val titleText = binding.etAddTitle.text.toString()
-            val contentsText = binding.etAddContents.text.toString()
+        binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId) {
+                R.id.chip_share -> tag = "나눔"
+                R.id.chip_walk -> tag = "산책"
+                R.id.chip_love -> tag = "사랑"
+                R.id.chip_exchange -> tag = "정보교환"
+            }
+        }
 
-            title = titleText
-            contents = contentsText
+
+        binding.btnAddEnroll.setOnClickListener {
+            with(binding){
+                title = etAddTitle.text.toString()
+                contents = etAddContents.text.toString()
+            }
 
             // Firebase 현재 사용자 가져오기
             val currentUser = FirebaseAuth.getInstance().currentUser
@@ -101,8 +110,6 @@ class CommunityAddActivity : AppCompatActivity() {
                     }
             }
         }
-
-
     }
 
     private fun initView() {
@@ -121,8 +128,6 @@ class CommunityAddActivity : AppCompatActivity() {
             finish()
         }
     }
-
-
 
 
 }
