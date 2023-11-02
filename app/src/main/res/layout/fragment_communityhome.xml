@@ -39,7 +39,7 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/image_slider"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="220dp"
             android:src="@drawable/ic_launcher_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,47 +49,47 @@
             android:id="@+id/dots_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:layout_marginTop="45dp"
+            android:layout_marginBottom="10dp"
             app:dotsColor="@color/gray"
-            app:layout_constraintEnd_toEndOf="@+id/image_slider"
-            app:layout_constraintStart_toStartOf="@+id/image_slider"
-            app:layout_constraintTop_toBottomOf="@+id/image_slider"
-            app:selectedDotColor="@color/warm_blue" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout7"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
-
-        <TextView
-            android:id="@+id/tv_notice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="@string/comu_notice"
-            android:textColor="@color/black"
-            android:textSize="15sp"
+            app:dotsSize="10dp"
+            app:dotsSpacing="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dots_indicator" />
-
-        <TextView
-            android:id="@+id/tv_notice_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@string/comu_notice_text"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_notice"
-            app:layout_constraintStart_toEndOf="@+id/tv_notice"
-            app:layout_constraintTop_toTopOf="@+id/tv_notice" />
+            app:selectedDotColor="@color/accent_color" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cons_border_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
+
+            <TextView
+                android:id="@+id/tv_notice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/comu_notice"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dots_indicator" />
+
+            <TextView
+                android:id="@+id/tv_notice_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/comu_notice_text"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_notice"
+                app:layout_constraintStart_toEndOf="@+id/tv_notice"
+                app:layout_constraintTop_toTopOf="@+id/tv_notice" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/communicationrecyclerView"
