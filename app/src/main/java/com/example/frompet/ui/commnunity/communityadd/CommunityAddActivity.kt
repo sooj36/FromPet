@@ -74,6 +74,8 @@ class CommunityAddActivity : AppCompatActivity() {
                             if (petType != null) {
                                 val currentTime = System.currentTimeMillis()
                                 timeStamp = currentTime.toString()
+
+
                                 // Community 모델 생성
                                 val community = CommunityData(
                                     title = title,
@@ -96,8 +98,9 @@ class CommunityAddActivity : AppCompatActivity() {
                                         Toast.makeText(this, "등록되었습니다", Toast.LENGTH_SHORT).show()
 
                                         val dataIntent = Intent()
-                                        dataIntent.putExtra(DOCS_ID, community.docsId)
-                                        setResult(RESULT_OK, dataIntent)
+//                                        dataIntent.putExtra(DOCS_ID, community.docsId)
+//                                        setResult(RESULT_OK, dataIntent)
+                                        setResult(RESULT_OK, Intent().putExtra(DOCS_ID, community.docsId))
                                         finish()
                                     }
                                     .addOnFailureListener {
@@ -116,6 +119,7 @@ class CommunityAddActivity : AppCompatActivity() {
         with(binding) {
             btnAddCancel.setOnClickListener { showExitDialog() }
             backBtn.setOnClickListener { backToCommunity() }
+
         }
     }
 

@@ -22,7 +22,6 @@ class CommunityDetailUpdateActivity : AppCompatActivity() {
     private val store = FirebaseFirestore.getInstance()
     private var communityData: CommunityData? = null
 
-    private var tag: String = ""
 
     companion object {
         const val COMMUNITY_DATA = "communityData"
@@ -62,10 +61,6 @@ class CommunityDetailUpdateActivity : AppCompatActivity() {
                 finish()
             }
 
-            btnDone.setOnClickListener {
-                updateCommunity(communityData?.docsId)
-            }
-
             when (tag) {
                 "나눔" -> chipGroup.check(R.id.chip_share)
                 "산책" -> chipGroup.check(R.id.chip_walk)
@@ -81,6 +76,9 @@ class CommunityDetailUpdateActivity : AppCompatActivity() {
                     R.id.chip_exchange -> tag = "정보교환"
                 }
             }
+            btnDone.setOnClickListener {
+                updateCommunity(communityData?.docsId)
+            }
         }
     }
 
@@ -93,7 +91,7 @@ class CommunityDetailUpdateActivity : AppCompatActivity() {
                     binding.updateTitle.text.toString(),
                     "contents",
                     binding.updateContents.text.toString(),
-                    // 기도 메타.... 바인딩안해도 업데이트 되게 해주세요 !!!!!!!!
+
 
                 )
                 .addOnSuccessListener {
