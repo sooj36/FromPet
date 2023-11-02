@@ -1,7 +1,6 @@
 package com.example.frompet.ui.login
 
 import android.content.Context
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +32,7 @@ class MemberInfoAdapter(private val context: Context, private val data: List<Com
 
         val item = data[position]
         imageView.setImageResource(item.petLogo)
-        textView.text = item.petType
+        textView.text = item.petName
 
         return view
     }

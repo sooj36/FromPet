@@ -1,27 +1,25 @@
 package com.example.frompet.ui.commnunity.communityhome
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageButton
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.frompet.data.model.CommunityHomeData
 import com.example.frompet.databinding.ItemCoummunicationBinding
-import com.example.frompet.ui.chat.activity.ChatPullScreenActivity
-import com.example.frompet.ui.chat.adapter.ChatMessageAdapter
 import com.example.frompet.ui.commnunity.community.CommunityActivity
 
-class CommunityHomeAdapter(communicationFragment: List<CommunityHomeData>) :
+class CommunityHomeAdapter(private val onClicked: (CommunityHomeData,Int) -> Unit) :
     ListAdapter<CommunityHomeData, CommunityHomeAdapter.CommunicationViewHolder>(
         object : DiffUtil.ItemCallback<CommunityHomeData>() {
             override fun areItemsTheSame(
                 oldItem: CommunityHomeData,
                 newItem: CommunityHomeData
             ): Boolean {
-                return oldItem == newItem
+                return oldItem.petName == newItem.petName
             }
 
             override fun areContentsTheSame(
@@ -34,33 +32,30 @@ class CommunityHomeAdapter(communicationFragment: List<CommunityHomeData>) :
     ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommunicationViewHolder {
-        val binding = ItemCoummunicationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CommunicationViewHolder(binding)
+        return CommunicationViewHolder(
+            ItemCoummunicationBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false,
+            ), onClicked
+        )
     }
 
-    override fun onBindViewHolder(holder: CommunicationViewHolder, position : Int) {
-        // currentList : 해당 Adapter 에 " submitList()를 통해 삽입한 아이템 리스트
-        holder.bind(currentList[position])
+    override fun onBindViewHolder(holder: CommunicationViewHolder, position: Int) {
+        val item = getItem(position)
+        holder.bind(item)
     }
 
-    private fun clickListener(imageButton: ImageButton, imageUrl: String?) {
-        imageButton.setOnClickListener {
-            val intent = Intent(it.context, ChatPullScreenActivity::class.java)
-            intent.putExtra(ChatMessageAdapter.IMAGE_URL, imageUrl)
-            it.context.startActivity(intent)
-        }
-    }
-
-
-    class CommunicationViewHolder(private val binding: ItemCoummunicationBinding) :
+    class CommunicationViewHolder(
+        private val binding: ItemCoummunicationBinding,
+        private val onClicked: (CommunityHomeData,Int) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(communityHomeData: CommunityHomeData) {
-            binding.ivPetNameComm.load(communityHomeData.petLogo)
-            binding.tvPetNameComm.text = communityHomeData.petType
-
-
+        fun bind(item: CommunityHomeData) = with(binding) {
+            ivPetNameComm.load(item.petLogo)
+            tvPetNameComm.text = item.petName
             binding.communicationId.setOnClickListener {
-                val intent : Intent = Intent(it.context, CommunityActivity::class.java)
+                onClicked(item, adapterPosition)
+                Log.e("zzzzzzz", "Clicked item: ${item.petName}, Index: $adapterPosition")
+                val intent: Intent = Intent(it.context, CommunityActivity::class.java)
                 it.context.startActivity(intent)
             }
         }
