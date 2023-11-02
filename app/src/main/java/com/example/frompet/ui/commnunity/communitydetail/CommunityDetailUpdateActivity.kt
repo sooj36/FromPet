@@ -73,7 +73,6 @@ class CommunityDetailUpdateActivity : AppCompatActivity() {
                 "정보교환" -> chipGroup.check(R.id.chip_exchange)
             }
 
-
             chipGroup.setOnCheckedChangeListener { group, checkedId ->
                 when (checkedId) {
                     R.id.chip_share -> tag = "나눔"
@@ -82,8 +81,6 @@ class CommunityDetailUpdateActivity : AppCompatActivity() {
                     R.id.chip_exchange -> tag = "정보교환"
                 }
             }
-
-
         }
     }
 
@@ -96,7 +93,8 @@ class CommunityDetailUpdateActivity : AppCompatActivity() {
                     binding.updateTitle.text.toString(),
                     "contents",
                     binding.updateContents.text.toString(),
-                    "tag", binding.chipGroup
+                    // 기도 메타.... 바인딩안해도 업데이트 되게 해주세요 !!!!!!!!
+
                 )
                 .addOnSuccessListener {
                     showToast("게시글이 수정되었습니다", Toast.LENGTH_SHORT)
