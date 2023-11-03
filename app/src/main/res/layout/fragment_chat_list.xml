@@ -16,11 +16,11 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tv_like_me"
+            android:id="@+id/tv_possible_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
+            android:text=""
             android:padding="15dp"
-            android:text="@string/chat_like_me"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
