@@ -45,32 +45,35 @@ class HomeFilterViewModel: ViewModel() {
         query.get().addOnSuccessListener { documents ->
             val users = documents.map { it.toObject(User::class.java) }
                 .filter { it.uid != currentUser }
-                _filteredUsers.value = users
 
-            val filteredUsersRef = database.getReference("filteredUsers").child(currentUser)
-            filteredUsersRef.removeValue().addOnCompleteListener {
-                for (user in users) {
-                    filteredUsersRef.child(user.uid).setValue(user)
-                }
+            // 스와이프한 사용자를 제외합니다
+            excludeSwipedUsers(users) { filteredUsers ->
+                _filteredUsers.value = filteredUsers
+                updateFilteredUsers(filteredUsers)
             }
         }
     }
+
     fun loadFilteredUsers() {
         val filteredUsersRef = database.getReference("filteredUsers").child(currentUser)
         filteredUsersRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val users = dataSnapshot.children.mapNotNull { it.getValue(User::class.java) }
-                excludeSwipedUsers(users)
+                // 스와이프한 사용자를 제외하고 나서 ui를 업데이트하기 위한 콜백을 전달합니당
+                excludeSwipedUsers(users) { filteredUsers ->
+                    _filteredUsers.value = filteredUsers
+                }
             }
             override fun onCancelled(databaseError: DatabaseError) {}
         })
     }
-    private fun excludeSwipedUsers(users: List<User>) {
+
+    private fun excludeSwipedUsers(users: List<User>, callback: (List<User>) -> Unit) {
         swipedUsersRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val swipedUserIds = snapshot.children.map { it.key ?: "" }.toSet()
                 val filteredList = users.filter { !swipedUserIds.contains(it.uid) }
-                _filteredUsers.value = filteredList
+                callback(filteredList)
             }
 
             override fun onCancelled(error: DatabaseError) {}
@@ -79,10 +82,27 @@ class HomeFilterViewModel: ViewModel() {
 
     // 사용자가 카드를 스와이프할 때 호출할 함수입니다:박세준
     fun userSwiped(userId: String) {
+        // 스와이프한 사용자를 스와이프 노드에 추가합니다
         swipedUsersRef.child(userId).setValue(true)
+
+        // 필터링된 사용자 목록에서 스와이프한 사용자를 제거합니당
+        _filteredUsers.value = _filteredUsers.value?.filterNot { it.uid == userId }
+
+        // 필터유저 노드에서 스와이프한 사용자를 제거합니다
+        val filteredUsersRef = database.getReference("filteredUsers").child(currentUser)
+        filteredUsersRef.child(userId).removeValue()
+    }
+
+    // 필터링된 사용자 목록을 업데이트하는 함수입니당
+    private fun updateFilteredUsers(users: List<User>) {
+        val filteredUsersRef = database.getReference("filteredUsers").child(currentUser)
+        filteredUsersRef.removeValue().addOnCompleteListener {
+            for (user in users) {
+                filteredUsersRef.child(user.uid).setValue(user)
+            }
+        }
     }
 }
-
 
 
 
