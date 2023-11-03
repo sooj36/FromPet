@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.ViewTreeObserver
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import com.example.frompet.R
@@ -66,7 +67,18 @@ class HomeFilterActivity : AppCompatActivity() {
         val petTypes = resources.getStringArray(R.array.pet_types)
         val defaultPosition = petTypes.indexOf("전체")
         binding.spPetType.setSelection(defaultPosition)
+        binding.spPetType.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                // 스피너의 넓이
+                val spinnerWidth = binding.spPetType.width
+                // 드롭다운 리스트의 넓이를 스피너의 넓이로 설정
+                binding.spPetType.dropDownWidth = spinnerWidth
+                // 레이아웃 리스너를 제거(최종넓이를 얻기위해서 호출)
+                binding.spPetType.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+        })
     }
+
 
     private fun getSelectedGender(): String? {
         return when (binding.chipGroup.checkedChipId) {
