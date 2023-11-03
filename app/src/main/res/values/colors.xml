@@ -24,10 +24,7 @@
     <color name="accent_color">#F461FF</color>
     <color name="semi_white">#E1DEDE</color>
     <color name="transparent">#00000000</color>
-
-
-
-
+    <color name="deep_green">#778C64</color>
 
 
 </resources>
