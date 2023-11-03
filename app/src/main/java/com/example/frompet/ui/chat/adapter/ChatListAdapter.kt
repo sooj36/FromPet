@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +18,7 @@ import com.example.frompet.util.RandomColor
 import com.example.frompet.util.RandomColor.Companion.getRandomColor
 import java.util.Random
 
-class ChatListAdapter(private val context: Context, private val onUserClick: (User) -> Unit) :
+class ChatListAdapter(private val context: Context, private val onUserClick: (User, ImageView) -> Unit) :
     ListAdapter<User, ChatListAdapter.ChatListViewHoler>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatListViewHoler {
@@ -39,9 +40,8 @@ class ChatListAdapter(private val context: Context, private val onUserClick: (Us
                 tvUserAge.text = "${user.petAge.toString()}세"
 
                 user.petProfile?.let {
-                    profileArea.load(it){
+                    ivPetProfile2.load(it){
                         error(R.drawable.kakaotalk_20230825_222509794_01)
-
                     }
                 }
                 val startColor = getRandomColor(255, 0.5f, 0.7f)
@@ -49,7 +49,7 @@ class ChatListAdapter(private val context: Context, private val onUserClick: (Us
                 val gradientDrawable = binding.view6.background as GradientDrawable
                 gradientDrawable.colors = intArrayOf(startColor, endColor)
                 root.setOnClickListener {
-                    onUserClick(user)
+                    onUserClick(user,ivPetProfile2)
                 }
             }
         }
