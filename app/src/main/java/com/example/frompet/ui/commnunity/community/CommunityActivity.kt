@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.frompet.R
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityBinding
 import com.example.frompet.ui.commnunity.communityadd.CommunityAddActivity
@@ -70,15 +71,21 @@ class CommunityActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val chipLove = binding.chipLove
-        binding.chipGroup.setOnClickListener {
-            //'사랑' 게시글만
+        binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
+            viewModel.loadCommunityListData(getFilter())
         }
     }
 
     override fun onResume() {
         super.onResume()
 
-        viewModel.loadCommunityListData()
+        viewModel.loadCommunityListData(getFilter())
+    }
+    private fun getFilter() =  when (binding.chipGroup.checkedChipId) {
+        R.id.chip_share -> "나눔"
+        R.id.chip_walk -> "산책"
+        R.id.chip_love -> "사랑"
+        R.id.chip_exchange -> "정보교환"
+        else -> ""
     }
 }

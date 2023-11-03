@@ -49,7 +49,6 @@ class CommunityDetailUpdateActivity : AppCompatActivity() {
         Log.d("sooj", "데이터 ${communityData}")
 
 
-        var tag = communityData?.tag
 
 
         with(binding) {
@@ -61,7 +60,7 @@ class CommunityDetailUpdateActivity : AppCompatActivity() {
                 finish()
             }
 
-            when (tag) {
+            when (communityData?.tag) {
                 "나눔" -> chipGroup.check(R.id.chip_share)
                 "산책" -> chipGroup.check(R.id.chip_walk)
                 "사랑" -> chipGroup.check(R.id.chip_love)
@@ -69,12 +68,7 @@ class CommunityDetailUpdateActivity : AppCompatActivity() {
             }
 
             chipGroup.setOnCheckedChangeListener { group, checkedId ->
-                when (checkedId) {
-                    R.id.chip_share -> tag = "나눔"
-                    R.id.chip_walk -> tag = "산책"
-                    R.id.chip_love -> tag = "사랑"
-                    R.id.chip_exchange -> tag = "정보교환"
-                }
+
             }
             btnDone.setOnClickListener {
                 updateCommunity(communityData?.docsId)
@@ -91,6 +85,14 @@ class CommunityDetailUpdateActivity : AppCompatActivity() {
                     binding.updateTitle.text.toString(),
                     "contents",
                     binding.updateContents.text.toString(),
+                    "tag",
+                    when (binding.chipGroup.checkedChipId) {
+                        R.id.chip_share -> "나눔"
+                        R.id.chip_walk -> "산책"
+                        R.id.chip_love -> "사랑"
+                        R.id.chip_exchange -> "정보교환"
+                        else -> ""
+                    }
 
 
                 )

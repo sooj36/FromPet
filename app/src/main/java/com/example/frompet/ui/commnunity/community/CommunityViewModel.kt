@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.frompet.data.model.CommunityData
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -25,7 +26,9 @@ class CommunityViewModel : ViewModel() {
 
 
     // 데이터 로드
-    fun loadCommunityListData() {
+    fun loadCommunityListData(
+        filter : String
+    ) {
         val currentUserId = auth.currentUser?.uid
         communitydb
             .collection("Community")
