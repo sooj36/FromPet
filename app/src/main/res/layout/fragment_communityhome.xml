@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -29,13 +28,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:text="FromPet"
-            android:textSize="20dp"
             android:textColor="@color/main_color"
+            android:textSize="20dp"
             android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,11 +51,11 @@
                 android:id="@+id/tv_this_weekend_king"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:text="@string/comu_thisweekend_matched"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:layout_marginTop="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -64,11 +63,9 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout9"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="120dp"
+                app:layout_constraintBottom_toTopOf="@+id/category_bt">
 
 
                 <androidx.viewpager2.widget.ViewPager2
@@ -111,8 +108,9 @@
                     android:text="@string/comu_notice"
                     android:textColor="@color/black"
                     android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/dots_indicator" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tv_notice_text"
@@ -126,20 +124,17 @@
                     app:layout_constraintTop_toTopOf="@+id/tv_notice" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/category_bt"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout7"
                 tools:listitem="@layout/item_coummunication" />
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
