@@ -10,7 +10,6 @@ import com.example.frompet.databinding.ActivityCommunityBinding
 import com.example.frompet.ui.commnunity.communityadd.CommunityAddActivity
 import com.example.frompet.ui.commnunity.communitydetail.CommunityDetailActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 
 class CommunityActivity : AppCompatActivity() {
 
@@ -81,6 +80,7 @@ class CommunityActivity : AppCompatActivity() {
         R.id.chip_walk -> "산책"
         R.id.chip_love -> "사랑"
         R.id.chip_exchange -> "정보교환"
+        R.id.chip_all -> "전체"
         else -> ""
     }
 }

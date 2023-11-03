@@ -9,6 +9,7 @@ import com.example.frompet.data.model.CommunityData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import java.util.Arrays
 
 class CommunityViewModel : ViewModel() {
 
@@ -27,38 +28,72 @@ class CommunityViewModel : ViewModel() {
     // 데이터 로드
     fun loadCommunityListData(filter: String) {
         val currentUserId = auth.currentUser?.uid
-        val chipQuery = communitydb.collection("Community")
-
-        if (filter.isNotEmpty()) {
-            chipQuery.orderBy("timestamp", Query.Direction.DESCENDING)
-        } else {
-            chipQuery.whereEqualTo("tag", filter)
-        }
-//        for (filter in filters) {
+//        val chipQuery = communitydb.collection("Community")
+//
+//        if (filter != "전체") {
+//            Log.d("sooj" ,"tag ${filter}")
 //            chipQuery.whereEqualTo("tag", filter)
+//        }
+        val communityListData = mutableListOf<CommunityData>()
+        if (filter == "전체") {
+            communitydb
+                .collection("Community")
+//            .whereEqualTo("tag", filter)
+//            .whereArrayContainsAny("tag", Arrays.asList("나눔", "산책", "사랑", "정보교환"))
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .get()
 
-        communitydb
-            .collection("Community")
-            .whereEqualTo("tag", filter)
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .get()
+                .addOnSuccessListener { querySnapshot ->
+                    Log.d("sooj", "tagadd ${querySnapshot.size()}")
 
-            .addOnSuccessListener { querySnapshot ->
-                val communityListData = mutableListOf<CommunityData>()
 
-                if (querySnapshot.isEmpty.not()) {
-                    for (document in querySnapshot.documents) {
-                        val data = document.toObject(CommunityData::class.java)
-                        data?.let {
-                            communityListData.add(it)
+                    if (querySnapshot.isEmpty.not()) {
+                        for (document in querySnapshot.documents) {
+                            val data = document.toObject(CommunityData::class.java)
+                            data?.let {
+                                communityListData.add(it)
+                            }
                         }
+
+
+                        Log.d("sooj", "test ${communityListData}")
                     }
                     _communityList.value = communityListData
-                    Log.d("sooj", "${communityListData}")
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.e("sooj", "456 데이터 로딩 실패", exception)
-            }
+                .addOnFailureListener { exception ->
+                    Log.e("sooj", "456 데이터 로딩 실패", exception)
+                }
+        } else {
+            communitydb
+                .collection("Community")
+                .whereEqualTo("tag", filter)
+//            .whereArrayContainsAny("tag", Arrays.asList("나눔", "산책", "사랑", "정보교환"))
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .get()
+
+                .addOnSuccessListener { querySnapshot ->
+                    Log.d("sooj", "tagadd ${querySnapshot.size()}")
+
+
+                    if (querySnapshot.isEmpty.not()) {
+                        for (document in querySnapshot.documents) {
+                            val data = document.toObject(CommunityData::class.java)
+                            data?.let {
+                                communityListData.add(it)
+                            }
+                        }
+
+
+                        Log.d("sooj", "test ${communityListData}")
+                    }
+                    _communityList.value = communityListData
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("sooj", "456 데이터 로딩 실패", exception)
+                }
+
+        }
     }
 }
+
+
