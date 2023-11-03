@@ -38,6 +38,8 @@ class CommunityHomeFragment : Fragment() {
     private val communityHomeAdapter by lazy {
         CommunityHomeAdapter(
             onClicked = { item, position ->
+                _viewModel.listClickCategory(item.petName)
+                _viewModel.getHomeCategory()
             }
         )
     }
@@ -58,9 +60,23 @@ class CommunityHomeFragment : Fragment() {
                 startAutoScroll()
             }
         }
+        _viewModel.selectPetType.observe(viewLifecycleOwner){selectPetType ->
+            if(!selectPetType.isNullOrEmpty()){
+                _viewModel.getHomeCategory()
+            }
+        }
 
         viewModel.getTotalMatchedCount{matchedCount->
             _binding?.tvNoticeText?.text = " 총 ${matchedCount}쌍이 매칭되었습니다!"
+        }
+
+        _viewModel.commuHomeDataList.observe(viewLifecycleOwner){CategoryList ->
+            communityHomeAdapter.submitList(CategoryList)
+        }
+        communityHomeAdapter.onClicked = {item , position ->
+            _viewModel.listClickCategory(item.petName)
+
+            Log.e("zzzzzzzz","${item.petName},$position")
         }
 
         startNoticeTextAniMation()

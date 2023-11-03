@@ -12,7 +12,7 @@ import com.example.frompet.data.model.CommunityHomeData
 import com.example.frompet.databinding.ItemCoummunicationBinding
 import com.example.frompet.ui.commnunity.community.CommunityActivity
 
-class CommunityHomeAdapter(private val onClicked: (CommunityHomeData,Int) -> Unit) :
+class CommunityHomeAdapter(var onClicked: (CommunityHomeData, Int) -> Unit) :
     ListAdapter<CommunityHomeData, CommunityHomeAdapter.CommunicationViewHolder>(
         object : DiffUtil.ItemCallback<CommunityHomeData>() {
             override fun areItemsTheSame(

@@ -3,6 +3,7 @@ package com.example.frompet.data.repository.category
 import android.content.Context
 import android.util.Log
 import com.example.frompet.R
+import com.example.frompet.data.model.CommunityData
 import com.example.frompet.data.model.CommunityHomeData
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -29,6 +30,28 @@ class CategoryRepositoryImp(
             )
 
         }
+    }
+
+    override suspend fun getCommunityData(petType:String): List<CommunityData> {
+        val firestore = FirebaseFirestore.getInstance()
+        val communityDataList = mutableListOf<CommunityData>()
+        try {
+            val querySnapshot = firestore.collection("Community")
+                .whereEqualTo("petType",petType).get().await()
+            Log.e("aaaaaa","$petType")
+            for(document in querySnapshot.documents){
+                val petType = document.getString("petType") ?: ""
+                val docsId = document.id
+
+                val communityData = CommunityData(petType = petType, docsId = docsId)
+                communityDataList.add(communityData)
+            }
+            Log.e("aaaaa","$communityDataList")
+
+        }catch (e:Exception){
+            Log.e("aaaaaa","error",e)
+        }
+        return communityDataList
     }
 
     private fun getAnimalImage(categoryString: String): Int {
