@@ -74,7 +74,6 @@ class CommunityDetailActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.popup_menu, popup.menu) // 메뉴 레이아웃 inflate
 
 
-        // 람다식으로 처리
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.delete -> {
@@ -84,7 +83,7 @@ class CommunityDetailActivity : AppCompatActivity() {
                 }
 
                 R.id.cut -> {
-                    updateVisible()
+                    updateActivity()
                     true
                 }
 
@@ -96,7 +95,7 @@ class CommunityDetailActivity : AppCompatActivity() {
 
 
 
-    private fun updateVisible() {
+    private fun updateActivity() {
         val intent : Intent = Intent(this, CommunityDetailUpdateActivity::class.java)
         intent.putExtra(COMMUNITY_DATA, communityData)
         startActivity(intent)
