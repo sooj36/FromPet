@@ -46,17 +46,18 @@
             app:layout_constraintTop_toBottomOf="@+id/iv_pet_image"
             app:srcCompat="@drawable/icon_down" />
 
-        <TextView
-            android:id="@+id/tv_type_pet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@string/home_name"
-            android:textColor="@color/dark_gray"
-            android:textSize="20sp"
-            android:transitionName="petTypeTransition"
-            app:layout_constraintStart_toStartOf="@+id/tv_name_pet"
-            app:layout_constraintTop_toBottomOf="@+id/tv_name_pet" />
+            <TextView
+                android:id="@+id/tv_type_pet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/home_name"
+                android:textColor="@color/dark_gray"
+                android:textSize="20sp"
+                android:transitionName="petTypeTransition"
+                app:layout_constraintStart_toStartOf="@+id/tv_name_pet"
+                app:layout_constraintTop_toBottomOf="@+id/tv_name_pet" />
 
         <TextView
             android:id="@+id/tv_name_pet"
@@ -85,27 +86,27 @@
             app:layout_constraintStart_toEndOf="@+id/tv_name_pet"
             app:layout_constraintTop_toTopOf="@+id/tv_name_pet" />
 
-        <TextView
-            android:id="@+id/tv_pet_gender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/activity_detail_petgender"
-            android:textColor="@color/dark_gray"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/tv_type_pet"
-            app:layout_constraintTop_toBottomOf="@+id/tv_type_pet" />
+            <TextView
+                android:id="@+id/tv_pet_gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/activity_detail_petgender"
+                android:textColor="@color/dark_gray"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/tv_type_pet"
+                app:layout_constraintTop_toBottomOf="@+id/tv_type_pet" />
 
-        <View
-            android:id="@+id/view4"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="15dp"
-            android:background="@color/gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_pet_gender" />
+            <View
+                android:id="@+id/view4"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="15dp"
+                android:background="@color/gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_pet_neuter" />
 
         <TextView
             android:id="@+id/textView12"
@@ -177,6 +178,47 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_pet_intro" />
+
+            <TextView
+                android:id="@+id/tv_pet_neuter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="TextView"
+                android:textColor="@color/dark_gray"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/tv_pet_gender"
+                app:layout_constraintTop_toBottomOf="@+id/tv_pet_gender" />
+
+            <ImageView
+                android:id="@+id/iv_pet_type"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_type_pet"
+                app:layout_constraintEnd_toStartOf="@+id/tv_type_pet"
+                app:layout_constraintTop_toTopOf="@+id/tv_type_pet"
+                app:srcCompat="@drawable/cat" />
+
+            <ImageView
+                android:id="@+id/iv_pet_gender"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_pet_gender"
+                app:layout_constraintEnd_toStartOf="@+id/tv_pet_gender"
+                app:layout_constraintTop_toTopOf="@+id/tv_pet_gender"
+                app:srcCompat="@drawable/cat" />
+
+            <ImageView
+                android:id="@+id/iv_pet_neuter"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_pet_neuter"
+                app:layout_constraintEnd_toStartOf="@+id/tv_pet_neuter"
+                app:layout_constraintTop_toTopOf="@+id/tv_pet_neuter"
+                app:srcCompat="@drawable/cat" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

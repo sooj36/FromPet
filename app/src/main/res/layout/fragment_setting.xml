@@ -104,7 +104,7 @@
             android:id="@+id/tv_modify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15sp"
+            android:layout_marginStart="15dp"
             android:textStyle="bold"
             android:text="프로필 수정"
             android:textSize="15dp"
@@ -112,15 +112,14 @@
             app:layout_constraintStart_toEndOf="@+id/iv_modify"
             app:layout_constraintTop_toTopOf="@+id/iv_modify" />
 
-        <ImageView
-            android:id="@+id/iv_modify"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/icon_modify"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view" />
+            <ImageView
+                android:id="@+id/iv_modify"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="-7dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view" />
 
         <ImageButton
             android:id="@+id/bt_modify"
@@ -147,15 +146,14 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_friends"
                 app:layout_constraintTop_toTopOf="@+id/iv_friends" />
 
-        <ImageView
-            android:id="@+id/iv_friends"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/icon_friends"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_modify" />
+            <ImageView
+                android:id="@+id/iv_friends"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="-7dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_modify" />
 
         <ImageButton
             android:id="@+id/ib_friends"
@@ -204,15 +202,14 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_notification"
                 app:layout_constraintTop_toTopOf="@+id/iv_notification" />
 
-        <ImageView
-            android:id="@+id/iv_notification"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/icon_alarm_off"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view2" />
+            <ImageView
+                android:id="@+id/iv_notification"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="-7dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view2" />
 
         <ImageButton
             android:id="@+id/ib_notification"
@@ -248,15 +245,14 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_friends_noti"
                 app:layout_constraintTop_toTopOf="@+id/iv_friends_noti" />
 
-        <ImageView
-            android:id="@+id/iv_friends_noti"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/icon_alarm_off"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_notification" />
+            <ImageView
+                android:id="@+id/iv_friends_noti"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="-7dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_notification" />
 
         <ImageButton
             android:id="@+id/ib_friends_noti"
@@ -304,15 +300,14 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_log_out"
                 app:layout_constraintTop_toTopOf="@+id/iv_log_out" />
 
-        <ImageView
-            android:id="@+id/iv_log_out"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/icon_setting_selected"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view3" />
+            <ImageView
+                android:id="@+id/iv_log_out"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="-6dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view3" />
 
 
         <ImageButton

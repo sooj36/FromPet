@@ -91,9 +91,9 @@ class MemberInfoActivity : AppCompatActivity() {
 
                 val selectedGenderId = binding.toggleButtonPetGender.checkedButtonId
                 if (selectedGenderId == R.id.buttonHe) {
-                    petGender = "남"
+                    petGender = "수컷"
                 } else if (selectedGenderId == R.id.buttonShe) {
-                    petGender = "여"
+                    petGender = "암컷"
                 }
 
                 val selectedNeuterId = when (binding.toggleButtonNeuter.checkedButtonId) {
