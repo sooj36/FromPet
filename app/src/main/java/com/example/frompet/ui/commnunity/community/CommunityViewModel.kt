@@ -5,13 +5,19 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.frompet.SingleLiveEvent
 import com.example.frompet.data.model.CommunityData
+import com.example.frompet.data.repository.category.CategoryRepository
+import com.example.frompet.ui.commnunity.communityhome.CategoryClick
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.launch
 import java.util.Arrays
 
-class CommunityViewModel : ViewModel() {
+class CommunityViewModel(
+) : ViewModel() {
 
     // 데이터 가져오기
     private val communitydb = FirebaseFirestore.getInstance()
@@ -23,6 +29,10 @@ class CommunityViewModel : ViewModel() {
 
     private val _communityList = MutableLiveData<List<CommunityData>>()
     val communityList: LiveData<List<CommunityData>> = _communityList
+
+
+    private val _event: SingleLiveEvent<CategoryClick> = SingleLiveEvent()
+    val event: LiveData<CategoryClick> get() = _event
 
 
     // 데이터 로드
@@ -94,6 +104,7 @@ class CommunityViewModel : ViewModel() {
 
         }
     }
+
 }
 
 
