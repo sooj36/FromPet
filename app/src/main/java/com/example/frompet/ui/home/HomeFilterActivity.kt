@@ -85,7 +85,7 @@ class HomeFilterActivity : AppCompatActivity() {
         database.reference.child("userSaveFilter").child(currentUserUid).addListenerForSingleValueEvent(object :
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val petType = snapshot.child("petType").getValue(String::class.java) ?: "기본값"
+                val petType = snapshot.child("petType").getValue(String::class.java) ?: "전체"
                 val petGender = snapshot.child("petGender").getValue(String::class.java) ?: "all"
                 val petTypePosition = resources.getStringArray(R.array.pet_types).indexOf(petType)
 
