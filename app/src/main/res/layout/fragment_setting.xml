@@ -1,38 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar2"
+        android:id="@+id/setting_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#80FFFFFF"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/main_icon" />
+
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
-            android:text="마이 페이지"
+            android:text="FromPet"
+            android:textColor="@color/main_color"
             android:textSize="20dp"
-            android:textColor="#000"
             android:textStyle="bold" />
-
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2"
+        app:layout_constraintTop_toBottomOf="@+id/setting_toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -58,6 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:textStyle="bold"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_pet" />
@@ -67,6 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -100,9 +104,10 @@
             android:id="@+id/tv_modify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="15sp"
             android:textStyle="bold"
             android:text="프로필 수정"
+            android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_modify"
             app:layout_constraintStart_toEndOf="@+id/iv_modify"
             app:layout_constraintTop_toTopOf="@+id/iv_modify" />
@@ -130,17 +135,17 @@
             app:layout_constraintTop_toTopOf="@+id/iv_modify" />
 
 
-
-        <TextView
-            android:id="@+id/tv_friends"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textStyle="bold"
-            android:text="친구 목록"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_friends"
-            app:layout_constraintStart_toEndOf="@+id/iv_friends"
-            app:layout_constraintTop_toTopOf="@+id/iv_friends" />
+            <TextView
+                android:id="@+id/tv_friends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="친구 목록"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_friends"
+                app:layout_constraintStart_toEndOf="@+id/iv_friends"
+                app:layout_constraintTop_toTopOf="@+id/iv_friends" />
 
         <ImageView
             android:id="@+id/iv_friends"
@@ -187,16 +192,17 @@
             app:layout_constraintStart_toStartOf="@+id/view2" />
 
 
-        <TextView
-            android:id="@+id/tv_notification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textStyle="bold"
-            android:text="메시지 알림"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_notification"
-            app:layout_constraintStart_toEndOf="@+id/iv_notification"
-            app:layout_constraintTop_toTopOf="@+id/iv_notification" />
+            <TextView
+                android:id="@+id/tv_notification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="메시지 알림"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_notification"
+                app:layout_constraintStart_toEndOf="@+id/iv_notification"
+                app:layout_constraintTop_toTopOf="@+id/iv_notification" />
 
         <ImageView
             android:id="@+id/iv_notification"
@@ -220,25 +226,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/iv_notification" />
 
-        <Switch
+            <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/chat_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_notification"
+                android:theme="@style/SwitchTheme"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_notification"
             app:layout_constraintEnd_toEndOf="@+id/ib_notification"
             app:layout_constraintTop_toTopOf="@+id/iv_notification" />
 
 
-        <TextView
-            android:id="@+id/tv_friends_noti"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textStyle="bold"
-            android:text="친구 신청 알림"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_friends_noti"
-            app:layout_constraintStart_toEndOf="@+id/iv_friends_noti"
-            app:layout_constraintTop_toTopOf="@+id/iv_friends_noti" />
+            <TextView
+                android:id="@+id/tv_friends_noti"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="친구 신청 알림"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_friends_noti"
+                app:layout_constraintStart_toEndOf="@+id/iv_friends_noti"
+                app:layout_constraintTop_toTopOf="@+id/iv_friends_noti" />
 
         <ImageView
             android:id="@+id/iv_friends_noti"
@@ -262,10 +270,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/iv_friends_noti" />
 
-        <Switch
+            <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/friends_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+                android:theme="@style/SwitchTheme"
             app:layout_constraintBottom_toBottomOf="@+id/iv_friends_noti"
             app:layout_constraintEnd_toEndOf="@+id/ib_friends_noti"
             app:layout_constraintTop_toTopOf="@+id/iv_friends_noti" />
@@ -283,16 +292,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ib_friends_noti" />
 
-        <TextView
-            android:id="@+id/tv_log_out"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textStyle="bold"
-            android:text="로그아웃"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_log_out"
-            app:layout_constraintStart_toEndOf="@+id/iv_log_out"
-            app:layout_constraintTop_toTopOf="@+id/iv_log_out" />
+            <TextView
+                android:id="@+id/tv_log_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="로그아웃"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_log_out"
+                app:layout_constraintStart_toEndOf="@+id/iv_log_out"
+                app:layout_constraintTop_toTopOf="@+id/iv_log_out" />
 
         <ImageView
             android:id="@+id/iv_log_out"

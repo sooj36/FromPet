@@ -1,10 +1,9 @@
 package com.example.frompet.data.model
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
 data class CommunityHomeData(
-    val pet_logo: Int,
-    val pet_name: String
-): Parcelable
+    val petLogo: Int,
+    val petName: String,
+   /* var uid: String="" //var 은 지향 copy 사용 --> 무결성이 사라짐.*/
+){
+}

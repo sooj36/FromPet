@@ -1,5 +1,6 @@
 package com.example.frompet.data.repository.user
 
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 
 interface BaseAuthRepository {
@@ -17,4 +18,6 @@ interface BaseAuthRepository {
     suspend fun isAlreadyLoggedIn() : Boolean
 
     suspend fun signInGoogle(idToken: String) : FirebaseUser?
+
+    suspend fun signInWithCredential(credential: AuthCredential): FirebaseUser?
 }

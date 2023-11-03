@@ -1,6 +1,6 @@
 package com.example.frompet
 
-import FCMTokenManagerViewModel
+import com.example.frompet.ui.setting.fcm.FCMTokenManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -8,34 +8,39 @@ import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import com.example.frompet.data.repository.firebase.MyFirebaseMessagingService
 import com.example.frompet.databinding.ActivityMainBinding
 import com.example.frompet.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import android.Manifest
+import androidx.appcompat.app.AppCompatDelegate
 
 class MainActivity : AppCompatActivity() {
-    private val fcmTokenManagerViewModel by lazy {
-        ViewModelProvider(this)[FCMTokenManagerViewModel::class.java]
-    }
+    //    private val fcmTokenManagerViewModel by lazy {
+//        ViewModelProvider(this)[FCMTokenManagerViewModel::class.java]
+//    }
     private var _binding: ActivityMainBinding? = null
+
+    private val fcmTokenManager = FCMTokenManager()
     private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.myBottomNav.itemIconTintList = null
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-        // FCM 설정 및 토큰 가져오기
-        FCMTokenManagerViewModel().getFirebaseToken()
+
+
 
         // Android 13 PostNotification 처리
         checkAppPushNotification()
 
         val currentUser = FirebaseAuth.getInstance().currentUser
+        currentUser?.let {
+            fcmTokenManager.fetchAndBaseFCMToken(it.uid)  // FCM 토큰을 가져와서 저장
+        } //세준
 
         if (currentUser == null) {
             // 사용자가 로그인되어 있지 않은 경우
@@ -46,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             setStartApp()
         }
-        fcmTokenManagerViewModel.retrieveAndSaveFCMToken()
+//        fcmTokenManagerViewModel.retrieveAndSaveFCMToken() 해야함
         /* viewModel.user.observe(this) { firebaseUser ->
              if (firebaseUser != null) {
                  val uid = firebaseUser.uid

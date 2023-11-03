@@ -1,0 +1,11 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/light_gray" /> <!-- 배경 색상 설정 -->
+            <stroke
+                android:width="2dp"
+                android:color="@color/black" />
+            <corners android:radius="0dp" />
+        </shape>
+    </item>
+</layer-list>

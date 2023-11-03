@@ -8,6 +8,11 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
 }
+//프로퍼티선언하고 저장한 키값 불러옴
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+
 
 android {
     namespace 'com.example.frompet'
@@ -19,8 +24,11 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+//        buildConfigField "String", "FCM_API_KEY", properties["fcm_api_key"]
+        //로컬프로퍼티에 API값
+//        manifestPlaceholders["fcm_key"] = localProperties.getProperty('FCM_API_KEY')
     }
 
     buildTypes {
@@ -69,19 +77,22 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.firebase:firebase-auth-ktx:22.1.2'
-    implementation 'com.google.firebase:firebase-database-ktx:20.2.2'
-    implementation 'com.google.firebase:firebase-auth:21.1.0'
-    implementation 'com.google.firebase:firebase-firestore-ktx:24.4.1'
+    implementation 'com.google.firebase:firebase-auth-ktx:22.1.2'  //파이어베이스 로그인 정보
+    implementation 'com.google.firebase:firebase-database-ktx:20.2.2' //리얼타임 데이터 베이스
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.4.1' //파이어 스토어 데이터 베이스
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
-    implementation 'com.google.firebase:firebase-storage-ktx:20.2.1'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.2.1' //파이어베이스 스토리지 ( 이미지 저장 )
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-    implementation platform('com.google.firebase:firebase-bom:32.3.1')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'//레트로핏
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'//GSon컨버터
+
+    implementation platform('com.google.firebase:firebase-bom:32.3.1') //파이어베이스 붐
+    implementation 'com.google.firebase:firebase-analytics-ktx' // 파이어베이스 이용량
+    implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+
 
 
 
@@ -89,6 +100,7 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.7.2'
     implementation "androidx.fragment:fragment-ktx:1.6.1"
 
+    //뷰모델, 라이프 사이클
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:"2.5.1"'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:"2.5.1"'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:"2.5.1"'
@@ -98,22 +110,29 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
+    //Dagger Hilt 프레임 워크
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "com.google.dagger:hilt-compiler:2.44"
+
     //로그인 프로그래스바
     implementation 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
-
-
+    //스택 카드뷰
     implementation 'com.github.yuyakaido:CardStackView:v2.3.4'
-
+    //팔레트( 이미지 색 추출후 알맞는 텍스트 색상 지정을 위함 )
     implementation 'androidx.palette:palette:1.0.0'
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
-
+    //스켈레톤 라이브러리
     implementation 'com.faltenreich:skeletonlayout:5.0.0'
+    //인디케이터 애니메이션
+    implementation("com.tbuonomo:dotsindicator:5.0")
+
+    implementation 'kr.co.prnd:readmore-textview:1.0.0'
+    //더보기 라이브러리
+
 
 
 }

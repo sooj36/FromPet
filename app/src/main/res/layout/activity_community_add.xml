@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_gray"
+
     tools:context=".ui.commnunity.communityadd.CommunityAddActivity">
 
     <LinearLayout
@@ -19,13 +19,15 @@
         android:layout_margin="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back" />
+        app:srcCompat="@drawable/icon_back" />
 
     <EditText
         android:id="@+id/et_add_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/dark_pink"
         android:background="@color/light_gray"
         android:gravity="center"
         android:hint="@string/community_add_title"
@@ -67,67 +69,68 @@
             app:layout_constraintTop_toBottomOf="@+id/add_view_line_1"
             app:singleLine="false"
             app:singleSelection="true"
-            android:background="@color/light_orenge">
+            app:checkedIconVisible="true">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_all"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/community_all"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                app:chipBackgroundColor="@color/light_beige" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_share"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/community_share"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                app:chipBackgroundColor="@color/light_gray" />
+                app:chipBackgroundColor="@color/chip_background_share"
+                app:chipStartPadding="8dp"
+                app:chipEndPadding="8dp"
+                app:checkedIcon="@drawable/splash"
+                app:chipIconEnabled="true"
+                android:checkable="true"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_walk"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/community_walk"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                app:chipBackgroundColor="@color/light_gray" />
+                app:chipBackgroundColor="@color/chip_background_walk"
+                app:chipStartPadding="8dp"
+                app:chipEndPadding="8dp"
+                app:checkedIcon="@drawable/splash"
+                app:chipIconEnabled="true"
+                android:checkable="true"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_love"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/community_love"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                app:chipBackgroundColor="@color/light_gray" />
+                app:chipBackgroundColor="@color/chip_background_love"
+                app:chipStartPadding="8dp"
+                app:chipEndPadding="8dp"
+                app:checkedIcon="@drawable/splash"
+                app:chipIconEnabled="true"
+                android:checkable="true"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_exchange"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/community_exchange"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                app:chipBackgroundColor="@color/light_beige" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_add"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/community_add"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                app:chipBackgroundColor="@color/light_gray" />
+                app:chipBackgroundColor="@color/chip_background_exchange"
+                app:chipStartPadding="8dp"
+                app:chipEndPadding="8dp"
+                app:checkedIcon="@drawable/splash"
+                app:chipIconEnabled="true"
+                android:checkable="true"/>
 
 
         </com.google.android.material.chip.ChipGroup>
@@ -151,6 +154,8 @@
             android:background="@color/light_gray"
             android:hint="@string/community_add_content"
             android:padding="20dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/add_view_line_2" />

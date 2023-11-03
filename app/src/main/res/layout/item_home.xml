@@ -16,102 +16,86 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/gradient_shape" />
-
-
-        <ImageView
             android:id="@+id/iv_pet_image"
             android:layout_width="match_parent"
-            android:layout_height="550dp"
+            android:layout_height="0dp"
             android:paddingVertical="@dimen/cardview_compat_inset_shadow"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
+            android:transitionName="imageTransition"
+            app:layout_constraintBottom_toBottomOf="@+id/view6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/con_container"
+        <View
+            android:id="@+id/view6"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView5">
+            android:layout_height="180dp"
+            android:background="@drawable/ground_gradient"
+            app:layout_constraintBottom_toTopOf="@+id/view4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-            <LinearLayout
-                android:id="@+id/linearLayout2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <ImageView
-                    android:id="@+id/bt_dislike"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-
-                    android:layout_weight="1"
-                    android:src="@drawable/dislike" />
-
-                <ImageView
-                    android:id="@+id/bt_animalprofile"
-                    android:layout_width="0dp"
-                    android:layout_height="65dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/animalprofile" />
-
-                <ImageView
-                    android:id="@+id/bt_like"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:src="@drawable/like" />
-
-            </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-
+        <View
+            android:id="@+id/view4"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@color/light_beige"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tv_type_pet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginBottom="12dp"
-            android:textStyle="bold"
+            android:transitionName="petTypeTransition"
+            android:layout_marginTop="15dp"
             android:text="@string/home_name"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/con_container"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tv_name_pet"
+            app:layout_constraintTop_toBottomOf="@+id/tv_name_pet" />
 
         <TextView
             android:id="@+id/tv_name_pet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginBottom="12dp"
-
+            android:transitionName="petNameTransition"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="5dp"
             android:text="@string/home_type"
-            android:textColor="@color/black"
-            android:textSize="25sp"
+            android:textColor="@color/white"
+            android:textSize="35sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/tv_type_pet"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/iv_pet_image"
+            app:layout_constraintStart_toStartOf="@+id/view6"
+            app:layout_constraintTop_toTopOf="@+id/view6" />
 
+        <TextView
+            android:id="@+id/tv_age_pet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:transitionName="petAgeTransition"
+            android:layout_marginStart="10dp"
+            android:text="@string/home_name"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_name_pet"
+            app:layout_constraintStart_toEndOf="@+id/tv_name_pet"
+            app:layout_constraintTop_toTopOf="@+id/tv_name_pet" />
 
+        <ImageButton
+            android:id="@+id/ib_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_pet_image"
+            app:layout_constraintEnd_toEndOf="@+id/view6"
+            app:srcCompat="@drawable/icon_up" />
 
         <FrameLayout
             android:id="@+id/left_overlay"
@@ -123,20 +107,23 @@
                 android:layout_height="200dp"
                 android:layout_gravity="center"
                 android:src="@drawable/like" />
+
+            <FrameLayout
+                android:id="@+id/right_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/dislike" />
+            </FrameLayout>
+
+
         </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/right_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:src="@drawable/dislike"
-                />
-        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

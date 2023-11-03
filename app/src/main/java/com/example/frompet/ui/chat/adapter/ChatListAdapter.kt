@@ -1,6 +1,8 @@
 package com.example.frompet.ui.chat.adapter
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -11,6 +13,9 @@ import com.example.frompet.R
 
 import com.example.frompet.databinding.ItemChatlistBinding
 import com.example.frompet.data.model.User
+import com.example.frompet.util.RandomColor
+import com.example.frompet.util.RandomColor.Companion.getRandomColor
+import java.util.Random
 
 class ChatListAdapter(private val context: Context, private val onUserClick: (User) -> Unit) :
     ListAdapter<User, ChatListAdapter.ChatListViewHoler>(DiffCallback()) {
@@ -31,17 +36,24 @@ class ChatListAdapter(private val context: Context, private val onUserClick: (Us
             binding.apply {
                 tvUserName.text = user.petName
                 tvUserType.text = user.petType
+                tvUserAge.text = "${user.petAge.toString()}세"
+
                 user.petProfile?.let {
                     profileArea.load(it){
                         error(R.drawable.kakaotalk_20230825_222509794_01)
 
                     }
                 }
+                val startColor = getRandomColor(255, 0.5f, 0.7f)
+                val endColor = Color.argb(0, Color.red(startColor), Color.green(startColor), Color.blue(startColor))
+                val gradientDrawable = binding.view6.background as GradientDrawable
+                gradientDrawable.colors = intArrayOf(startColor, endColor)
                 root.setOnClickListener {
                     onUserClick(user)
                 }
             }
         }
+
     }
 
     class DiffCallback : DiffUtil.ItemCallback<User>() {

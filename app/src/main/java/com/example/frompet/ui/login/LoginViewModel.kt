@@ -13,6 +13,7 @@ import com.example.frompet.data.repository.user.UserRepositoryImp
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,9 +26,12 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userRepository: UserRepositoryImp,
-    private var mGoogleSignInClient: GoogleSignInClient,
+    var mGoogleSignInClient: GoogleSignInClient,
     private val auth: FirebaseAuth
 ):ViewModel() {
+    companion object {
+        private const val TAG = "랄라라"
+        }
 
     private val _firebaseUser = MutableLiveData<FirebaseUser?>()
     val currentUser get() = _firebaseUser
@@ -157,21 +161,19 @@ class LoginViewModel @Inject constructor(
         }
 
     }
-    fun signInGoogle(idToken: String) = viewModelScope.launch{
-        if (idToken.isNotEmpty()) {
-            try {
-                val user = userRepository.signInGoogle(idToken)
-                user?.let {
-                    _firebaseUser.postValue(it)
-                    eventsChannel.send(AllEvents.Message("Google로 로그인 되었습니다."))
-                }
-            } catch (e: Exception) {
-                eventsChannel.send(AllEvents.Error("Google 로그인 중 오류가 발생"))
+
+    private fun saveGoogle(uid: String){
+        val userDocRef = FirebaseFirestore.getInstance().collection("User").document(uid)
+        val userData = hashMapOf(
+            "username" to "Google 사용자 이름",
+            "email" to "Google 사용자 이메일"
+        )
+        userDocRef.set(userData)
+            .addOnSuccessListener {
             }
-        } else {
-            // idToken이 비어있는 경우에 대한 처리
-            eventsChannel.send(AllEvents.Error("Google 로그인 중 오류가 발생"))
-        }
+            .addOnFailureListener { e ->
+            }
+
     }
 
     sealed class AllEvents {

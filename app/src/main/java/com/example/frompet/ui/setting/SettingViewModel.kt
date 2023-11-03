@@ -31,6 +31,9 @@ class SettingViewModel : ViewModel() {
     private val _petDescription = MutableLiveData<String?>()
     val petDescription: LiveData<String?> = _petDescription
 
+    private val _petNeuter = MutableLiveData<String?>()
+    val petNeuter: LiveData<String?> = _petNeuter
+
     fun loadUserPetProfile() {
         val userId = currentUser?.uid
 
@@ -45,6 +48,7 @@ class SettingViewModel : ViewModel() {
                         _petAge.value = documentSnapshot.getLong("petAge")?.toInt()
                         _petIntroduction.value = documentSnapshot.getString("petIntroduction")
                         _petDescription.value = documentSnapshot.getString("petDescription")
+                        _petNeuter.value = documentSnapshot.getString("petNeuter")
                     }
                 }
         }
