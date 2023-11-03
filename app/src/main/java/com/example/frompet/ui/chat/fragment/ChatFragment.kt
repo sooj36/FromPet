@@ -70,10 +70,20 @@ class ChatFragment : Fragment() {
                 spannable.setSpan(colorSpan,0,"${it.size}".length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 binding.btCanChat?.text = spannable
             }
-        }
+            matchSharedViewModel.likeList.observe(viewLifecycleOwner) { users ->
+            users?.let {
+                val text = "${it.size}마리가 나를 좋아해요"
+                val spannable = SpannableStringBuilder(text)
+                val colorSpan = ForegroundColorSpan(ContextCompat.getColor(context?:return@let, R.color.lip_pink))
+                spannable.setSpan(colorSpan, 0, "${it.size}".length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-
+                binding.btLikeMe?.text = spannable
+            }
+          }
+        matchSharedViewModel.loadlike()
     }
+    }
+
     private fun updateButtonColors(currentPage: Int) {
         val isFirstPage = currentPage == 0
         binding.btCanChat.setTextColor(

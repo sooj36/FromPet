@@ -70,14 +70,9 @@ class ChatHomeFragment : Fragment() {
             matchSharedViewModel.matchedList.observe(viewLifecycleOwner) { users ->
                 chatViewModel.getLastTimeSorted(users) {
                     adapter.submitList(it)
-                    val text = "${it.size}마리와 대화가 가능해요"
-                    val spannable = SpannableStringBuilder(text)
-                    val colorSpan = ForegroundColorSpan(ContextCompat.getColor(context?:return@getLastTimeSorted, R.color.lip_pink))
-                    spannable.setSpan(colorSpan,0,"${it.size}".length,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    binding.tvPossibleText?.text = spannable
+
                 }
             }
-
             matchSharedViewModel.loadMatchedUsers()
         }
     }
