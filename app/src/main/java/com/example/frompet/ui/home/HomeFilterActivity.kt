@@ -35,6 +35,7 @@ class HomeFilterActivity : AppCompatActivity() {
         _binding = ActivityHomeFilterBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.chipGroup.check(R.id.chip_all)
+        binding.chipGroup2.check(R.id.chip_dont_care)
 
         setupCloseButton()
         setupPetTypeSpinner()
@@ -43,9 +44,10 @@ class HomeFilterActivity : AppCompatActivity() {
         binding.btComplete.setOnClickListener {
             val selectedPetType = binding.spPetType.selectedItem.toString()
             val selectedGender = getSelectedGender()
-            val filter = Filter(petType = selectedPetType, petGender = selectedGender)
+            val selectNeuter = getSelectedNeuter()
+            val filter = Filter(petType = selectedPetType, petGender = selectedGender,petNeuter = selectNeuter)
 
-            saveFilterOptions(selectedPetType, selectedGender)
+            saveFilterOptions(selectedPetType, selectedGender,selectNeuter)
             returnFilterResult(filter)
         }
     }
@@ -87,9 +89,16 @@ class HomeFilterActivity : AppCompatActivity() {
             else -> "all"
         }
     }
+  private fun getSelectedNeuter():String?{
+      return when(binding.chipGroup2.checkedChipId){
+          R.id.chip_done -> "중성화"
+          R.id.chip_nope -> "중성화 안함"
+          else -> "상관없음"
+      }
+  }
 
-    private fun saveFilterOptions(petType: String, petGender: String?) {
-        val filterOptions = mapOf("petType" to petType, "petGender" to petGender)
+    private fun saveFilterOptions(petType: String, petGender: String?,petNeuter: String?) {
+        val filterOptions = mapOf("petType" to petType, "petGender" to petGender,"petNeuter" to petNeuter)
         database.reference.child("userSaveFilter").child(currentUserUid).setValue(filterOptions)
     }
 
@@ -99,6 +108,7 @@ class HomeFilterActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val petType = snapshot.child("petType").getValue(String::class.java) ?: "전체"
                 val petGender = snapshot.child("petGender").getValue(String::class.java) ?: "all"
+                val petNeuter = snapshot.child("petNeuter").getValue(String::class.java)?:"상관없음"
                 val petTypePosition = resources.getStringArray(R.array.pet_types).indexOf(petType)
 
                 binding.spPetType.setSelection(petTypePosition)
@@ -109,6 +119,13 @@ class HomeFilterActivity : AppCompatActivity() {
                     else -> R.id.chip_all
                 }
                 binding.chipGroup.check(genderChipId)
+
+                val neuterChipId = when(petNeuter){
+                    "중성화"-> R.id.chip_done
+                    "중성화 안함"->R.id.chip_nope
+                    else -> R.id.chip_dont_care
+                }
+                binding.chipGroup2.check(neuterChipId)
             }
 
             override fun onCancelled(error: DatabaseError) {

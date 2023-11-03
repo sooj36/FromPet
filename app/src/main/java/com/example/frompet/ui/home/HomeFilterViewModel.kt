@@ -32,11 +32,21 @@ class HomeFilterViewModel: ViewModel() {
         if (filter.petGender != "all") {
             filter.petGender?.let {
                 val genderValue = when (it) {
-                    "male" -> "남"
-                    "female" -> "여"
+                    "남" -> "남"
+                    "여" -> "여"
                     else -> it
                 }
                 query = query.whereEqualTo("petGender", genderValue)
+            }
+        }
+        if (filter.petNeuter != "상관없음") {
+            filter.petNeuter?.let {
+                val genderValue = when (it) {
+                    "중성화" -> "중성화"
+                    "중성화 안함" -> "중성화 안함"
+                    else -> it
+                }
+                query = query.whereEqualTo("petNeuter", genderValue)
             }
         }
         if (filter.petType != "전체") {

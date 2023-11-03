@@ -8,5 +8,6 @@ import kotlinx.android.parcel.Parcelize
 data class Filter(
     val petType: String? = null,
     val petGender: String? = null,
+    val petNeuter: String? = null,
     val location: String? = null
 ): Parcelable
