@@ -6,8 +6,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 
 data class Filter(
-    val petType: String? = null,
-    val petGender: String? = null,
-    val petNeuter: String? = null,
-    val location: String? = null
+    val petType: String? = "",
+    val petGender: String? = "",
+    val petNeuter: String? = "",
+    val location: String? = ""
 ): Parcelable

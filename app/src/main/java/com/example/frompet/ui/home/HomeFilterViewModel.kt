@@ -13,6 +13,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.MutableData
+import com.google.firebase.database.Transaction
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -20,13 +22,22 @@ class HomeFilterViewModel: ViewModel() {
     private val _filteredUsers = MutableLiveData<List<User>>()
     val filteredUsers: MutableLiveData<List<User>> get() = _filteredUsers
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
+
     private val store: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val currentUser = FirebaseAuth.getInstance().currentUser?.uid?:""
     private val swipedUsersRef = database.getReference("swipedUsers").child(currentUser)
+    private val filteredUsersRef = database.getReference("filteredUsers").child(currentUser)
+    private var lastFilter: Filter? = null
+
 
 
     fun filterUsers(filter: Filter) {
+        if (filter == lastFilter) return
+        lastFilter = filter
         var query: Query = store.collection("User")
 
         if (filter.petGender != "all") {
@@ -55,26 +66,27 @@ class HomeFilterViewModel: ViewModel() {
         query.get().addOnSuccessListener { documents ->
             val users = documents.map { it.toObject(User::class.java) }
                 .filter { it.uid != currentUser }
-
-            // 스와이프한 사용자를 제외합니다
+            // 스와이프한 사용자를 제외하는로직입니다
             excludeSwipedUsers(users) { filteredUsers ->
                 _filteredUsers.value = filteredUsers
                 updateFilteredUsers(filteredUsers)
+                loadFilteredUsers()
             }
         }
     }
 
     fun loadFilteredUsers() {
-        val filteredUsersRef = database.getReference("filteredUsers").child(currentUser)
-        filteredUsersRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val users = dataSnapshot.children.mapNotNull { it.getValue(User::class.java) }
-                // 스와이프한 사용자를 제외하고 나서 ui를 업데이트하기 위한 콜백을 전달합니당
-                excludeSwipedUsers(users) { filteredUsers ->
-                    _filteredUsers.value = filteredUsers
-                }
+        _isLoading.value = true
+        filteredUsersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val users = snapshot.children.mapNotNull { it.getValue(User::class.java) }
+                _filteredUsers.value = users
+                _isLoading.value = false
             }
-            override fun onCancelled(databaseError: DatabaseError) {}
+
+            override fun onCancelled(error: DatabaseError) {
+                _isLoading.value = false
+            }
         })
     }
 
@@ -99,18 +111,30 @@ class HomeFilterViewModel: ViewModel() {
         _filteredUsers.value = _filteredUsers.value?.filterNot { it.uid == userId }
 
         // 필터유저 노드에서 스와이프한 사용자를 제거합니다
-        val filteredUsersRef = database.getReference("filteredUsers").child(currentUser)
         filteredUsersRef.child(userId).removeValue()
     }
 
     // 필터링된 사용자 목록을 업데이트하는 함수입니당
     private fun updateFilteredUsers(users: List<User>) {
-        val filteredUsersRef = database.getReference("filteredUsers").child(currentUser)
-        filteredUsersRef.removeValue().addOnCompleteListener {
-            for (user in users) {
-                filteredUsersRef.child(user.uid).setValue(user)
+    //이 트랜잭션을 사용하는 이유: 여러 사용자가 동시에 같은 데이터를 수정할 때 발생할 수 있는 충돌을 방지하기 위해(현재상태기반으로 데이터를 읽고 쓰는 방식)
+        filteredUsersRef.runTransaction(object : Transaction.Handler {
+            override fun doTransaction(mutableData: MutableData): Transaction.Result {
+                mutableData.value = users.associateBy { it.uid }
+                return Transaction.success(mutableData)
             }
-        }
+
+            override fun onComplete(
+                databaseError: DatabaseError?,
+                b: Boolean,
+                dataSnapshot: DataSnapshot?
+            ) {
+                if (databaseError != null) {
+                    Log.e("ffff", "Failed users", databaseError.toException())
+                } else {
+                    Log.d("ffff", "Updated ${users.size} users")
+                }
+            }
+        })
     }
 }
 

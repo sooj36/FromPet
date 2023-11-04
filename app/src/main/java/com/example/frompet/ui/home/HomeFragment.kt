@@ -21,6 +21,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -32,6 +33,7 @@ import com.example.frompet.data.model.Filter
 import com.example.frompet.data.model.User
 import com.example.frompet.ui.chat.activity.ChatClickUserDetailActivity
 import com.example.frompet.ui.setting.fcm.FCMNotificationViewModel
+import com.example.frompet.util.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -46,16 +48,17 @@ class HomeFragment : Fragment() {
 
     companion object {
         const val USER = "user"
-        const val FILTER_DATA = "filter_data"
+        const val FILTER_DATA ="filter_data"
 
     }
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var manager: CardStackLayoutManager
+    private lateinit var manager : CardStackLayoutManager
     private val viewModel: MatchSharedViewModel by viewModels()
     private val fcmViewModel: FCMNotificationViewModel by viewModels()
     private val filterViewModel: HomeFilterViewModel by activityViewModels()
+    private var isShowingEmptyFragment = false
 
 
     private val currentUser = FirebaseAuth.getInstance().currentUser
@@ -67,17 +70,16 @@ class HomeFragment : Fragment() {
     private val homeAdapter by lazy {
         HomeAdapter(this@HomeFragment)
     }
-    private val filterActivityResultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                if (result.resultCode == Activity.RESULT_OK) {
-                    val filterData = result.data?.getParcelableExtra<Filter>(FILTER_DATA)
-                    filterData?.let {
-                        filterViewModel.filterUsers(it)
-                    }
+    private val filterActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == Activity.RESULT_OK){
+                val filterData = result.data?.getParcelableExtra<Filter>(FILTER_DATA)
+                filterData?.let {
+                    filterViewModel.filterUsers(it)
                 }
             }
         }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -89,58 +91,44 @@ class HomeFragment : Fragment() {
 
         checkAndShowSwipeTutorial()
 
+
         binding.btComplete.setOnClickListener {
             binding.tutorialOverlay.visibility = View.GONE
             setTutorialShown()
         }
 
-        filterViewModel.loadFilteredUsers()
-        filterViewModel.filteredUsers.observe(viewLifecycleOwner) { users ->
-            homeAdapter.submitList(users)
-            updateUIBasedOnUsers(users) // 사용자 목록에 따라 UI를 업데이트합니다.
-        }
-
-
         return binding.root
     }
-
     private fun init() {
-        manager = CardStackLayoutManager(requireContext(), object : CardStackListener {
+        manager = CardStackLayoutManager(requireContext(), object : CardStackListener{
             override fun onCardDragging(direction: Direction?, ratio: Float) {
 
             }
 
-            override fun onCardSwiped(direction: Direction?) {
+            override fun onCardSwiped(direction: Direction?)  {
                 when (direction) {
                     Direction.Left -> {
                         // 오른쪽으로 스와이프 (Like) 했을 때의 처리
 
-                        val user = homeAdapter.currentList[manager.topPosition - 1]
+                        val user  = homeAdapter.currentList[manager.topPosition-1]
                         user?.let {
                             // user를 이용하여 원하는 작업 수행
                             viewModel.like(user.uid)
                             filterViewModel.userSwiped(it.uid)
-                            firestore.collection("User").document(currentUser?.uid!!).get()
-                                .addOnSuccessListener { docs ->
-                                    val currentUserName = docs.getString("petName") ?: "nothing"
-                                    val title = "새로운 좋아요!"
-                                    val message = "${currentUserName}님이 당신을 좋아합니다."
-                                    fcmViewModel.sendFCMNotification(user.uid, title, message)
-                                }
+                            firestore.collection("User").document(currentUser?.uid!!).get().addOnSuccessListener { docs ->
+                                val currentUserName = docs.getString("petName") ?:"nothing"
+                                val title = "새로운 좋아요!"
+                                val message = "${currentUserName}님이 당신을 좋아합니다."
+                                fcmViewModel.sendFCMNotification(user.uid, title, message)
+                            }
 
                             val btLike = binding.btLike
                             btLike.setImageResource(R.drawable.icon_sel_heart)
 
                             // ImageButton 크기 조절 애니메이션 적용
                             val scaleAnimation = ScaleAnimation(
-                                1f,
-                                1.2f,
-                                1f,
-                                1.2f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
-                                Animation.RELATIVE_TO_SELF,
-                                0.5f,
-                                Animation.RELATIVE_TO_SELF,
-                                0.5f // 중심 위치
+                                1f, 1.2f, 1f, 1.2f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
+                                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f // 중심 위치
                             )
                             scaleAnimation.duration = 200 // 애니메이션 지속 시간 (밀리초)
                             scaleAnimation.fillAfter = true // 애니메이션 이후 상태 유지
@@ -149,14 +137,8 @@ class HomeFragment : Fragment() {
                             Handler().postDelayed({
                                 btLike.setImageResource(R.drawable.icon_unsel_heart)
                                 val restoreAnimation = ScaleAnimation(
-                                    1.2f,
-                                    1f,
-                                    1.2f,
-                                    1f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
-                                    Animation.RELATIVE_TO_SELF,
-                                    0.5f,
-                                    Animation.RELATIVE_TO_SELF,
-                                    0.5f // 중심 위치
+                                    1.2f, 1f, 1.2f, 1f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
+                                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f // 중심 위치
                                 )
                                 restoreAnimation.duration = 200 // 애니메이션 지속 시간 (밀리초)
                                 restoreAnimation.fillAfter = false // 애니메이션 이후 상태 유지
@@ -166,10 +148,9 @@ class HomeFragment : Fragment() {
                         }
 
                     }
-
                     Direction.Right -> {
                         // 왼쪽으로 스와이프 (Dislike) 했을 때의 처리
-                        val user = homeAdapter.currentList[manager.topPosition - 1]
+                        val user = homeAdapter.currentList[manager.topPosition -1]
                         user?.let {
                             viewModel.dislike(user.uid)
                             filterViewModel.userSwiped(it.uid)
@@ -178,14 +159,8 @@ class HomeFragment : Fragment() {
 
                             // ImageButton 크기 조절 애니메이션 적용
                             val scaleAnimation = ScaleAnimation(
-                                1f,
-                                1.2f,
-                                1f,
-                                1.2f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
-                                Animation.RELATIVE_TO_SELF,
-                                0.5f,
-                                Animation.RELATIVE_TO_SELF,
-                                0.5f // 중심 위치
+                                1f, 1.2f, 1f, 1.2f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
+                                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f // 중심 위치
                             )
                             scaleAnimation.duration = 200 // 애니메이션 지속 시간 (밀리초)
                             scaleAnimation.fillAfter = true // 애니메이션 이후 상태 유지
@@ -194,14 +169,8 @@ class HomeFragment : Fragment() {
                             Handler().postDelayed({
                                 btLike.setImageResource(R.drawable.icon_unsel_cross)
                                 val restoreAnimation = ScaleAnimation(
-                                    1.2f,
-                                    1f,
-                                    1.2f,
-                                    1f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
-                                    Animation.RELATIVE_TO_SELF,
-                                    0.5f,
-                                    Animation.RELATIVE_TO_SELF,
-                                    0.5f // 중심 위치
+                                    1.2f, 1f, 1.2f, 1f, // 시작 크기와 끝 크기 (1.0f은 원래 크기)
+                                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f // 중심 위치
                                 )
                                 restoreAnimation.duration = 200 // 애니메이션 지속 시간 (밀리초)
                                 restoreAnimation.fillAfter = false // 애니메이션 이후 상태 유지
@@ -212,32 +181,25 @@ class HomeFragment : Fragment() {
                         }
 
                     }
-
                     Direction.Top -> {
 
                     }
-
                     else -> {
                         // 다른 방향으로 스와이프한 경우
                     }
                 }
 
-                if (manager.topPosition == homeAdapter.currentList.size) {
-                    if (isResumed) {
-                        Toast.makeText(
-                            requireContext(),
-                            "This is the last card",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    if (manager.topPosition == homeAdapter.currentList.size || homeAdapter.currentList.isEmpty()) {
+                       requireContext().showToast(getString(R.string.this_is_last_card), Toast.LENGTH_SHORT)
                         val transaction = parentFragmentManager.beginTransaction()
                         transaction.replace(R.id.home_container, HomeEmptyFragment())
                         transaction.addToBackStack(null)
                         transaction.commit()
                     }
                 }
-            }
 
-            override fun onCardRewound() {}
+
+                override fun onCardRewound() {}
 
             override fun onCardCanceled() {}
 
@@ -256,8 +218,7 @@ class HomeFragment : Fragment() {
             layoutManager = manager
             itemAnimator = DefaultItemAnimator()
             adapter = homeAdapter
-            addOnChildAttachStateChangeListener(object :
-                RecyclerView.OnChildAttachStateChangeListener {
+            addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
                 override fun onChildViewAttachedToWindow(view: View) {
                     val imageView: ImageView = view.findViewById(R.id.iv_pet_image)
                     val imageButton: ImageButton = view.findViewById(R.id.ib_up)
@@ -268,11 +229,10 @@ class HomeFragment : Fragment() {
                             user?.let {
                                 val intent = Intent(requireActivity(), HomeDetailPage::class.java)
                                 intent.putExtra(ChatClickUserDetailActivity.USER, user)
-                                val options: ActivityOptions =
-                                    ActivityOptions.makeSceneTransitionAnimation(
-                                        requireActivity(),
-                                        Pair.create(imageView, "imageTransition")
-                                    )
+                                val options: ActivityOptions = ActivityOptions.makeSceneTransitionAnimation(
+                                    requireActivity(),
+                                    Pair.create(imageView, "imageTransition")
+                                )
                                 startActivity(intent, options.toBundle())
                             }
                         }
@@ -287,6 +247,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+
     private fun checkAndShowSwipeTutorial() {
         _binding?.let { binding ->
             checkIfTutorialShow { isShown ->
@@ -300,11 +261,11 @@ class HomeFragment : Fragment() {
     private fun checkIfTutorialShow(onComplete: (Boolean) -> Unit) {
         currentUser?.let {
             database.child("usersTutorial").child(it.uid).child("isTutorialShown").get()
-                .addOnSuccessListener { snapShot ->
-                    val isTutorialShown = snapShot.getValue(Boolean::class.java) ?: false
+                .addOnSuccessListener { snapShot->
+                    val isTutorialShown = snapShot.getValue(Boolean::class.java)?:false
                     onComplete(isTutorialShown)
                 }
-                .addOnFailureListener { onComplete(false) }
+                .addOnFailureListener{ onComplete(false) }
         }
     }
 
@@ -314,75 +275,50 @@ class HomeFragment : Fragment() {
         }
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
         filterViewModel.filteredUsers.observe(viewLifecycleOwner) { users ->
-            Log.d("filter","$users")
-            if (users.isEmpty()) {
-                // 필터링된 사용자 목록이 비어 있으면 빈화면을 표시합니당
+            if (users.isNullOrEmpty()) {
                 showEmptyFragment()
+                homeAdapter.submitList(null) // 현재 카드 스택 뷰를 비우는 처리
             } else {
-                // 사용자 목록이 비어 있지 않으면 카드 스택을 업데이트합니당
+                hideEmptyFragment() // 사용자 목록이 있을 때 빈 화면을 숨깁니다
                 homeAdapter.submitList(users)
-                updateUIBasedOnUsers(users)
             }
         }
+
+
+
+        filterViewModel.loadFilteredUsers()
         ivFilter.setOnClickListener {
             val intent = Intent(requireContext(), HomeFilterActivity::class.java)
             filterActivityResultLauncher.launch(intent)
-
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        // 필터링된 사용자 목록이 비어 있는지 확인하고, 비어 있다면 빈 화면을 표시합니다.
-        filterViewModel.filteredUsers.value?.let { users ->
-            if (users.isEmpty()) {
-                showEmptyFragment()
-            }
-        } ?: showEmptyFragment()
-    }
-
-
-    private fun updateUIBasedOnUsers(users: List<User>) {
-        if (users.isEmpty()) {
-            // 현재 표시된 프래그먼트 확인하고 비어있으면 빈화면을 표시합니다
-            if (parentFragmentManager.findFragmentById(R.id.home_container) !is HomeEmptyFragment) {
-                showEmptyFragment()
-            }
-        } else {
-            // 현재 표시된 프래그먼트가 엠프티면 제거합니다
-            val currentFragment = parentFragmentManager.findFragmentById(R.id.home_container)
-            if (currentFragment is HomeEmptyFragment) {
-                parentFragmentManager.beginTransaction().remove(currentFragment).commit()
-            }
-        }
-    }
-
-
     private fun showEmptyFragment() {
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.home_container, HomeEmptyFragment())
-        transaction.commit()
+        // 백 스택을 정리합니다
+        parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+        // 홈앰프티프래그먼트로 전환합니다
+        parentFragmentManager.beginTransaction().apply {
+            replace(R.id.home_container, HomeEmptyFragment())
+            commit()
+        }
     }
-
-
+    private fun hideEmptyFragment() {
+        // 홈앰프티프래그먼트 인스턴스를 찾습니다
+        val existingFragment = parentFragmentManager.findFragmentById(R.id.home_container)
+        if (existingFragment is HomeEmptyFragment) {
+            // 홈앰프티프래그먼트를 제거합니다
+            parentFragmentManager.beginTransaction().remove(existingFragment).commit()
+        }
+    }
     override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
+            _binding = null
+            super.onDestroyView()
+        }
     }
-}
 
-    //        private fun getDataFromFirestore() {
-//
-//        viewModel.getExceptDislikeAndMe(
-//            onSuccess = { users ->
-//                    homeAdapter.submitList(users)
-//            },
-//            onFailure = { e ->
-//                Log.e("shsh", "Error getting documents: ", e)
-//            }
-//        )
-//    }
+
