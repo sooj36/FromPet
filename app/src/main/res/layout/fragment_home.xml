@@ -37,6 +37,7 @@
             android:layout_marginEnd="20dp"
             android:id="@+id/iv_filter"
             android:layout_width="25dp"
+            android:layout_marginTop="22dp"
             android:layout_height="25dp"
             android:src="@drawable/filter"/>
 
@@ -85,6 +86,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/icon_unsel_heart" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/tutorialOverlay"
         android:layout_width="match_parent"
@@ -96,25 +98,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/arrowright" />
+
         <TextView
+            android:id="@+id/textView15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="@string/home_tutor_image"
-            android:textColor="#FFFFFF"
-            android:layout_marginTop="60dp"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/skybori"
-            android:textStyle="bold|normal"
+            android:padding="16dp"
+            android:text="필터를 통해 친구를 찾으세요!"
+            android:textColor="#FFFFFF"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textStyle="bold|normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/swipeleft"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="100dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="60dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:lottie_autoPlay="true"
@@ -126,22 +148,21 @@
             android:id="@+id/leftSwipeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/skybori"
             android:padding="16dp"
             android:text="@string/home_tutor_swipe_left"
-            android:fontFamily="@font/skybori"
-            android:textStyle="bold|normal"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
-            android:layout_marginBottom="160dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textStyle="bold|normal"
+            app:layout_constraintTop_toBottomOf="@+id/swipeleft"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/swiperight"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            app:layout_constraintBottom_toTopOf="@+id/rightSwipeText"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            app:layout_constraintTop_toBottomOf="@+id/leftSwipeText"
             app:layout_constraintStart_toStartOf="parent"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
@@ -151,39 +172,67 @@
             android:id="@+id/rightSwipeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="170dp"
-            android:padding="16dp"
             android:fontFamily="@font/skybori"
-            android:textStyle="bold|normal"
+            android:padding="16dp"
             android:text="@string/home_tutor_swipe_right"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
+            android:textStyle="bold|normal"
+            app:layout_constraintTop_toBottomOf="@+id/swiperight"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
+            android:fontFamily="@font/skybori"
+            android:padding="16dp"
+            android:text="@string/home_tutor_image"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold|normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieAnimationView"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="75dp"
+            android:layout_marginBottom="90dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/arrowright" />
+
+        <ImageButton
+            android:id="@+id/ib_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/lottieAnimationView"
+            app:layout_constraintStart_toEndOf="@+id/lottieAnimationView"
+            app:layout_constraintTop_toTopOf="@+id/lottieAnimationView"
+            app:srcCompat="@drawable/icon_up" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_complete"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="80dp"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/button_radius"
             android:textColor="@color/white"
-            android:textSize="15sp"
+            android:fontFamily="@font/skybori"
+            android:textSize="23sp"
             android:text="확인"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-       android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
