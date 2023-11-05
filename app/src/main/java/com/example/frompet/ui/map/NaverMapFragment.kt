@@ -47,9 +47,6 @@ import kotlinx.coroutines.tasks.await
 class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-
-//    private val ONE_MEGABYTE : Long = 1024 * 1024
-
     private lateinit var naverMap: NaverMap
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -208,12 +205,13 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         marker.height = 150
 
         marker.onClickListener = Overlay.OnClickListener {
+//            markerClick()
             lifecycleScope.launch {
-            val userDocument = firestore.collection("User").document(userUid).get().await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
-            val user = userDocument.toObject(User::class.java) //위에서 얻은 문서들을 user클래스의 인스턴스로 변환
-            val intent = Intent(context, MapUserDetailActivity::class.java)
-            intent.putExtra(MapUserDetailActivity.USER, user)
-            startActivity(intent)
+                val userDocument = firestore.collection("User").document(userUid).get().await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
+                val user = userDocument.toObject(User::class.java) //위에서 얻은 문서들을 user클래스의 인스턴스로 변환
+                val intent = Intent(context, MapUserDetailActivity::class.java)
+                intent.putExtra(MapUserDetailActivity.USER, user)
+                startActivity(intent)
             }
             true
         }
@@ -237,6 +235,17 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
                 imageLoader?.execute(request)
             }
         }
+
+//    private fun markerClick() {
+//        lifecycleScope.launch {
+//            val userDocument = firestore.collection("User").document(userUid).get().await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
+//            val user = userDocument.toObject(User::class.java) //위에서 얻은 문서들을 user클래스의 인스턴스로 변환
+//            val intent = Intent(context, MapUserDetailActivity::class.java)
+//            intent.putExtra(MapUserDetailActivity.USER, user)
+//            startActivity(intent)
+//        }
+//    }
+
 
     override fun onDestroyView() {
         _binding = null
