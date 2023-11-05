@@ -3,8 +3,13 @@ package com.example.frompet.ui.commnunity.community
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityBinding
@@ -65,7 +70,7 @@ class CommunityActivity : AppCompatActivity() {
 
 
         binding.recyclerview.adapter = communityAdapter
-        binding.recyclerview.scrollToPosition(0) // 수정 예정
+//        binding.recyclerview.scrollToPosition(0) // 수정 예정
 
         // Firebase 현재 사용자 가져오기 (일단 남겨놈)
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -117,5 +122,14 @@ class CommunityActivity : AppCompatActivity() {
         R.id.chip_exchange -> "정보교환"
         R.id.chip_all -> "전체"
         else -> ""
+    }
+
+    private fun scrollToLastItem(view: View) {
+        var manager = findViewById<RecyclerView>(R.id.recyclerview).layoutManager as? LinearLayoutManager
+        val last = manager!!.findLastVisibleItemPosition()
+        Handler(Looper.getMainLooper()).postDelayed(
+            Runnable { manager!!.scrollToPositionWithOffset(last,0)},
+            300
+        )
     }
 }
