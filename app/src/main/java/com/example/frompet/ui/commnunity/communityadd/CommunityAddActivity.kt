@@ -82,7 +82,7 @@ class CommunityAddActivity : AppCompatActivity() {
                                     title = title,
                                     tag = tag,
                                     contents = contents,
-                                    timestamp = timeStamp,
+                                    timestamp = System.currentTimeMillis(),
                                     uid = currentUser.uid,
                                     docsId = docsId,
                                     petType = petType

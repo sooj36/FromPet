@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +8,7 @@
 
     tools:context=".ui.commnunity.communitydetail.CommunityDetailActivity">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,33 +27,15 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/icon_back" />
 
-
-        <TextView
-            android:id="@+id/tv_detail_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:gravity="center"
-            android:hint="@string/community_detail_title"
-            android:textColor="@color/black"
-            android:textSize="23sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/chip_tag" />
-
-
         <View
             android:id="@+id/detail_view_line_1"
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
             android:background="@color/dark_pink"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_detail_title"
+            app:layout_constraintTop_toBottomOf="@+id/chip_tag"
             app:layout_scrollFlags="scroll|exitUntilCollapsed" />
 
         <com.google.android.material.chip.Chip
@@ -60,60 +43,109 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="40dp"
+            android:checkable="false"
+            android:checked="true"
+            android:clickable="false"
             android:text="@string/community_walk"
             android:textColor="@color/white"
             android:textStyle="bold"
             app:chipBackgroundColor="@color/deep_green"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:chipStartPadding="10dp"
             app:chipEndPadding="10dp"
             app:chipIcon="@drawable/splash"
             app:chipIconEnabled="true"
-            android:checked="true"
-            android:clickable="false"
-            android:checkable="false"/>
+            app:chipStartPadding="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/detail_view_line2"
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
             android:background="@color/dark_pink"
+           android:layout_marginTop="120dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_detail_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_detail_contents"
             app:layout_scrollFlags="scroll|exitUntilCollapsed" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_pet_profile"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detail_view_line_1" />
+
+        <TextView
+            android:id="@+id/tv_pet_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="펫네임"
+            android:layout_marginStart="15dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/iv_pet_profile"
+            app:layout_constraintTop_toTopOf="@+id/iv_pet_profile" />
+
+        <TextView
+            android:id="@+id/tv_last_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="작성시간"
+            android:textSize="14sp"
+            android:layout_marginStart="15dp"
+            android:textColor="@color/gray"
+            app:layout_constraintStart_toEndOf="@+id/iv_pet_profile"
+            app:layout_constraintTop_toBottomOf="@+id/tv_pet_name" />
+
+        <TextView
+            android:id="@+id/tv_detail_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:hint="@string/community_detail_title"
+            android:layout_marginEnd="15dp"
+            android:textColor="@color/black"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/iv_pet_profile"
+            app:layout_constraintTop_toBottomOf="@+id/iv_pet_profile" />
+
 
         <TextView
             android:id="@+id/tv_detail_contents"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
             android:hint="@string/community_detail_comment"
             android:textColor="@color/black"
             android:textSize="17sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_view_line2" />
+            app:layout_constraintStart_toStartOf="@+id/iv_pet_profile"
+            app:layout_constraintTop_toBottomOf="@+id/tv_detail_title" />
 
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/threedots"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="10dp"
+
         android:contentDescription="@string/popupmenu"
-        app:layout_constraintBottom_toTopOf="@id/linearLayout5"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/threedots"
-        android:visibility="visible"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/threedots" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
