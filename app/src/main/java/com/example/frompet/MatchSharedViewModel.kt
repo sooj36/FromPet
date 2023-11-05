@@ -26,6 +26,7 @@ class MatchSharedViewModel : ViewModel() {
     val matchedList : MutableLiveData<List<User>> get() = _matchedList
 
     private val database = FirebaseDatabase.getInstance().getReference("likeUsers")
+    private val swipeUsersDb = FirebaseDatabase.getInstance().getReference("swipedUsers")
     private val disLikeDb = FirebaseDatabase.getInstance().getReference("dislikeList")
     private val filterDb =FirebaseDatabase.getInstance().getReference("filteredUsers")
 
@@ -208,6 +209,8 @@ class MatchSharedViewModel : ViewModel() {
         database.child(targetUserId).child("matched").child(currentUserId).removeValue()
         database.child(targetUserId).child("likeBy").child(currentUserId).removeValue()
         database.child(currentUserId).child("likeBy").child(targetUserId).removeValue()
+        swipeUsersDb.child(currentUserId).child(targetUserId).removeValue()
+        swipeUsersDb.child(targetUserId).child(currentUserId).removeValue()
         loadMatchedUsers()
         loadlike()
 

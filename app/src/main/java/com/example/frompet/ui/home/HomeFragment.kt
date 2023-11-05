@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.widget.ImageButton
@@ -21,6 +22,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -32,6 +34,7 @@ import com.example.frompet.data.model.Filter
 import com.example.frompet.data.model.User
 import com.example.frompet.ui.chat.activity.ChatClickUserDetailActivity
 import com.example.frompet.ui.setting.fcm.FCMNotificationViewModel
+import com.example.frompet.util.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -41,6 +44,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
+import com.yuyakaido.android.cardstackview.Duration
+import com.yuyakaido.android.cardstackview.SwipeAnimationSetting
 
 class HomeFragment : Fragment() {
 
@@ -57,10 +62,8 @@ class HomeFragment : Fragment() {
     private val fcmViewModel: FCMNotificationViewModel by viewModels()
     private val filterViewModel: HomeFilterViewModel by activityViewModels()
 
-
     private val currentUser = FirebaseAuth.getInstance().currentUser
     private val firestore = FirebaseFirestore.getInstance()
-
     private val database = FirebaseDatabase.getInstance().reference
 
 
@@ -72,7 +75,7 @@ class HomeFragment : Fragment() {
             if (result.resultCode == Activity.RESULT_OK){
                 val filterData = result.data?.getParcelableExtra<Filter>(FILTER_DATA)
                 filterData?.let {
-                                      filterViewModel.filterUsers(it)
+                    filterViewModel.filterUsers(it)
                 }
             }
         }
@@ -88,23 +91,15 @@ class HomeFragment : Fragment() {
 
         checkAndShowSwipeTutorial()
 
+
         binding.btComplete.setOnClickListener {
             binding.tutorialOverlay.visibility = View.GONE
             setTutorialShown()
         }
 
-        filterViewModel.loadFilteredUsers()
-
-        filterViewModel.filteredUsers.observe(viewLifecycleOwner) { users ->
-            if (users.isEmpty()) {
-                showEmptyScreen()
-            }
-        }
-
-
         return binding.root
     }
-      private fun init() {
+    private fun init() {
         manager = CardStackLayoutManager(requireContext(), object : CardStackListener{
             override fun onCardDragging(direction: Direction?, ratio: Float) {
 
@@ -194,17 +189,17 @@ class HomeFragment : Fragment() {
                     }
                 }
 
-                if (manager.topPosition == homeAdapter.currentList.size) {
-                    if (isResumed) {
-                        Toast.makeText(requireContext(), "This is the last card", Toast.LENGTH_SHORT).show()
+                    if (manager.topPosition == homeAdapter.currentList.size || homeAdapter.currentList.isEmpty()) {
+                       requireContext().showToast(getString(R.string.this_is_last_card), Toast.LENGTH_SHORT)
                         val transaction = parentFragmentManager.beginTransaction()
                         transaction.replace(R.id.home_container, HomeEmptyFragment())
                         transaction.addToBackStack(null)
                         transaction.commit()
                     }
                 }
-            }
-            override fun onCardRewound() {}
+
+
+                override fun onCardRewound() {}
 
             override fun onCardCanceled() {}
 
@@ -251,6 +246,8 @@ class HomeFragment : Fragment() {
             })
         }
     }
+
+
     private fun checkAndShowSwipeTutorial() {
         _binding?.let { binding ->
             checkIfTutorialShow { isShown ->
@@ -274,59 +271,90 @@ class HomeFragment : Fragment() {
 
     private fun setTutorialShown() {
         currentUser?.let {
-         database.child("usersTutorial").child(it.uid).child("isTutorialShown").setValue(true)
+            database.child("usersTutorial").child(it.uid).child("isTutorialShown").setValue(true)
         }
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        filterViewModel.filteredUsers.observe(viewLifecycleOwner){users->
-            homeAdapter.submitList(users)
-            Log.d("filter"," 홈으로 다시돌아올떄 리스트필터:${users}")
 
-            val currentFragment = parentFragmentManager.findFragmentById(R.id.home_container)
-
-            if (users.isEmpty()) {
-                if (currentFragment !is HomeEmptyFragment) {
-                    showEmptyScreen()
-                }
+        filterViewModel.filteredUsers.observe(viewLifecycleOwner) { users ->
+            if (users.isNullOrEmpty()) {
+                showEmptyFragment()
+                homeAdapter.submitList(null) // 현재 카드 스택 뷰를 비우는 처리
             } else {
-                if (currentFragment is HomeEmptyFragment) {
-                    parentFragmentManager.beginTransaction().remove(currentFragment).commit()
-                }
+                hideEmptyFragment() // 사용자 목록이 있을 때 빈 화면을 숨깁니다
+                homeAdapter.submitList(users)
             }
         }
-        filterViewModel.loadFilteredUsers()
+        btLike.setOnClickListener {
+            likeUser()
+        }
+        btDislike.setOnClickListener {
+            dislikeUser()
+        }
 
+        filterViewModel.loadFilteredUsers()
         ivFilter.setOnClickListener {
             val intent = Intent(requireContext(), HomeFilterActivity::class.java)
             filterActivityResultLauncher.launch(intent)
-
         }
     }
-    private fun showEmptyScreen() {
-        val currentFragment = parentFragmentManager.findFragmentById(R.id.home_container)
-        if (currentFragment !is HomeEmptyFragment) {
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.home_container, HomeEmptyFragment())
-            transaction.commit()
-        }}
+    private fun showEmptyFragment() {
+        // 백 스택을 정리합니다
+        parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+        // 홈앰프티프래그먼트로 전환합니다
+        parentFragmentManager.beginTransaction().apply {
+            replace(R.id.home_container, HomeEmptyFragment())
+            commit()
+        }
+    }
+    private fun hideEmptyFragment() {
+        // 홈앰프티프래그먼트 인스턴스를 찾습니다
+        val existingFragment = parentFragmentManager.findFragmentById(R.id.home_container)
+        if (existingFragment is HomeEmptyFragment) {
+            // 홈앰프티프래그먼트를 제거합니다
+            parentFragmentManager.beginTransaction().remove(existingFragment).commit()
+        }
+    }
+    private fun likeUser()= with(binding) { //탑포지션은 실험해봐야함
+        val currentPosition = manager.topPosition
+        if (currentPosition < homeAdapter.currentList.size) {
+            val user = homeAdapter.currentList[currentPosition]
+            user?.let {
+                viewModel.like(user.uid)
+                filterViewModel.userSwiped(it.uid)
+                firestore.collection("User").document(currentUser?.uid!!).get().addOnSuccessListener { docs ->
+                    val currentUserName = docs.getString("petName") ?: "nothing"
+                    val title = "새로운 좋아요!"
+                    val message = "${currentUserName}님이 당신을 좋아합니다."
+                    fcmViewModel.sendFCMNotification(user.uid, title, message)
+                }
+                cardStackView.swipe()
+            }
+        } else {
+        }
+    }
+
+    private fun dislikeUser() = with(binding){
+        val currentPosition = manager.topPosition
+        if (currentPosition < homeAdapter.currentList.size) {
+            val user = homeAdapter.currentList[currentPosition]
+            user?.let {
+                viewModel.dislike(user.uid)
+                filterViewModel.userSwiped(it.uid)
+                cardStackView.swipe()
+            }
+        } else {
+            // 카드가 더 이상 없을 때 처리
+        }
+    }
     override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
+            _binding = null
+            super.onDestroyView()
+        }
     }
 
 
-    //        private fun getDataFromFirestore() {
-//
-//        viewModel.getExceptDislikeAndMe(
-//            onSuccess = { users ->
-//                    homeAdapter.submitList(users)
-//            },
-//            onFailure = { e ->
-//                Log.e("shsh", "Error getting documents: ", e)
-//            }
-//        )
-//    }
-}

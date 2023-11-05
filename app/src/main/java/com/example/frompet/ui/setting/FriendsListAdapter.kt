@@ -1,5 +1,7 @@
 package com.example.frompet.ui.setting
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.frompet.data.model.User
 import com.example.frompet.databinding.ItemFriendsBinding
+import com.example.frompet.util.RandomColor
 
 class FriendsListAdapter(private val context: Context, private val onUserClick: (User) -> Unit) :
     ListAdapter<User, FriendsListAdapter.ViewHolder>(DiffCallback()) {
@@ -31,6 +34,11 @@ class FriendsListAdapter(private val context: Context, private val onUserClick: 
                 tvUserName3.text = user.petName
                 tvUserType3.text = user.petType
                 Glide.with(root.context).load(user.petProfile).into(binding.profileArea3)
+
+                val startColor = RandomColor.getRandomColor(255, 0.5f, 0.7f)
+                val endColor = Color.argb(0, Color.red(startColor), Color.green(startColor), Color.blue(startColor))
+                val gradientDrawable = binding.view6.background as GradientDrawable
+                gradientDrawable.colors = intArrayOf(startColor, endColor)
 
             }
         }
