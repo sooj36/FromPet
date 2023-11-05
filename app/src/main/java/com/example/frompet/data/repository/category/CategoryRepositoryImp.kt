@@ -55,7 +55,7 @@ class CategoryRepositoryImp(
                 val communityData = CommunityData(
                     title = title,
                     tag = tag,
-                    timestamp = timestamp,
+                    timestamp = System.currentTimeMillis(),
                     contents = contents,
                     uid = uid,
                     docsId = docsId,
