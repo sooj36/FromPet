@@ -103,7 +103,7 @@
         app:dotsSize="16dp"
         app:dotsSpacing="4dp"
         app:dotsColor="@color/peach_puff"
-        app:selectedDotColor="@color/accent_color"
+        app:selectedDotColor="@color/lip_pink"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

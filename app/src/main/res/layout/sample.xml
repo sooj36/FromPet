@@ -15,11 +15,12 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/iv_pet_profile2"
+                android:id="@+id/iv_pet_profile"
                 android:layout_width="match_parent"
                 android:layout_height="450dp"
                 android:scaleType="centerCrop"
-                android:transitionName="imageTransition2"
+                android:src="@drawable/ic_launcher_background"
+                android:transitionName="imageTransition"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +33,7 @@
                 android:background="@android:color/transparent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_pet_profile2" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_pet_profile" />
 
             <ImageButton
                 android:id="@+id/back_btn"
@@ -42,7 +43,7 @@
                 android:background="@android:color/transparent"
                 app:layout_constraintBottom_toBottomOf="@+id/view3"
                 app:layout_constraintEnd_toEndOf="@+id/view3"
-                app:layout_constraintTop_toBottomOf="@+id/iv_pet_profile2"
+                app:layout_constraintTop_toBottomOf="@+id/iv_pet_profile"
                 app:srcCompat="@drawable/icon_down" />
 
             <TextView
@@ -70,7 +71,7 @@
                 android:textStyle="bold"
                 android:transitionName="petNameTransition"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_pet_profile2" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_pet_profile" />
 
             <TextView
                 android:id="@+id/tv_pet_age"
@@ -222,33 +223,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-    <ImageButton
-        android:id="@+id/like_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="90dp"
-        android:layout_marginBottom="17dp"
-        android:background="@drawable/circular_button_background"
-        app:srcCompat="@drawable/icon_detail_heart"
-        android:elevation="100dp"/>
-
-
-    <ImageButton
-        android:id="@+id/dislike_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="90dp"
-        android:layout_marginBottom="17dp"
-        android:background="@drawable/circular_button_background"
-        app:srcCompat="@drawable/icon_detail_cross"
-        android:elevation="100dp"
-        android:outlineAmbientShadowColor="@color/black"
-        android:outlineSpotShadowColor="@color/black" />
-
 
 </RelativeLayout>

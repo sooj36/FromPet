@@ -257,9 +257,6 @@ class ChatMessageActivity : AppCompatActivity() {
         }
     }
 
-
-
-
     override fun onBackPressed() {
         handleBackAction()
     }

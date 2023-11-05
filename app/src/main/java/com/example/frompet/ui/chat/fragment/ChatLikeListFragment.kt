@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.frompet.MatchSharedViewModel
@@ -37,7 +38,7 @@ class ChatLikeListFragment : Fragment() {
     }
     private var _binding: FragmentChatListBinding? = null
     private val binding get() = _binding!!
-    private val matchSharedViewModel: MatchSharedViewModel by viewModels()
+    private val matchSharedViewModel: MatchSharedViewModel by activityViewModels()
 
     private val startChatDetailActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -80,18 +81,9 @@ class ChatLikeListFragment : Fragment() {
             matchSharedViewModel.likeList.observe(viewLifecycleOwner) { users ->
                 users?.let {
                     (rvChatList.adapter as ChatListAdapter).submitList(it)
-
-                    val text = "${it.size}마리가 나를 좋아해요"
-                    val spannable = SpannableStringBuilder(text)
-                    val colorSpan = ForegroundColorSpan(ContextCompat.getColor(context?:return@let, R.color.lip_pink))
-                    spannable.setSpan(colorSpan, 0, "${it.size}".length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                    binding.tvLikeMe?.text = spannable
                 }
             }
-
             matchSharedViewModel.loadlike()
-
         }
     }
 
