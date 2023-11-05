@@ -11,7 +11,6 @@ import com.example.frompet.data.model.User
 import com.example.frompet.MainActivity
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunityHomeData
-import com.example.frompet.ui.commnunity.communityadd.CommunityAddActivity
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -103,7 +102,7 @@ class MemberInfoActivity : AppCompatActivity() {
                     else -> " "
                 }
 
-                val spinnerPetType = communityHomeData[spinner.selectedItemPosition].petName
+                val spinnerPetType = communityHomeData[spinner.selectedItemPosition].petType
                 val petLogo = communityHomeData[spinner.selectedItemPosition].petLogo
                 val collectionName = when (spinnerPetType) {
                     "강아지" -> "Dog"
