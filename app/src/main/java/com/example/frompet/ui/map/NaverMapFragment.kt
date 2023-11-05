@@ -1,3 +1,5 @@
+@file:Suppress("UNREACHABLE_CODE")
+
 package com.example.frompet.ui.map
 
 import android.Manifest
@@ -11,6 +13,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,6 +22,7 @@ import androidx.lifecycle.lifecycleScope
 import coil.Coil
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
+import com.example.frompet.BuildConfig
 import com.example.frompet.R
 import com.example.frompet.data.model.User
 import com.example.frompet.data.model.UserLocation
@@ -56,7 +61,6 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
 
-
     private val LOCATION_PERMISSION_REQUEST_CODE = 1000
 
     private val PERMISSIONS = arrayOf(
@@ -77,10 +81,8 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentMapBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -90,15 +92,12 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         } else {
             initMapView()
         }
-
     }
 
     private fun initMapView() {
-        val fm = childFragmentManager
-        val mapFragment = fm?.findFragmentById(R.id.naver_map_fragment) as MapFragment?
+        val mapFragment = childFragmentManager.findFragmentById(R.id.naver_map_fragment) as MapFragment?
             ?: MapFragment.newInstance().also {
-                fm.beginTransaction().add(R.id.naver_map_fragment, it).commit()
-
+                childFragmentManager.beginTransaction().add(R.id.naver_map_fragment, it).commit()
             }
 
         // fragment의 getMapAsync() 메서드로 OnMapReadyCallBack 콜백을 등록하면, 비동기로 NaverMap 객체를 얻을 수 있음
@@ -106,7 +105,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
     }
 
-    //hasPermission()에서는 위치 권한 있 -> true , 없 -> false
+    // hasPermission()에서는 위치 권한 있 -> true , 없 -> false
     private fun hasPermission(): Boolean {
         for (permission in PERMISSIONS) {
             if (activity?.let { ContextCompat.checkSelfPermission(it, permission) }
@@ -173,21 +172,38 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
                     // 다른 사용자 위치 마커 표시
                     if (location != null && userUid != null && userUid != currentUserId) {
-                        setMark(userUid,location) //사용자 uid 셋마크로 넘겨주고
+                        setMark(userUid, location) // 사용자 uid 셋마크로 넘겨주고
                         Log.d("sooj", "$location")
                     }
-
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {}
         })
+//        // 이동 마다 호출되는 콜백 설정
+//        naverMap.addOnCameraChangeListener { reason, animated ->
+//            // 현재 보이는 영역만 가져옴
+//            val visibleRegion = naverMap.contentBounds
+//
+//            // fb realtime db에서 해당 데이터만 가져옴
+//            val geoFire = GeoFire(FirebaseDatabase.getInstance().getReference("location"))
+//            val geoQuery = geoFire.queryAtLocation(
+//                GeoLocation(visibleRegion.center.latitude, visibleRegion.center.longitude),
+//                max(visibleRegion.latitudeSize, visibleRegion.longitudeSize)
+//            )
+//        }
     }
-
 
     private fun setMark(userUid:String,location: UserLocation) = lifecycleScope.launch {
         if (!isAdded) return@launch //프래그먼트에서 액티비티가 연결되어 있는지 확인 만약 연결되어 있지 않다면 빠르게 종료해서requireContext호출을 방지
+        val marker = createMarker(location, userUid)
+        setUserProfileImage(userUid, marker)
+
+    }
+
+    private fun createMarker(location: UserLocation, userUid: String): Marker {
         val marker = Marker()
+
         // 마커 위치
         if (location != null) {
             marker.position = LatLng(location.latitude, location.longitude)
@@ -205,46 +221,44 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         marker.height = 150
 
         marker.onClickListener = Overlay.OnClickListener {
-//            markerClick()
-            lifecycleScope.launch {
-                val userDocument = firestore.collection("User").document(userUid).get().await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
-                val user = userDocument.toObject(User::class.java) //위에서 얻은 문서들을 user클래스의 인스턴스로 변환
-                val intent = Intent(context, MapUserDetailActivity::class.java)
-                intent.putExtra(MapUserDetailActivity.USER, user)
-                startActivity(intent)
-            }
+            markerClick(userUid)
+
             true
         }
+        return marker
 
+    }
+
+    private fun markerClick(userUid : String) {
+        lifecycleScope.launch {
+            val userDocument = firestore.collection("User").document(userUid).get().await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
+            val user = userDocument.toObject(User::class.java) //위에서 얻은 문서들을 user클래스의 인스턴스로 변환
+            val intent = Intent(context, MapUserDetailActivity::class.java)
+            intent.putExtra(MapUserDetailActivity.USER, user)
+            startActivity(intent)
+        }
+    }
+
+    private fun setUserProfileImage(userUid: String, marker: Marker) = lifecycleScope.launch {
         val userDocument = firestore.collection("User").document(userUid).get()
             .await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
         val user = userDocument.toObject(User::class.java) //위에서 얻은 문서들을 user클래스의 인스턴스로 변환
         val profileUrl = user?.petProfile //유저인스턴스에 해당 사용자들의 프로필 사진 변수
-        if (profileUrl != null) { //이미지가 널값이 아닐때
-                val imageLoader = context?.let { Coil.imageLoader(it) }
-                val request = ImageRequest.Builder(requireActivity())
-                    .data(profileUrl)
-                    .size(200,200)
-                    .transformations(CircleCropTransformation(),MapMakerBorder(requireContext(),15f)) //이미지동그랗게
-                    .target {
-                        val bitmap = (it as BitmapDrawable).bitmap
-                        val imageOverlay = OverlayImage.fromBitmap(bitmap)
-                        marker.icon = imageOverlay
-                    }.build()
+        if (profileUrl != null) { // 이미지가 널값이 아닐때
+            val imageLoader = context?.let { Coil.imageLoader(it) }
+            val request = ImageRequest.Builder(requireActivity())
+                .data(profileUrl)
+                .size(200,200)
+                .transformations(CircleCropTransformation(),MapMakerBorder(requireContext(),15f)) //이미지동그랗게
+                .target {
+                    val bitmap = (it as BitmapDrawable).bitmap
+                    val imageOverlay = OverlayImage.fromBitmap(bitmap)
+                    marker.icon = imageOverlay
+                }.build()
 
-                imageLoader?.execute(request)
-            }
+            imageLoader?.execute(request)
         }
-
-//    private fun markerClick() {
-//        lifecycleScope.launch {
-//            val userDocument = firestore.collection("User").document(userUid).get().await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
-//            val user = userDocument.toObject(User::class.java) //위에서 얻은 문서들을 user클래스의 인스턴스로 변환
-//            val intent = Intent(context, MapUserDetailActivity::class.java)
-//            intent.putExtra(MapUserDetailActivity.USER, user)
-//            startActivity(intent)
-//        }
-//    }
+    }
 
 
     override fun onDestroyView() {
