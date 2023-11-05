@@ -32,6 +32,31 @@
             android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
+    <LinearLayout
+        android:id="@+id/map_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/map_toolbar">
+
+    <EditText
+        android:id="@+id/et_search_map"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:hint="@string/enter_a_search_word"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="검색"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/et_search_map"
+        app:layout_constraintTop_toBottomOf="@id/map_toolbar"/>
+
+    </LinearLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/naver_map_fragment"
         android:layout_width="0dp"
@@ -40,7 +65,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/map_toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/map_linearlayout">
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
