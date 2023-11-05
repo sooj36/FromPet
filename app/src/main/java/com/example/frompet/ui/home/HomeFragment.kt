@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.widget.ImageButton
@@ -43,6 +44,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
+import com.yuyakaido.android.cardstackview.Duration
+import com.yuyakaido.android.cardstackview.SwipeAnimationSetting
 
 class HomeFragment : Fragment() {
 
@@ -288,8 +291,12 @@ class HomeFragment : Fragment() {
                 homeAdapter.submitList(users)
             }
         }
-
-
+        btLike.setOnClickListener {
+            likeUser()
+        }
+        btDislike.setOnClickListener {
+            dislikeUser()
+        }
 
         filterViewModel.loadFilteredUsers()
         ivFilter.setOnClickListener {
@@ -313,6 +320,38 @@ class HomeFragment : Fragment() {
         if (existingFragment is HomeEmptyFragment) {
             // 홈앰프티프래그먼트를 제거합니다
             parentFragmentManager.beginTransaction().remove(existingFragment).commit()
+        }
+    }
+    private fun likeUser()= with(binding) { //탑포지션은 실험해봐야함
+        val currentPosition = manager.topPosition
+        if (currentPosition < homeAdapter.currentList.size) {
+            val user = homeAdapter.currentList[currentPosition]
+            user?.let {
+                viewModel.like(user.uid)
+                filterViewModel.userSwiped(it.uid)
+                firestore.collection("User").document(currentUser?.uid!!).get().addOnSuccessListener { docs ->
+                    val currentUserName = docs.getString("petName") ?: "nothing"
+                    val title = "새로운 좋아요!"
+                    val message = "${currentUserName}님이 당신을 좋아합니다."
+                    fcmViewModel.sendFCMNotification(user.uid, title, message)
+                }
+                cardStackView.swipe()
+            }
+        } else {
+        }
+    }
+
+    private fun dislikeUser() = with(binding){
+        val currentPosition = manager.topPosition
+        if (currentPosition < homeAdapter.currentList.size) {
+            val user = homeAdapter.currentList[currentPosition]
+            user?.let {
+                viewModel.dislike(user.uid)
+                filterViewModel.userSwiped(it.uid)
+                cardStackView.swipe()
+            }
+        } else {
+            // 카드가 더 이상 없을 때 처리
         }
     }
     override fun onDestroyView() {
