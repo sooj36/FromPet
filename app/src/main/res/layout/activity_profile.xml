@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.setting.SettingProfileActivity">
+    android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
@@ -17,13 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/bt_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/icon_back" />
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
@@ -42,7 +34,7 @@
             android:text="완료"
             android:textSize="17dp"
             android:textStyle="bold"
-            android:textColor="@color/beige"
+            android:textColor="@color/accent_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.appcompat.widget.Toolbar>
@@ -55,29 +47,40 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageView
                 android:id="@+id/iv_pet2"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_marginTop="10dp"
-
+                android:layout_width="match_parent"
+                android:layout_height="450dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background"
+                android:transitionName="imageTransition"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_pet2" />
+
             <ImageButton
                 android:id="@+id/ib_profile"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="450dp"
                 android:background="@android:color/transparent"
+                android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -86,195 +89,217 @@
                 android:id="@+id/iv_camera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="140dp"
-                android:layout_marginTop="140dp"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_pet2"
-                app:layout_constraintEnd_toEndOf="@+id/iv_pet2"
-                app:layout_constraintStart_toStartOf="@+id/iv_pet2"
-                app:layout_constraintTop_toTopOf="@+id/iv_pet2"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/circular_button_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/icon_camera" />
+
+            <ImageButton
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="@+id/view3"
+                app:layout_constraintEnd_toEndOf="@+id/view3"
+                app:layout_constraintTop_toBottomOf="@+id/iv_pet2"
+                app:srcCompat="@drawable/icon_down" />
+
+            <TextView
+                android:id="@+id/et_pet_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/home_name"
+                android:textColor="@color/dark_gray"
+                android:textSize="20sp"
+                android:transitionName="petTypeTransition"
+                app:layout_constraintStart_toStartOf="@+id/et_pet_name"
+                app:layout_constraintTop_toBottomOf="@+id/et_pet_name" />
 
             <TextView
                 android:id="@+id/et_pet_name"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:background="@color/white"
-                android:hint="반려동물 이름"
-                android:inputType="textPersonName"
-                android:padding="10dp"
-                android:paddingStart="15dp"
-                android:textColor="@color/gray"
-                android:textSize="17dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/home_type"
+                android:textColor="@color/black"
+                android:textSize="35sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:transitionName="petNameTransition"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_pet2" />
 
             <TextView
-                android:id="@+id/et_pet_type"
-                android:layout_width="0dp"
+                android:id="@+id/et_pet_age"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:background="@color/white"
-                android:hint="반려동물 종류"
-                android:inputType="text"
-                android:padding="10dp"
-                android:paddingStart="15dp"
-                android:textColor="@color/gray"
-                android:textSize="17dp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_pet_name" />
+                android:layout_marginStart="10dp"
+                android:text="@string/home_name"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:transitionName="petAgeTransition"
+                app:layout_constraintBottom_toBottomOf="@+id/et_pet_name"
+                app:layout_constraintStart_toEndOf="@+id/et_pet_name"
+                app:layout_constraintTop_toTopOf="@+id/et_pet_name" />
 
             <TextView
                 android:id="@+id/et_pet_gender"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:background="@color/white"
-                android:hint="반려동물 성별"
-                android:inputType="text"
-                android:padding="10dp"
-                android:paddingStart="15dp"
-                android:textColor="@color/gray"
-                android:textSize="17dp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="20dp"
+                android:text="@string/activity_detail_petgender"
+                android:textColor="@color/dark_gray"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/et_pet_type"
                 app:layout_constraintTop_toBottomOf="@+id/et_pet_type" />
 
-            <TextView
-                android:id="@+id/et_pet_age"
+            <View
+                android:id="@+id/view4"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:background="@color/white"
-                android:hint="반려동물 나이"
-                android:inputType="text"
-                android:padding="10dp"
-                android:paddingStart="15dp"
-                android:textColor="@color/gray"
-                android:textSize="17dp"
-                android:textStyle="bold"
+                android:layout_height="1dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="15dp"
+                android:background="@color/gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_pet_neuter" />
+                app:layout_constraintTop_toBottomOf="@id/et_pet_neuter" />
 
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="반려동물 소개"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view4" />
 
             <EditText
                 android:id="@+id/et_pet_introduction"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:background="@color/white"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/round_background"
                 android:hint="반려동물 설명"
                 android:inputType="textMultiLine"
                 android:maxLength="95"
                 android:maxLines="5"
                 android:padding="11dp"
                 android:paddingStart="15dp"
-                android:textColor="@color/black"
+                android:textColor="@color/dark_gray"
                 android:textSize="17dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_pet_age" />
+                app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+            <View
+                android:id="@+id/view5"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="20dp"
+                android:background="@color/gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_pet_introduction" />
+
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="어플 가입 목적"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view5" />
 
             <EditText
                 android:id="@+id/et_purpose"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="40dp"
-                android:background="@color/white"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/round_background"
                 android:hint="어플 가입 목적  ex)산책 친구 찾아요."
                 android:inputType="textMultiLine"
                 android:maxLength="57"
                 android:maxLines="3"
                 android:padding="11dp"
                 android:paddingStart="15dp"
-                android:textColor="@color/black"
+                android:textColor="@color/dark_gray"
                 android:textSize="17dp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+            <View
+                android:id="@+id/view6"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="90dp"
+                android:background="@color/gray"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_pet_introduction" />
+                app:layout_constraintTop_toBottomOf="@+id/et_purpose" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/et_pet_neuter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:paddingStart="15dp"
-                android:text="반려동물 이름"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/et_pet_name"
-                app:layout_constraintStart_toStartOf="@+id/et_pet_name" />
+                android:layout_marginTop="20dp"
+                android:text="TextView"
+                android:textColor="@color/dark_gray"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/et_pet_gender"
+                app:layout_constraintTop_toBottomOf="@+id/et_pet_gender" />
 
-            <TextView
-                android:id="@+id/textView7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:paddingStart="15dp"
-                android:text="반려동물 종류"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/et_pet_type"
-                app:layout_constraintStart_toStartOf="@+id/et_pet_type" />
+            <ImageView
+                android:id="@+id/iv_pet_type"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/et_pet_type"
+                app:layout_constraintEnd_toStartOf="@+id/et_pet_type"
+                app:layout_constraintTop_toTopOf="@+id/et_pet_type"
+                app:srcCompat="@drawable/cat" />
 
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:paddingStart="15dp"
-                android:text="반려동물 성별"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/et_pet_gender"
-                app:layout_constraintStart_toStartOf="@+id/et_pet_gender" />
+            <ImageView
+                android:id="@+id/iv_pet_gender"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/et_pet_gender"
+                app:layout_constraintEnd_toStartOf="@+id/et_pet_gender"
+                app:layout_constraintTop_toTopOf="@+id/et_pet_gender"
+                app:srcCompat="@drawable/cat" />
 
-            <TextView
-                android:id="@+id/textView9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:paddingStart="15dp"
-                android:text="반려동물 나이"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/et_pet_age"
-                app:layout_constraintStart_toStartOf="@+id/et_pet_age" />
-
-            <TextView
-                android:id="@+id/textView10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:paddingStart="15dp"
-                android:text="반려동물 설명"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/et_pet_introduction"
-                app:layout_constraintStart_toStartOf="@+id/et_pet_introduction" />
-
-            <TextView
-                android:id="@+id/textView11"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:paddingStart="15dp"
-                android:text="어플 가입 목적"
-
-                android:textSize="15dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/et_purpose"
-                app:layout_constraintStart_toStartOf="@+id/et_purpose" />
+            <ImageView
+                android:id="@+id/iv_pet_neuter"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/et_pet_neuter"
+                app:layout_constraintEnd_toStartOf="@+id/et_pet_neuter"
+                app:layout_constraintTop_toTopOf="@+id/et_pet_neuter"
+                app:srcCompat="@drawable/cat" />
 
             <TextView
                 android:id="@+id/tv_char_count"
@@ -298,36 +323,7 @@
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toTopOf="@+id/et_purpose"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <TextView
-                android:id="@+id/textView33"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:paddingStart="15dp"
-                android:text="중성화 여부"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/et_pet_neuter"
-                app:layout_constraintStart_toStartOf="@+id/et_pet_neuter" />
-
-            <TextView
-                android:id="@+id/et_pet_neuter"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:background="@color/white"
-                android:hint="중성화 여부"
-                android:inputType="text"
-                android:padding="10dp"
-                android:paddingStart="15dp"
-                android:textColor="@color/gray"
-                android:textSize="17dp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_pet_gender" />
+                app:layout_constraintEnd_toEndOf="@+id/et_purpose" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

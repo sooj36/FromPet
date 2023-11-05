@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.example.frompet.R
 import com.example.frompet.databinding.ActivityProfileBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -27,7 +28,7 @@ class SettingProfileActivity : AppCompatActivity() {
     private val binding get() = _binding!!
     private lateinit var storage: FirebaseStorage
     private lateinit var ViewModel: SettingViewModel
-    private var selectedImageUri: Uri? = null // 이미지 선택을 저장할 변수임
+    private var selectedImageUri: Uri? = null
 
 
     companion object {
@@ -60,9 +61,11 @@ class SettingProfileActivity : AppCompatActivity() {
         }
         ViewModel.petType.observe(this) { petType ->
             binding.etPetType.setText(petType)
+            updateImageViewBasedOnPetType(petType)
         }
         ViewModel.petGender.observe(this) { petGender ->
             binding.etPetGender.setText(petGender)
+            updateImageViewBasedOnPetGender(petGender)
         }
         ViewModel.petAge.observe(this) { petAge ->
             binding.etPetAge.setText(petAge?.toString() ?: "")
@@ -75,6 +78,7 @@ class SettingProfileActivity : AppCompatActivity() {
         }
         ViewModel.petNeuter.observe(this) { petNeuter ->
             binding.etPetNeuter.setText(petNeuter)
+            updateImageViewBasedOnPetNeuter(petNeuter)
         }
 
         binding.ibProfile.setOnClickListener {
@@ -86,7 +90,7 @@ class SettingProfileActivity : AppCompatActivity() {
             customProgressDialog.show()
             onProfileUpdateClick()
         }
-        binding.btBack.setOnClickListener {
+        binding.backBtn.setOnClickListener {
             onBackPressed()
         }
         val textWatcherIntroduction = object : TextWatcher {
@@ -218,4 +222,31 @@ class SettingProfileActivity : AppCompatActivity() {
                 .into(binding.ivPet2)
         }
     }
+    private fun updateImageViewBasedOnPetType(petType: String?) {
+        when (petType) {
+            "고양이" -> binding.ivPetType.setImageResource(R.drawable.cat)
+            "강아지" -> binding.ivPetType.setImageResource(R.drawable.dog)
+            "라쿤" -> binding.ivPetType.setImageResource(R.drawable.raccoon)
+            "여우" -> binding.ivPetType.setImageResource(R.drawable.fox)
+            "새" -> binding.ivPetType.setImageResource(R.drawable.chick)
+            "돼지" -> binding.ivPetType.setImageResource(R.drawable.pig)
+            "파충류" -> binding.ivPetType.setImageResource(R.drawable.snake)
+            "물고기" -> binding.ivPetType.setImageResource(R.drawable.fish)
+        }
+    }
+
+    private fun updateImageViewBasedOnPetGender(petGender: String?) {
+        when (petGender) {
+            "수컷" -> binding.ivPetType.setImageResource(R.drawable.icon_male)
+            "암컷" -> binding.ivPetType.setImageResource(R.drawable.icon_female)
+        }
+    }
+
+    private fun updateImageViewBasedOnPetNeuter(petNeuter: String?) {
+        when (petNeuter) {
+            "중성화" -> binding.ivPetNeuter.setImageResource(R.drawable.icon_neuter)
+            "중성화 안함" -> binding.ivPetNeuter.setImageResource(R.drawable.icon_non_neuter)
+        }
+    }
+
 }
