@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide
 import com.example.frompet.R
 import com.example.frompet.databinding.FragmentSettingBinding
 import com.example.frompet.ui.login.LoginActivity
+import com.example.frompet.ui.setting.fcm.FCMTokenManager
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -110,10 +111,10 @@ class SettingFragment : Fragment() {
         }
         binding.chatSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                binding.ivNotification.setImageResource(R.drawable.icon_alarm_on)
+
                 database.child("usersToken").child(auth.currentUser?.uid ?: "").child("chatNotificationsEnabled").setValue(true)
             } else {
-                binding.ivNotification.setImageResource(R.drawable.icon_alarm_off)
+
                 database.child("usersToken").child(auth.currentUser?.uid ?: "").child("chatNotificationsEnabled").setValue(false)
             }
         }
@@ -123,9 +124,9 @@ class SettingFragment : Fragment() {
                     val chatNotificationsEnabled = snapshot.value as? Boolean ?: true
                     chatSwitch.isChecked = chatNotificationsEnabled
                     if (chatNotificationsEnabled) {
-                        binding.ivNotification.setImageResource(R.drawable.icon_alarm_on)
+
                     } else {
-                        binding.ivNotification.setImageResource(R.drawable.icon_alarm_off)
+
                     }
                 }
                 override fun onCancelled(error: DatabaseError) {}
@@ -134,10 +135,10 @@ class SettingFragment : Fragment() {
         binding.friendsSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
 
             if (isChecked) {
-                binding.ivFriendsNoti.setImageResource(R.drawable.icon_alarm_on)
+
                 database.child("usersToken").child(auth.currentUser?.uid ?: "").child("notificationsEnabled").setValue(true)
             } else {
-                binding.ivFriendsNoti.setImageResource(R.drawable.icon_alarm_off)
+
                 database.child("usersToken").child(auth.currentUser?.uid ?: "").child("notificationsEnabled").setValue(false)
             }
         }
@@ -148,9 +149,9 @@ class SettingFragment : Fragment() {
                     val notificationsEnabled = snapshot.value as? Boolean ?: true
                     friendsSwitch.isChecked = notificationsEnabled
                     if (notificationsEnabled) { //true면 on
-                        binding.ivFriendsNoti.setImageResource(R.drawable.icon_alarm_on)
+
                     } else {        //false면 off
-                        binding.ivFriendsNoti.setImageResource(R.drawable.icon_alarm_off)
+
                     }
                 }
                 override fun onCancelled(error: DatabaseError) {}
@@ -182,6 +183,9 @@ class SettingFragment : Fragment() {
             // 현재 로그인된 사용자가 있는 경우에만 실행!
             val userId = currentUser.uid
 
+
+            val database = FirebaseDatabase.getInstance().getReference()
+            database.child("usersToken").child(userId).child("fcmToken").setValue(null)
 //            // FCM 토큰을 삭제하는 코드 추가 해야함
 
 

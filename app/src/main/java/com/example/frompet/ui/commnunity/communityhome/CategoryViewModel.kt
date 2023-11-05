@@ -7,31 +7,40 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.frompet.SingleLiveEvent
+import com.example.frompet.data.model.CommunityData
 import com.example.frompet.data.model.CommunityHomeData
+import com.example.frompet.data.model.toCommunityData
 import com.example.frompet.data.repository.category.CategoryRepository
 import com.example.frompet.data.repository.category.CategoryRepositoryImp
-import com.google.firebase.firestore.FirebaseFirestore
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.lang.Exception
-import javax.inject.Inject
+import kotlin.Exception
 
 
 class CategoryViewModel(
     private val categoryRepository: CategoryRepository
 ):ViewModel() {
     //버튼 카테고리
-    private val _btnList: MutableLiveData<List<CommunityHomeData>> = MutableLiveData()
-    val btnList: LiveData<List<CommunityHomeData>> get() = _btnList
+    private val _btnList: MutableLiveData<List<CommunityData>> = MutableLiveData()
+    val btnList: LiveData<List<CommunityData>> get() = _btnList
 
     private val _commuHomeDataList: MutableLiveData<List<CommunityHomeData>> = MutableLiveData()
     val commuHomeDataList: LiveData<List<CommunityHomeData>> =_commuHomeDataList
+
+    private val _communityList: MutableLiveData<List<CommunityData>> = MutableLiveData()
+    val communityList: LiveData<List<CommunityData>> = _communityList
+
+    private val _selectPetType: MutableLiveData<String> = MutableLiveData()
+    val selectPetType:LiveData<String> = _selectPetType
+
+    private val _event: SingleLiveEvent<CategoryClick> = SingleLiveEvent()
+    val event: LiveData<CategoryClick> get() = _event
 
     fun getHomeCategory(){
         viewModelScope.launch {
             try{
                 val categories = categoryRepository.getCategory()
-                Log.e("zzzzz", "getHomeCategory executed successfully") // 디버그 로그
+                Log.e("zzzzzzz", "getHomeCategory executed successfully") // 디버그 로그
                 _commuHomeDataList.value = categories
             }catch (e:Exception){
                 Log.e("zzzzz", "Error in getHomeCategory: ${e.message}", e) // 오류 로그
@@ -39,15 +48,27 @@ class CategoryViewModel(
         }
     }
 
-    fun clickItemCategory(category: CommunityHomeData){
-        _btnList.value = listOf(category)
-    }
-
-    fun CategoryAnimal(){
+    fun listClickCategory(petType: String) {
         viewModelScope.launch {
-            val category = categoryRepository.getCategory()
-            _btnList.value = category
+            try {
+                Log.e("zzzzzzz", petType)
+                val category = categoryRepository.getCommunityData(petType)
+                val cateMatchCategory = category.filter { it.petType == petType }
+                if (cateMatchCategory.isNotEmpty()) {
+                    _communityList.value = cateMatchCategory
+                    Log.e("zzzzzzz","$petType,$cateMatchCategory")
+                } else {
+                    Log.e("zzzzzzz", petType)
+                }
+            }catch (e: Exception){
+                Log.e("zzzzzzz","errot",e)
+            }
         }
+    }
+    fun clickedCategory(
+        item: CommunityHomeData){
+        Log.e("gggggg", "Clicked category: ${item.petType}")
+        _event.value = CategoryClick.PetCategory(item.toCommunityData())
     }
 
 }
@@ -56,6 +77,7 @@ class CategoryViewModelFactory(
 ): ViewModelProvider.Factory{
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CategoryViewModel::class.java)) {
+            Log.e("hhhhh", "CategoryViewModel instance created")
             return CategoryViewModel(CategoryRepositoryImp(context)) as T
         } else {
             throw IllegalArgumentException("Not found ViewModel class.")

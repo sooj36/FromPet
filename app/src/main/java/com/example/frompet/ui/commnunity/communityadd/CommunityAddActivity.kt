@@ -20,7 +20,7 @@ class CommunityAddActivity : AppCompatActivity() {
     private val binding get() = _binding!!
 
     // FirebaseStorage 초기화
-    val storage = FirebaseStorage.getInstance()
+    private val storage = FirebaseStorage.getInstance()
 
     // data class
     private var title: String = "" // 제목
@@ -44,13 +44,23 @@ class CommunityAddActivity : AppCompatActivity() {
         initView()
 
 
+        binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId) {
+                R.id.chip_share -> tag = "나눔"
+                R.id.chip_walk -> tag = "산책"
+                R.id.chip_love -> tag = "사랑"
+                R.id.chip_exchange -> tag = "정보교환"
+            }
+        }
+
+
         binding.btnAddEnroll.setOnClickListener {
-            val titleText = binding.etAddTitle.text.toString()
-            val contentsText = binding.etAddContents.text.toString()
+            with(binding) {
+                title = etAddTitle.text.toString()
+                contents = etAddContents.text.toString()
+            }
 
-            title = titleText
-            contents = contentsText
-
+            if (title.isNotEmpty() && contents.isNotEmpty() && tag.isNotEmpty()) {
             // Firebase 현재 사용자 가져오기
             val currentUser = FirebaseAuth.getInstance().currentUser
             if (currentUser != null) {
@@ -65,6 +75,8 @@ class CommunityAddActivity : AppCompatActivity() {
                             if (petType != null) {
                                 val currentTime = System.currentTimeMillis()
                                 timeStamp = currentTime.toString()
+
+
                                 // Community 모델 생성
                                 val community = CommunityData(
                                     title = title,
@@ -84,31 +96,34 @@ class CommunityAddActivity : AppCompatActivity() {
                                     .addOnSuccessListener { docId ->
                                         community.docsId = docId.id
                                         docId.set(community)
-                                        Toast.makeText(this, "등록되었습니다", Toast.LENGTH_SHORT).show()
+                                        showToast("게시글이 등록되었습니다", Toast.LENGTH_SHORT)
 
                                         val dataIntent = Intent()
-                                        dataIntent.putExtra(DOCS_ID, community.docsId)
-                                        setResult(RESULT_OK, dataIntent)
+                                        setResult(
+                                            RESULT_OK,
+                                            Intent().putExtra(DOCS_ID, community.docsId)
+                                        )
                                         finish()
                                     }
                                     .addOnFailureListener {
                                         // 정보 저장 실패
-                                        Toast.makeText(this, "등록에 실패하였습니다.", Toast.LENGTH_SHORT)
-                                            .show()
+                                        showToast("게시글을 작성하는데 실패하였습니다", Toast.LENGTH_SHORT)
                                     }
                             }
                         }
                     }
             }
+        } else {
+            showToast("항목을 모두 기입해주세요", Toast.LENGTH_SHORT)
+            }
         }
-
-
     }
 
     private fun initView() {
         with(binding) {
             btnAddCancel.setOnClickListener { showExitDialog() }
             backBtn.setOnClickListener { backToCommunity() }
+
         }
     }
 
@@ -121,8 +136,6 @@ class CommunityAddActivity : AppCompatActivity() {
             finish()
         }
     }
-
-
 
 
 }
