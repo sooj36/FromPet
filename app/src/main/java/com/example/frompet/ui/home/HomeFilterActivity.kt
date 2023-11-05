@@ -5,61 +5,144 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.ViewTreeObserver
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import com.example.frompet.R
 import com.example.frompet.data.model.Filter
 import com.example.frompet.databinding.ActivityHomeFilterBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 
 
 class HomeFilterActivity : AppCompatActivity() {
     private var _binding: ActivityHomeFilterBinding? = null
-    private val filterViewModel: HomeFilterViewModel by viewModels()
-    private val database : FirebaseDatabase = FirebaseDatabase.getInstance()
-    private val store :FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val currentUser = FirebaseAuth.getInstance().currentUser?.uid?:""
     private val binding get() = _binding!!
-    companion object {
-        const val USER = "user"
-        const val FILTER_DATA ="filter_data"
 
+    private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    private val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+    companion object {
+        const val FILTER_DATA = "filter_data"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityHomeFilterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.chipGroup.check(R.id.chip_all)
+        binding.chipGroup2.check(R.id.chip_dont_care)
 
-        binding.ivClose.setOnClickListener {
-            finish()
-        }
-
-        val adapter =ArrayAdapter.createFromResource(this,R.array.pet_types,android.R.layout.simple_spinner_item)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spPetType.adapter=adapter
-
-
+        setupCloseButton()
+        setupPetTypeSpinner()
+        restoreFilterOptions()
 
         binding.btComplete.setOnClickListener {
             val selectedPetType = binding.spPetType.selectedItem.toString()
-            val selectedGenderChipId = binding.chipGroup.checkedChipId
-            val selectedGender: String? = when (selectedGenderChipId) {
-                R.id.chip_all -> "all"
-                R.id.chip_male -> "남"
-                R.id.chip_female -> "여"
-                else -> "all"
-            }
+            val selectedGender = getSelectedGender()
+            val selectNeuter = getSelectedNeuter()
+            val filter = Filter(petType = selectedPetType, petGender = selectedGender,petNeuter = selectNeuter)
 
-            val filter = Filter(petType = selectedPetType, petGender = selectedGender)
-            Log.d("filter","$selectedPetType,펫성별:$selectedGender")
-            filterViewModel.filterUsers(filter)
-            val result = Intent()
-            result.putExtra(FILTER_DATA, filter)
-            setResult(Activity.RESULT_OK,result)
+            saveFilterOptions(selectedPetType, selectedGender,selectNeuter)
+            returnFilterResult(filter)
+        }
+    }
+
+    private fun setupCloseButton() {
+        binding.ivClose.setOnClickListener {
             finish()
         }
+    }
+
+    private fun setupPetTypeSpinner() {
+        val adapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.pet_types,
+            android.R.layout.simple_spinner_item
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spPetType.adapter = adapter
+        val petTypes = resources.getStringArray(R.array.pet_types)
+        val defaultPosition = petTypes.indexOf("전체")
+        binding.spPetType.setSelection(defaultPosition)
+        binding.spPetType.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                // 스피너의 넓이
+                val spinnerWidth = binding.spPetType.width
+                // 드롭다운 리스트의 넓이를 스피너의 넓이로 설정
+                binding.spPetType.dropDownWidth = spinnerWidth
+                // 레이아웃 리스너를 제거(최종넓이를 얻기위해서 호출)
+                binding.spPetType.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+        })
+    }
+
+
+    private fun getSelectedGender(): String? {
+        return when (binding.chipGroup.checkedChipId) {
+            R.id.chip_male -> "남"
+            R.id.chip_female -> "여"
+            else -> "all"
+        }
+    }
+  private fun getSelectedNeuter():String?{
+      return when(binding.chipGroup2.checkedChipId){
+          R.id.chip_done -> "중성화"
+          R.id.chip_nope -> "중성화 안함"
+          else -> "상관없음"
+      }
+  }
+
+    private fun saveFilterOptions(petType: String, petGender: String?,petNeuter: String?) {
+        val filterOptions = mapOf("petType" to petType, "petGender" to petGender,"petNeuter" to petNeuter)
+        database.reference.child("userSaveFilter").child(currentUserUid).setValue(filterOptions)
+    }
+
+    private fun restoreFilterOptions() {
+        database.reference.child("userSaveFilter").child(currentUserUid).addListenerForSingleValueEvent(object :
+            ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val petType = snapshot.child("petType").getValue(String::class.java) ?: "전체"
+                val petGender = snapshot.child("petGender").getValue(String::class.java) ?: "all"
+                val petNeuter = snapshot.child("petNeuter").getValue(String::class.java)?:"상관없음"
+                val petTypePosition = resources.getStringArray(R.array.pet_types).indexOf(petType)
+
+                binding.spPetType.setSelection(petTypePosition)
+
+                val genderChipId = when (petGender) {
+                    "남" -> R.id.chip_male
+                    "여" -> R.id.chip_female
+                    else -> R.id.chip_all
+                }
+                binding.chipGroup.check(genderChipId)
+
+                val neuterChipId = when(petNeuter){
+                    "중성화"-> R.id.chip_done
+                    "중성화 안함"->R.id.chip_nope
+                    else -> R.id.chip_dont_care
+                }
+                binding.chipGroup2.check(neuterChipId)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+    }
+
+    private fun returnFilterResult(filter: Filter) {
+        val result = Intent().apply {
+            putExtra(FILTER_DATA, filter)
+        }
+        setResult(Activity.RESULT_OK, result)
+        finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

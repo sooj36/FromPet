@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.frompet.R
 import com.example.frompet.databinding.FragmentHomeEmptyBinding
 
 class HomeEmptyFragment : Fragment() {
@@ -15,16 +14,17 @@ class HomeEmptyFragment : Fragment() {
 
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentHomeEmptyBinding.inflate(inflater,container,false)
-
+        _binding = FragmentHomeEmptyBinding.inflate(inflater, container, false)
 
         return binding.root
     }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
