@@ -119,17 +119,9 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
-        // 현 위치
-        naverMap.locationSource = locationSource
-        // 현 위치 버튼 기능
-        naverMap.uiSettings.isLocationButtonEnabled = true
-        // 위치를 추적하면서 카메라도 같이 움직임
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
-        Log.d("sooj", "onmapready")
+        setUpMap()
 
-        // 줌
-        naverMap.maxZoom = 17.0  // (최대 21)
-        naverMap.minZoom = 5.0
+
 
         // Firebase
         val database = Firebase.database
@@ -192,6 +184,20 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 //                max(visibleRegion.latitudeSize, visibleRegion.longitudeSize)
 //            )
 //        }
+    }
+
+    private fun setUpMap() {
+        // 현 위치
+        naverMap.locationSource = locationSource
+        // 현 위치 버튼 기능
+        naverMap.uiSettings.isLocationButtonEnabled = true
+        // 위치를 추적하면서 카메라도 같이 움직임
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+        Log.d("sooj", "onmapready")
+
+        // 줌
+        naverMap.maxZoom = 17.0  // (최대 21)
+        naverMap.minZoom = 5.0
     }
 
     private fun setMark(userUid:String,location: UserLocation) = lifecycleScope.launch {
