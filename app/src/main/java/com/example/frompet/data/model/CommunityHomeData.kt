@@ -11,7 +11,11 @@ data class CommunityHomeData(
 
 fun CommunityHomeData.toCommunityData(): CommunityData {
     return CommunityData(
-        petType = petType
+        petType = petType,
+        title = "",
+        contents = "",
+        timestamp = "",
+        tag = ""
     )
 
 }

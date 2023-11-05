@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityBinding
+import com.example.frompet.ui.commnunity.CategorySharedViewModel
 import com.example.frompet.ui.commnunity.communityadd.CommunityAddActivity
 import com.example.frompet.ui.commnunity.communitydetail.CommunityDetailActivity
 import com.example.frompet.ui.commnunity.communityhome.CategoryClick
@@ -42,6 +44,7 @@ class CommunityActivity : AppCompatActivity() {
 
     // viewModel 초기화
     private val viewModel : CommunityViewModel by viewModels()
+    private val _viewModel : CategorySharedViewModel by viewModels()
     // FirebaseStorage 초기화
 
 
@@ -50,17 +53,16 @@ class CommunityActivity : AppCompatActivity() {
         _binding = ActivityCommunityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val communityData = intent.getParcelableExtra<CommunityData>(CommunityActivity.EXTRA_DATA)
+
         val petType = intent.getStringExtra(CommunityActivity.EXTRA_PET_TYPE)
-        if (communityData != null) {
-            // 데이터 사용
-            Log.d("ㅂㅂㅂㅂㅂ", "item ${communityData}")
-            /*communityAdapter.updateData(communityData)*/
-        }
         if (petType != null) {
             // 필터 정보 사용
-            viewModel.loadCommunityListData(petType)
+            filterItemsByPetType(petType)
+            observeCommunityList()
             Log.d("ㅂㅂㅂㅂ", "petType $petType")
+        } else {
+            // 아무 필터도 없을 때 전체 아이템 표시
+            filterItemsByPetType("전체")
         }
 
 
@@ -91,6 +93,10 @@ class CommunityActivity : AppCompatActivity() {
             viewModel.loadCommunityListData(currentFilter)
 
         }
+   /*     _viewModel.selectPetCategory.observe(this, Observer { selectedData ->
+            adapter.submitList(listOf(selectedData))
+        })*/
+
 
         viewModel.event.observe(this) { categoryClick ->
             when (categoryClick) {
@@ -102,6 +108,22 @@ class CommunityActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
             }
+        }
+    }
+    // CommunityActivity
+    private fun filterItemsByPetType(petType: String) {
+        // petType과 일치하는 아이템을 필터링
+        val filteredItems = communityAdapter.currentList.filter { item ->
+            item.petType == petType
+        }
+
+        // 리사이클러뷰 어댑터에 필터링된 아이템 목록을 설정
+        communityAdapter.submitList(filteredItems)
+    }
+    private fun observeCommunityList() {
+        viewModel.communityList.observe(this) { communityList ->
+            // 리사이클러뷰 어댑터에 필터링된 데이터를 설정
+            communityAdapter.submitList(communityList)
         }
     }
 

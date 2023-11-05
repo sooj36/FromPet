@@ -36,12 +36,20 @@ class CategoryViewModel(
     private val _event: SingleLiveEvent<CategoryClick> = SingleLiveEvent()
     val event: LiveData<CategoryClick> get() = _event
 
+
+    private val _clickedCategoryData: MutableLiveData<CommunityData> = MutableLiveData()
+    val clickedCategoryData: LiveData<CommunityData> get() = _clickedCategoryData
+
+    fun onCategoryClicked(data: CommunityData) {
+        _clickedCategoryData.value = data
+    }
+
     fun getHomeCategory(){
         viewModelScope.launch {
             try{
                 val categories = categoryRepository.getCategory()
                 Log.e("zzzzzzz", "getHomeCategory executed successfully") // 디버그 로그
-                _commuHomeDataList.value = categories
+                _commuHomeDataList.postValue(categories)
             }catch (e:Exception){
                 Log.e("zzzzz", "Error in getHomeCategory: ${e.message}", e) // 오류 로그
             }
@@ -65,10 +73,9 @@ class CategoryViewModel(
             }
         }
     }
-    fun clickedCategory(
-        item: CommunityHomeData){
-        Log.e("gggggg", "Clicked category: ${item.petType}")
-        _event.value = CategoryClick.PetCategory(item.toCommunityData())
+    fun onCategoryClicked(data: CommunityHomeData) {
+        // 클릭한 카테고리 데이터를 Event로 전달
+        _event.value = CategoryClick.PetCategory(data.toCommunityData())
     }
 
 }
