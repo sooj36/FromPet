@@ -61,12 +61,9 @@ class HomeFragment : Fragment() {
     private val viewModel: MatchSharedViewModel by viewModels()
     private val fcmViewModel: FCMNotificationViewModel by viewModels()
     private val filterViewModel: HomeFilterViewModel by activityViewModels()
-    private var isShowingEmptyFragment = false
-
 
     private val currentUser = FirebaseAuth.getInstance().currentUser
     private val firestore = FirebaseFirestore.getInstance()
-
     private val database = FirebaseDatabase.getInstance().reference
 
 

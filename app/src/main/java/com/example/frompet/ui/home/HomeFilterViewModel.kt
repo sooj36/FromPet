@@ -36,7 +36,7 @@ class HomeFilterViewModel: ViewModel() {
 
 
     fun filterUsers(filter: Filter) {
-        if (filter == lastFilter) return
+//        if (filter == lastFilter) return
         lastFilter = filter
         var query: Query = store.collection("User")
 
