@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -36,6 +37,9 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.geometry.LatLngBounds
+import com.naver.maps.map.CameraAnimation
+import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -93,10 +97,12 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initMapView() {
-        val mapFragment = childFragmentManager.findFragmentById(R.id.naver_map_fragment) as MapFragment?
-            ?: MapFragment.newInstance().also {
-                childFragmentManager.beginTransaction().add(R.id.naver_map_fragment, it).commit()
-            }
+        val mapFragment =
+            childFragmentManager.findFragmentById(R.id.naver_map_fragment) as MapFragment?
+                ?: MapFragment.newInstance().also {
+                    childFragmentManager.beginTransaction().add(R.id.naver_map_fragment, it)
+                        .commit()
+                }
 
         // fragment의 getMapAsync() 메서드로 OnMapReadyCallBack 콜백을 등록하면, 비동기로 NaverMap 객체를 얻을 수 있음
         mapFragment.getMapAsync(this)
@@ -143,12 +149,29 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
                 location.let {
                     UserLocation(latitude = location.latitude, longitude = it.longitude)
                     locationRef.child(currentUserId).setValue(userLocation)
+
+                    naverMap.addOnCameraChangeListener { reason, animated  ->
+                        Log.i("CameraUpdate", "카메라 변경 - reason: $reason, animated: $animated")
+
+                    }
+                    val cameraUpdate = CameraUpdate.scrollTo(LatLng(location.latitude, location.longitude))
+                        .animate(CameraAnimation.Easing, 2000)
+                        .reason(CameraUpdate.REASON_GESTURE)
+                    naverMap.moveCamera(cameraUpdate)
+
+
+                    naverMap.addOnCameraIdleListener {
+                        Toast.makeText(context, "카메라 움직임 종료", Toast.LENGTH_SHORT).show()
+                    }
+
+
                     Log.d(
-                        "sooj",
-                        "${UserLocation(latitude = location.latitude, longitude = it.longitude)}"
+                        "CameraUpdate",
+                        "스크롤 : ${location.latitude}, longitude: ${location.longitude}"
                     )
-                    Log.d("sooj", "${locationRef.child(currentUserId).setValue(userLocation)}")
                 }
+
+                Log.d("sooj", "${locationRef.child(currentUserId).setValue(userLocation)}")
             }
         }
         locationRef.addValueEventListener(object : ValueEventListener {
@@ -168,8 +191,22 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
             override fun onCancelled(error: DatabaseError) {}
         })
+    }
 
+    private fun loadLocationData(bounds: LatLngBounds) {
+        // Firebase
+        val database = Firebase.database
+        val locationRef = database.getReference("location")
 
+        locationRef.get().addOnSuccessListener { snapshot ->
+            for (dataSnapshot in snapshot.children) {
+                val location = dataSnapshot.getValue(UserLocation::class.java)
+                if (location != null && bounds.contains(
+                        LatLng(location.latitude, location.longitude))) {
+                    // 지도 영역에 포함되는 위치만 처리
+                }
+            }
+        }
     }
 
     private fun setUpMap() {
@@ -183,13 +220,15 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
         // 줌
         naverMap.maxZoom = 17.0  // (최대 21)
-        naverMap.minZoom = 5.0
+        naverMap.minZoom = 11.0
+
     }
 
-    private fun setMark(userUid:String,location: UserLocation) = lifecycleScope.launch {
+    private fun setMark(userUid: String, location: UserLocation) = lifecycleScope.launch {
         if (!isAdded) return@launch //프래그먼트에서 액티비티가 연결되어 있는지 확인 만약 연결되어 있지 않다면 빠르게 종료해서requireContext호출을 방지
         val marker = createMarker(location, userUid)
         setUserProfileImage(userUid, marker)
+
 
     }
 
@@ -222,9 +261,10 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     // 마커 클릭 시, 프로필 띄우기
-    private fun markerClick(userUid : String) {
+    private fun markerClick(userUid: String) {
         lifecycleScope.launch {
-            val userDocument = firestore.collection("User").document(userUid).get().await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
+            val userDocument = firestore.collection("User").document(userUid).get()
+                .await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
             val user = userDocument.toObject(User::class.java) //위에서 얻은 문서들을 user클래스의 인스턴스로 변환
             val intent = Intent(context, MapUserDetailActivity::class.java)
             intent.putExtra(MapUserDetailActivity.USER, user)
@@ -242,8 +282,11 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
             val imageLoader = context?.let { Coil.imageLoader(it) }
             val request = ImageRequest.Builder(requireActivity())
                 .data(profileUrl)
-                .size(200,200)
-                .transformations(CircleCropTransformation(),MapMakerBorder(requireContext(),15f)) //이미지동그랗게
+                .size(200, 200)
+                .transformations(
+                    CircleCropTransformation(),
+                    MapMakerBorder(requireContext(), 15f)
+                ) //이미지동그랗게
                 .target {
                     val bitmap = (it as BitmapDrawable).bitmap
                     val imageOverlay = OverlayImage.fromBitmap(bitmap)
