@@ -146,13 +146,10 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
                     UserLocation(latitude = location.latitude, longitude = it.longitude)
                     locationRef.child(currentUserId).setValue(userLocation)
 
-
-
                     val cameraUpdate = CameraUpdate.scrollTo(LatLng(location.latitude, location.longitude))
                         .animate(CameraAnimation.Easing, 2000)
                         .reason(CameraUpdate.REASON_GESTURE)
                     naverMap.moveCamera(cameraUpdate)
-
 
                     naverMap.addOnCameraIdleListener {
                         loadLocationData(naverMap.contentBounds)
