@@ -153,6 +153,9 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
                     naverMap.addOnCameraChangeListener { reason, animated  ->
                         Log.i("CameraUpdate", "카메라 변경 - reason: $reason, animated: $animated")
 
+                        //지도 표시 영역이 변경될 때마다 데이터 로드
+                        loadLocationData(naverMap.contentBounds)
+
                     }
                     val cameraUpdate = CameraUpdate.scrollTo(LatLng(location.latitude, location.longitude))
                         .animate(CameraAnimation.Easing, 2000)
@@ -201,9 +204,9 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         locationRef.get().addOnSuccessListener { snapshot ->
             for (dataSnapshot in snapshot.children) {
                 val location = dataSnapshot.getValue(UserLocation::class.java)
-                if (location != null && bounds.contains(
-                        LatLng(location.latitude, location.longitude))) {
+                if (location != null && bounds.contains(LatLng(location.latitude, location.longitude))) {
                     // 지도 영역에 포함되는 위치만 처리
+                    setMark(dataSnapshot.key.orEmpty(), location)
                 }
             }
         }
