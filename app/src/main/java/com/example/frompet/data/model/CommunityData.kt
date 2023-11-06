@@ -9,10 +9,13 @@ import kotlinx.android.parcel.Parcelize
 data class CommunityData(
     var title: String = "",
     var tag: String = "",
-    val timestamp: String = "",
+    val timestamp: Long = System.currentTimeMillis(),
     var contents: String = "",
     var uid: String = "",
     var docsId: String? = null,
-    val petType: String? = ""
-): Parcelable
+    val petType: String? = "",
+    val petProfile: String?= null,
+    val petName: String = "",
+
+    ): Parcelable
 
