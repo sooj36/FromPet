@@ -30,8 +30,9 @@ class ChatClickUserDetailActivity : AppCompatActivity() {
         }
 
         binding.backBtn.setOnClickListener {
-            finish()
+            onBackPressed()
         }
+
 
         binding.ivPetProfile.setOnClickListener {
             val intent = Intent(this@ChatClickUserDetailActivity, ChatPullScreenActivity::class.java)

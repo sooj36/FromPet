@@ -70,6 +70,7 @@ class ChatFragment : Fragment() {
                 spannable.setSpan(colorSpan,0,"${it.size}".length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 binding.btCanChat?.text = spannable
             }
+            }
             matchSharedViewModel.likeList.observe(viewLifecycleOwner) { users ->
             users?.let {
                 val text = "${it.size}마리가 나를 좋아해요"
@@ -81,7 +82,7 @@ class ChatFragment : Fragment() {
             }
           }
         matchSharedViewModel.loadlike()
-    }
+
     }
 
     private fun updateButtonColors(currentPage: Int) {
@@ -89,14 +90,14 @@ class ChatFragment : Fragment() {
         binding.btCanChat.setTextColor(
             ContextCompat.getColor(
                 requireContext(),
-                if (isFirstPage) R.color.black else R.color.dark_gray
+                if (isFirstPage) R.color.black else R.color.gray
             )
         )
         val isSecondPage = currentPage == 1
         binding.btLikeMe.setTextColor(
             ContextCompat.getColor(
                 requireContext(),
-                if (isSecondPage) R.color.black else R.color.dark_gray
+                if (isSecondPage) R.color.black else R.color.gray
             )
         )
     }
