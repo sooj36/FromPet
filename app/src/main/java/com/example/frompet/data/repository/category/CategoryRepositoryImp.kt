@@ -46,7 +46,7 @@ class CategoryRepositoryImp(
             for (document in querySnapshot.documents) {
                 val title = document.getString("title") ?: ""
                 val tag = document.getString("tag") ?: ""
-                val timestamp = document.getString("timestamp") ?: ""
+                val timestamp = document.getLong("timestamp") ?: 0L
                 val contents = document.getString("contents") ?: ""
                 val uid = document.getString("uid") ?: ""
                 val docsId = document.id
@@ -55,7 +55,7 @@ class CategoryRepositoryImp(
                 val communityData = CommunityData(
                     title = title,
                     tag = tag,
-                    timestamp = System.currentTimeMillis(),
+                    timestamp = timestamp,
                     contents = contents,
                     uid = uid,
                     docsId = docsId,

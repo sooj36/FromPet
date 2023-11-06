@@ -15,8 +15,6 @@ import android.view.animation.AnimationUtils
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.frompet.MatchSharedViewModel
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunityHomeData
@@ -28,24 +26,24 @@ class CommunityHomeFragment : Fragment() {
 
     private var _binding: FragmentCommunityhomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter: CommunityHomeAdapter
-    private lateinit var communityHomeData: MutableList<CommunityHomeData>
     private val viewModel: MatchSharedViewModel by viewModels()
-    private val _viewModel by lazy {
+    private val categoryViewModel by lazy {
         ViewModelProvider(
             this,
             CategoryViewModelFactory(requireContext())
         )[CategoryViewModel::class.java]
     }
-    private val communityHomeAdapter by lazy {
-        CommunityHomeAdapter(
-            onClicked = { item, position ->
-                toCategory(item)
-            }
-        )
-    }
-
     private val imageSliderAdapter: ImageSliderAdapter by lazy { ImageSliderAdapter() }
+
+    private val communityHomeAdapter by lazy {
+        CommunityHomeAdapter(onClicked = { item ->
+            toCategory(item)
+            categoryViewModel.listClickCategory(item.petType)
+            Log.e("sshHome", item.petType)
+            Log.e("sshHome", item.toString())
+
+        })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,9 +60,11 @@ class CommunityHomeFragment : Fragment() {
                 startAutoScroll()
             }
         }
-        _viewModel.selectPetType.observe(viewLifecycleOwner) { selectPetType ->
+        categoryViewModel.selectPetType.observe(viewLifecycleOwner) { selectPetType ->
             if (!selectPetType.isNullOrEmpty()) {
-                _viewModel.getHomeCategory()
+                // 카테고리 변경 시 카테고리 데이터를 다시 로드
+                categoryViewModel.getHomeCategory()
+                Log.e("sshHome", "$selectPetType")
             }
         }
 
@@ -83,36 +83,62 @@ class CommunityHomeFragment : Fragment() {
         initViewModel()
     }
 
+
     private fun initView() = with(binding) {
         categoryBt.layoutManager = GridLayoutManager(requireContext(), 4)
         categoryBt.adapter = communityHomeAdapter
-        Log.e("zzzzzzz", "Adapter set with ${communityHomeAdapter.itemCount} items")
-        _viewModel.commuHomeDataList.observe(viewLifecycleOwner) { CateHomeList ->
-            Log.d("zzzzzzz", "CategoryList 변경됨")
+        Log.e("sshHome", "Adapter set with ${communityHomeAdapter.itemCount} items")
+        categoryViewModel.commuHomeDataList.observe(viewLifecycleOwner) { CateHomeList ->
+            Log.d("sshHome", "CategoryList 변경됨")
             communityHomeAdapter.submitList(CateHomeList)
+            Log.e("sshHome인데?", "$CateHomeList")
         }
-        communityHomeAdapter.onClicked = { item, posion ->
-            item.petType?.let { _viewModel.listClickCategory(it) }
+        categoryViewModel.getHomeCategory()
+        Log.e("ssh10", "${communityHomeAdapter}")
 
+    }
+
+    private fun toCategory(item: CommunityHomeData) = with(categoryViewModel) {
+        val selectedData = categoryViewModel.getHomeCategory()
+        selectedData?.let {
+            val selectedCommunityDataList = clickedCategoryData
+            selectedCommunityDataList.observe(viewLifecycleOwner) { communityData ->
+                categoryViewModel.onCategoryClicked(communityData)
+            }
+            Log.e("sshHome", "$item.toCommunityData()")
+            val intent = Intent(requireContext(), CommunityActivity::class.java)
+            intent.putExtra(CommunityActivity.EXTRA_PET_TYPE, item.petType)
+            intent.putExtra(CommunityActivity.EXTRA_DATA,item.toCommunityData())
+            startActivity(intent)
+        } ?: run {
+            Log.e("sshHome", "Selected Data is null")
         }
-        _viewModel.getHomeCategory()
-        categoryBt.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val visibleItemCount = layoutManager.childCount
-                val totalItemCount = layoutManager.itemCount
-                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+        categoryViewModel.listClickCategory(item.petType)
+    }
 
-                val isAtEndOfList = visibleItemCount + firstVisibleItemPosition >= totalItemCount
-
-                if (isAtEndOfList) {
-                    // Do something at the end of the list
-                    Log.e("zzzzzzz", "Reached the end of the list")
+    private fun initViewModel() {
+        Log.e("sshHome", "initViewModel function called")
+        with(categoryViewModel) {
+            event.observe(viewLifecycleOwner) { event ->
+                when (event) {
+                    is CategoryClick.PetCategory -> {
+                        Log.e("sshHome", "Event observed: $event")
+                        // 클릭 이벤트 처리
+                        val selectedCommunityData = communityList.value?.firstOrNull()
+                        if (selectedCommunityData != null) {
+                            Log.e("sshHome", "Selected Community Data: $selectedCommunityData")
+                            Intent(requireContext(), CommunityActivity::class.java).apply {
+                                putExtra(CommunityActivity.EXTRA_PET_TYPE, selectedCommunityData)
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }.run { requireContext().startActivity(this) }
+                        }
+                    }
                 }
             }
-        })
+        }
     }
+
+
 
     private fun startAutoScroll() {
         val handler = Handler(Looper.getMainLooper())
@@ -130,6 +156,7 @@ class CommunityHomeFragment : Fragment() {
         }
         handler.postDelayed(runnable, 3000)
     }
+
 
     private fun startNoticeTextAniMation() {
         val slideUp = AnimationUtils.loadAnimation(context, R.anim.slide_up)
@@ -158,33 +185,6 @@ class CommunityHomeFragment : Fragment() {
         })
 
         _binding?.tvNoticeText?.startAnimation(slideUp)
-    }
-
-    private fun toCategory(item: CommunityHomeData) = with(_viewModel) {
-        Log.e("zzzzzzz", "Navigating to CommunityActivity with item: ${item.petType}")
-        val intent = Intent(requireContext(), CommunityActivity::class.java)
-        intent.putExtra(CommunityActivity.EXTRA_DATA, item.toCommunityData())
-        intent.putExtra(CommunityActivity.EXTRA_PET_TYPE, item.petType)
-        Log.e("zzzzzzz", "Extra data: ${item}")
-        startActivity(intent)
-        clickedCategory(item)
-
-
-    }
-
-    private fun initViewModel() {
-        with(_viewModel) {
-            event.observe(viewLifecycleOwner) { event ->
-                when (event) {
-                    is CategoryClick.PetCategory -> {
-                        Intent(requireContext(), CommunityActivity::class.java).apply {
-                            putExtra(CommunityActivity.EXTRA_DATA, event.item)
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        }.run { requireContext().startActivity(this) }
-                    }
-                }
-            }
-        }
     }
 
     override fun onDestroyView() {

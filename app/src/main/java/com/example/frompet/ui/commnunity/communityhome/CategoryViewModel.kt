@@ -24,6 +24,9 @@ class CategoryViewModel(
     private val _btnList: MutableLiveData<List<CommunityData>> = MutableLiveData()
     val btnList: LiveData<List<CommunityData>> get() = _btnList
 
+    private val _clickedCategoryData: MutableLiveData<CommunityData> = MutableLiveData()
+    val clickedCategoryData: LiveData<CommunityData> get() = _clickedCategoryData
+
     private val _commuHomeDataList: MutableLiveData<List<CommunityHomeData>> = MutableLiveData()
     val commuHomeDataList: LiveData<List<CommunityHomeData>> =_commuHomeDataList
 
@@ -65,10 +68,9 @@ class CategoryViewModel(
             }
         }
     }
-    fun clickedCategory(
-        item: CommunityHomeData){
-        Log.e("gggggg", "Clicked category: ${item.petType}")
-        _event.value = CategoryClick.PetCategory(item.toCommunityData())
+    fun onCategoryClicked(data: CommunityData) {
+        _clickedCategoryData.value = data
+        _event.value = CategoryClick.PetCategory(CommunityData())
     }
 
 }
