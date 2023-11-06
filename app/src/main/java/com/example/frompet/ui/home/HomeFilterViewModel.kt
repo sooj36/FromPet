@@ -41,11 +41,10 @@ class HomeFilterViewModel(private val app :Application): ViewModel() {
     private val usersLocationRef = database.getReference("locations")
     private var currentFilter: Filter? = null
     private var lastFilter: Filter? = null
-    private val distanceFilter = 10000f //10km 미터 단위로 변환
     private var fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(app)
 
-    // 거리 필터 (예: 10km)
+
     private var currentUserLocation: Location? = null
 
     init {
@@ -56,10 +55,19 @@ class HomeFilterViewModel(private val app :Application): ViewModel() {
             val task: Task<Location> = fusedLocationClient.lastLocation
             task.addOnSuccessListener { location: Location? ->
                 if (location != null) {
+                    // 사용자의 위치 정보를 생성
+                    val userLocation = UserLocation(location.latitude, location.longitude)
+
+                    // firestore에 사용자 위치 정보 업데이트
+                    updateUserLocationFirestore(currentUser, userLocation)
                     currentUserLocation = location
+                    Log.d("Filter", "Current user location: $currentUserLocation")
+
                     app.showToast("위치권한을 성공적으로 가져왔습니다", Toast.LENGTH_SHORT)
                     currentFilter?.let { filter ->
-                        loadLocationUsers(filter) // 현재 필터를 사용하여 사용자 위치를 로드
+                        filterUsers(filter) // 이 함수는 _filteredUsers를 업데이트합니다!
+                    } ?: run {
+                        Log.d("Filter", "No filter ")
                     }
                 }
             }.addOnFailureListener {
@@ -70,19 +78,17 @@ class HomeFilterViewModel(private val app :Application): ViewModel() {
         }
     }
 
-
-
-
     fun filterUsers(filter: Filter) {
-//        if (filter == lastFilter) return
         lastFilter = filter
         var query: Query = store.collection("User")
+        Log.d("Filter", " query: $query")
+
 
         if (filter.petGender != "all") {
             filter.petGender?.let {
                 val genderValue = when (it) {
-                    "남" -> "남"
-                    "여" -> "여"
+                    "수컷" -> "수컷"
+                    "암컷" -> "암컷"
                     else -> it
                 }
                 query = query.whereEqualTo("petGender", genderValue)
@@ -104,15 +110,18 @@ class HomeFilterViewModel(private val app :Application): ViewModel() {
         query.get().addOnSuccessListener { documents ->
             val users = documents.map { it.toObject(User::class.java) }
                 .filter { it.uid != currentUser }
+
             // 스와이프한 사용자를 제외하는로직입니다
-            excludeSwipedUsers(users) { filteredUsers ->
-                _filteredUsers.value = filteredUsers
-                updateFilteredUsers(filteredUsers)
-                loadFilteredUsers()
+            excludeSwipedUsers(users) { filteredUsersWithoutSwipes ->
+                // 거리 필터링을 적용합니다.
+                val usersWithinDistance = applyDistanceFilter(filteredUsersWithoutSwipes, filter)
+                // 최종적으로 필터링된 사용자 목록을 LiveData에 설정합니다.
+                _filteredUsers.value = usersWithinDistance
+                // 필터링된 사용자 목록을 업데이트합니다.
+                updateFilteredUsers(usersWithinDistance)
             }
         }
     }
-
     fun loadFilteredUsers() {
         _isLoading.value = true
         filteredUsersRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -127,7 +136,6 @@ class HomeFilterViewModel(private val app :Application): ViewModel() {
             }
         })
     }
-
     private fun excludeSwipedUsers(users: List<User>, callback: (List<User>) -> Unit) {
         swipedUsersRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -138,6 +146,21 @@ class HomeFilterViewModel(private val app :Application): ViewModel() {
 
             override fun onCancelled(error: DatabaseError) {}
         })
+    }
+    private fun applyDistanceFilter(users: List<User>, filter: Filter): List<User> {
+        // 현재 사용자 위치가 없으면 빈 목록을 반환합니다
+        val currentUserLocation = currentUserLocation ?: return emptyList()
+        // 거리 필터링을 적용합니다
+        return users.filter { user ->
+            user.userLocation?.let { userLocation ->
+                val otherUserLocation = Location("").apply {
+                    latitude = userLocation.latitude
+                    longitude = userLocation.longitude
+                }
+                val distance = currentUserLocation.distanceTo(otherUserLocation) / 1000 // km 단위
+                distance <= filter.distanceFrom
+            } ?: false
+        }
     }
 
     // 사용자가 카드를 스와이프할 때 호출할 함수입니다:박세준
@@ -152,49 +175,15 @@ class HomeFilterViewModel(private val app :Application): ViewModel() {
         filteredUsersRef.child(userId).removeValue()
     }
 
-    fun loadLocationUsers(filter: Filter) {
-        _isLoading.value = true
-        usersLocationRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val usersWithinDistance = mutableListOf<User>()
 
-                snapshot.children.forEach { userSnapshot ->
-                    val userLocation = userSnapshot.getValue(UserLocation::class.java) ?: return@forEach
-                    val otherUserLocation = Location("").apply {
-                        latitude = userLocation.latitude
-                        longitude = userLocation.longitude
-                    }
 
-                    currentUserLocation?.let { currentUserLocation ->
-                        val distance = currentUserLocation.distanceTo(otherUserLocation)
-                        if (distance >= filter.distanceFrom && distance <= filter.distanceTo) {
-                            val userId = userSnapshot.key ?: return@forEach
-                            store.collection("User").document(userId).get().addOnSuccessListener { document ->
-                                val user = document.toObject(User::class.java)
-                                user?.let {
-                                    it.userLocation = userLocation
-                                    usersWithinDistance.add(it)
-                                }
-                                _filteredUsers.value = usersWithinDistance.filter { user ->
-                                    user.userLocation?.let { location ->
-                                        val userDistance = currentUserLocation.distanceTo(Location("").apply {
-                                            latitude = location.latitude
-                                            longitude = location.longitude
-                                        })
-                                        userDistance >= filter.distanceFrom && userDistance <= filter.distanceTo
-                                    } ?: false
-                                }
-                            }
-                        }
-                    }
-                }
-                _isLoading.value = false
+    // 사용자의 위치 정보가 업데이트 될 때 파이어스토어 User 문서에도 반영하는 함수입니다
+    fun updateUserLocationFirestore(userId: String, userLocation: UserLocation) {
+        val userRef = store.collection("User").document(userId)
+        userRef.update("userLocation", userLocation)
+            .addOnSuccessListener {
+                Log.d("Filter", "User location updat Firestore  $userId")
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                _isLoading.value = false
-            }
-        })
     }
 
     // 필터링된 사용자 목록을 업데이트하는 함수입니당
@@ -212,16 +201,45 @@ class HomeFilterViewModel(private val app :Application): ViewModel() {
                 dataSnapshot: DataSnapshot?
             ) {
                 if (databaseError != null) {
-                    Log.e("ffff", "Failed users", databaseError.toException())
+                    Log.e("Filter", "Failed users", databaseError.toException())
                 } else {
-                    Log.d("ffff", "Updated ${users.size} users")
+                    Log.d("Filter", "Updated ${users.size} users")
                 }
             }
         })
     }
 
+    //    fun loadLocationUsers(filteredUsers: List<User>, filter: Filter) {
+//        _isLoading.value = true
+//
+//        val currentUserLocation = currentUserLocation ?: run {
+//            _isLoading.value = false
+//            return
+//        }
+//
+//        // 이미 필터링된 사용자 목록에 대해서만 거리 필터링을 적용합니다
+//        val usersWithinDistance = filteredUsers.filter { user ->
+//            user.userLocation?.let { userLocation ->
+//                val otherUserLocation = Location("").apply {
+//                    latitude = userLocation.latitude
+//                    longitude = userLocation.longitude
+//                }
+//                val distanceInMeters = currentUserLocation.distanceTo(otherUserLocation)
+//                val distanceInKm = distanceInMeters / 1000 // 미터를 킬로미터로 변환
+//                distanceInKm <= filter.distanceFrom
+//            } ?: false
+//        }
+//
+//        Log.d("Filter", "Filtering with distance up to ${filter.distanceFrom} km")
+//
+//        _filteredUsers.value = usersWithinDistance
+//        _isLoading.value = false
+//    }
+
 
 }
+
+
 
 
     class HomeFilterViewModelFactory(private val application: Application) : ViewModelProvider.Factory {

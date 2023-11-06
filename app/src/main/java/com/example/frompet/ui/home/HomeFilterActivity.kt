@@ -26,8 +26,7 @@ class HomeFilterActivity : AppCompatActivity() {
 
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-    private var selectedDistanceFrom: Float = 10.0f
-    private var selectedDistanceTo: Float = 360.0f
+    private var selectedDistance: Float = 10.0f // 기본 최소 거리
 
     companion object {
         const val FILTER_DATA = "filter_data"
@@ -42,7 +41,7 @@ class HomeFilterActivity : AppCompatActivity() {
 
         setupCloseButton()
         setupPetTypeSpinner()
-        setupRangeDistance()
+        setupDistanceSlider()
         restoreFilterOptions()
 
         binding.btComplete.setOnClickListener {
@@ -53,39 +52,28 @@ class HomeFilterActivity : AppCompatActivity() {
                 petType = selectedPetType,
                 petGender = selectedGender,
                 petNeuter = selectNeuter,
-                distanceFrom = selectedDistanceFrom,
-                distanceTo = selectedDistanceTo
+                distanceFrom = selectedDistance
             )
-
-
-            saveFilterOptions(selectedPetType, selectedGender, selectNeuter, selectedDistanceFrom, selectedDistanceTo)
+            saveFilterOptions(selectedPetType, selectedGender, selectNeuter, selectedDistance)
             returnFilterResult(filter)
         }
     }
 
-    private fun setupRangeDistance() {
-        binding.rangeSlider.values = listOf(selectedDistanceFrom, selectedDistanceTo)
+    private fun setupDistanceSlider()= with(binding) {
+        slider.value = selectedDistance
+        slider.valueFrom = 10.0f // 슬라이더의 최소값
+        slider.valueTo = 360.0f // 슬라이더의 최대값
 
-        // km 단위로 라벨 포맷 설정
-        binding.rangeSlider.setLabelFormatter { value: Float ->
+        slider.setLabelFormatter { value: Float ->
             "${value.toInt()} km"
         }
-
-        binding.rangeSlider.addOnChangeListener { slider, _, _ ->
-            val values = slider.values
-            if (values.size >= 2) {
-                selectedDistanceFrom = values[0]
-                selectedDistanceTo = values[1] // 최대 거리
-            } else {
-
-            }
+        slider.addOnChangeListener { slider, value, _ ->
+            selectedDistance = value // 사용자가 선택한 최소 거리
         }
     }
 
 
-
-
-    private fun setupPetTypeSpinner() {
+        private fun setupPetTypeSpinner() {
         val adapter = ArrayAdapter.createFromResource(
             this,
             R.array.pet_types,
@@ -112,8 +100,8 @@ class HomeFilterActivity : AppCompatActivity() {
 
     private fun getSelectedGender(): String? {
         return when (binding.chipGroup.checkedChipId) {
-            R.id.chip_male -> "남"
-            R.id.chip_female -> "여"
+            R.id.chip_male -> "수컷"
+            R.id.chip_female -> "암컷"
             else -> "all"
         }
     }
@@ -126,13 +114,13 @@ class HomeFilterActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveFilterOptions(petType: String, petGender: String?, petNeuter: String?, distanceFrom: Float, distanceTo: Float) {
+    private fun saveFilterOptions(petType: String, petGender: String?, petNeuter: String?, distance: Float) {
         val filterOptions =
-            mapOf("petType" to petType, "petGender" to petGender, "petNeuter" to petNeuter,"distanceFrom" to distanceFrom,"distanceTo" to distanceTo)
+            mapOf("petType" to petType, "petGender" to petGender, "petNeuter" to petNeuter, "distanceFrom" to distance)
         database.reference.child("userSaveFilter").child(currentUserUid).setValue(filterOptions)
     }
 
-    private fun restoreFilterOptions() {
+    private fun restoreFilterOptions()= with(binding) {
         database.reference.child("userSaveFilter").child(currentUserUid)
             .addListenerForSingleValueEvent(object :
                 ValueEventListener {
@@ -144,26 +132,29 @@ class HomeFilterActivity : AppCompatActivity() {
                         snapshot.child("petNeuter").getValue(String::class.java) ?: "상관없음"
                     val petTypePosition =
                         resources.getStringArray(R.array.pet_types).indexOf(petType)
-                    selectedDistanceFrom = snapshot.child("distanceFrom").getValue(Float::class.java) ?: 10.0f
-                    selectedDistanceTo = snapshot.child("distanceTo").getValue(Float::class.java) ?: 360.0f
+                    val distance = snapshot.child("distanceFrom").getValue(Float::class.java) ?: 10.0f
 
 
-                    binding.spPetType.setSelection(petTypePosition)
+
+                    spPetType.setSelection(petTypePosition)
 
                     val genderChipId = when (petGender) {
-                        "남" -> R.id.chip_male
-                        "여" -> R.id.chip_female
+                        "수컷" -> R.id.chip_male
+                        "암컷" -> R.id.chip_female
                         else -> R.id.chip_all
                     }
-                    binding.chipGroup.check(genderChipId)
+                    chipGroup.check(genderChipId)
 
                     val neuterChipId = when (petNeuter) {
                         "중성화" -> R.id.chip_done
                         "중성화 안함" -> R.id.chip_nope
                         else -> R.id.chip_dont_care
                     }
-                    binding.chipGroup2.check(neuterChipId)
+                    chipGroup2.check(neuterChipId)
+                    slider.value = distance
+                    selectedDistance = distance
                 }
+
 
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -177,8 +168,8 @@ class HomeFilterActivity : AppCompatActivity() {
         setResult(Activity.RESULT_OK, result)
         finish()
     }
-    private fun setupCloseButton() {
-        binding.ivClose.setOnClickListener {
+    private fun setupCloseButton()= with(binding) {
+        ivClose.setOnClickListener {
             finish()
         }
     }

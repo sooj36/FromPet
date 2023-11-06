@@ -195,8 +195,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.slider.RangeSlider
-        android:id="@+id/range_slider"
+    <com.google.android.material.slider.Slider
+        android:id="@+id/slider"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:valueFrom="10.0"
