@@ -9,5 +9,6 @@ data class Filter(
     val petType: String? = "",
     val petGender: String? = "",
     val petNeuter: String? = "",
-    val location: String? = ""
+    var distanceFrom: Float = 10.0f,
+    var distanceTo: Float = 360.0f
 ): Parcelable

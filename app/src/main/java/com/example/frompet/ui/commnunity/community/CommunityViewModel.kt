@@ -1,6 +1,7 @@
 package com.example.frompet.ui.commnunity.community
 
 
+import android.media.metrics.Event
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,99 +24,78 @@ class CommunityViewModel(
     private val currentUserId = auth.currentUser?.uid
     private val currentUser = FirebaseAuth.getInstance().currentUser
 
-    private val _communityList = MutableLiveData<List<CommunityData>>()
-    val communityList: LiveData<List<CommunityData>> = _communityList
+    private val _communityList = MutableLiveData<List<CommunityData>?>()
+    val communityList: MutableLiveData<List<CommunityData>?> = _communityList
 
-    private val _selectedCommunityData = MutableLiveData<CommunityData?>()
-    val selectedCommunityData: MutableLiveData<CommunityData?> = _selectedCommunityData
+
 
 
     private val _event: SingleLiveEvent<CategoryClick> = SingleLiveEvent()
     val event: LiveData<CategoryClick> get() = _event
-
-    private val _clippedCommunityList = MutableLiveData<List<CommunityData>>()
-    val clippedCommunityList: LiveData<List<CommunityData>> = _clippedCommunityList
-
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
 
     // 데이터 로드
-    fun loadCommunityListData(filter: String?) {
-        val currentUserId = auth.currentUser?.uid
-//        val chipQuery = communitydb.collection("Community")
+//    fun loadCommunityListData(filter: String) {
 //
-//        if (filter != "전체") {
-//            Log.d("sooj" ,"tag ${filter}")
-//            chipQuery.whereEqualTo("tag", filter)
+//        val communityListData = mutableListOf<CommunityData>()
+//        if (filter == "전체") {
+//            communitydb
+//                .collection("Community")
+//                .orderBy("timestamp", Query.Direction.DESCENDING)
+//                .get()
+//
+//                .addOnSuccessListener { querySnapshot ->
+//                    Log.d("sooj", "tagadd ${querySnapshot.size()}")
+//
+//
+//                    if (querySnapshot.isEmpty.not()) {
+//                        for (document in querySnapshot.documents) {
+//                            val data = document.toObject(CommunityData::class.java)
+//                            data?.let {
+//                                communityListData.add(it)
+//                            }
+//                        }
+//
+//
+//                        Log.d("sooj", "test ${communityListData}")
+//                    }
+//                    _communityList.value = communityListData
+//                }
+//                .addOnFailureListener { exception ->
+//                    Log.e("sooj", "456 데이터 로딩 실패", exception)
+//                }
+//        } else {
+//            communitydb
+//                .collection("Community")
+//                .whereEqualTo("tag", filter)
+//                .orderBy("timestamp", Query.Direction.DESCENDING)
+//                .get()
+//
+//                .addOnSuccessListener { querySnapshot ->
+//                    Log.d("sooj", "tagadd ${querySnapshot.size()}")
+//
+//
+//                    if (querySnapshot.isEmpty.not()) {
+//                        for (document in querySnapshot.documents) {
+//                            val data = document.toObject(CommunityData::class.java)
+//                            data?.let {
+//                                communityListData.add(it)
+//                            }
+//                        }
+//                        Log.d("sooj", "test ${communityListData}")
+//                    }
+//                    _communityList.value = communityListData
+//                }
+//                .addOnFailureListener { exception ->
+//                    Log.e("sooj", "456 데이터 로딩 실패", exception)
+//                }
+//
 //        }
-        val communityListData = mutableListOf<CommunityData>()
-        if (filter == "전체") {
-            communitydb
-                .collection("Community")
-//            .whereEqualTo("tag", filter)
-//            .whereArrayContainsAny("tag", Arrays.asList("나눔", "산책", "사랑", "정보교환"))
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .get()
-
-                .addOnSuccessListener { querySnapshot ->
-                    Log.d("sooj", "tagadd ${querySnapshot.size()}")
-
-
-                    if (querySnapshot.isEmpty.not()) {
-                        for (document in querySnapshot.documents) {
-                            val data = document.toObject(CommunityData::class.java)
-                            data?.let {
-                                communityListData.add(it)
-                            }
-                        }
-
-
-                        Log.d("sooj", "test ${communityListData}")
-                    }
-                    _clippedCommunityList.postValue(communityListData)
-
-                }
-                .addOnFailureListener { exception ->
-                    Log.e("sooj", "456 데이터 로딩 실패", exception)
-                }
-        } else {
-            communitydb
-                .collection("Community")
-                .whereEqualTo("tag", filter)
-//            .whereArrayContainsAny("tag", Arrays.asList("나눔", "산책", "사랑", "정보교환"))
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .get()
-
-                .addOnSuccessListener { querySnapshot ->
-                    Log.d("sooj", "tagadd ${querySnapshot.size()}")
-
-
-                    if (querySnapshot.isEmpty.not()) {
-                        for (document in querySnapshot.documents) {
-                            val data = document.toObject(CommunityData::class.java)
-                            data?.let {
-                                communityListData.add(it)
-                            }
-                        }
-
-
-                        Log.d("sooj", "test ${communityListData}")
-                    }
-                    _communityList.value = communityListData
-                }
-                .addOnFailureListener { exception ->
-                    Log.e("sooj", "456 데이터 로딩 실패", exception)
-                }
-
-        }
-    }
-    fun setCommunityData(data: CommunityData?) {
-        _selectedCommunityData.value = data
-    }
-
-    //    }
+//    }
     fun getCommunityData(petType: String): LiveData<List<CommunityData>> {
         val liveData = MutableLiveData<List<CommunityData>>()
-        communitydb.collection("Community")
+        firestore.collection("Community")
             .whereEqualTo("petType", petType)
             .orderBy("timestamp", Query.Direction.DESCENDING)
             .get()
@@ -132,6 +112,33 @@ class CommunityViewModel(
         return liveData
     }
 
+    fun getFilterCommunityData(petType: String, filter: String): LiveData<List<CommunityData>> {
+        val liveData = MutableLiveData<List<CommunityData>>()
+
+        var query: Query = firestore.collection("Community").whereEqualTo("petType", petType)
+
+        if (filter != "전체") {
+            query = query.whereEqualTo("tag", filter)
+        }
+        query.orderBy("timestamp", Query.Direction.DESCENDING).get()
+            .addOnSuccessListener { docs ->
+                val communityDataList = docs.mapNotNull { document ->
+                    document.toObject(CommunityData::class.java)
+                }
+                liveData.value = communityDataList
+            }
+            .addOnFailureListener {}
+        return liveData
+    }
+    fun deleteCommunityData(docsId: String) {
+        firestore.collection("Community").document(docsId).delete()
+            .addOnSuccessListener {
+                val updatedList = _communityList.value?.filterNot { it.docsId == docsId }
+                _communityList.postValue(updatedList)
+            }
+            .addOnFailureListener { e ->
+            }
+    }
 }
 
 

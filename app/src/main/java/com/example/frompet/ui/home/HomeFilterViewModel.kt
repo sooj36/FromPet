@@ -1,14 +1,19 @@
 package com.example.frompet.ui.home
 
+import android.app.Application
+import android.location.Location
 import android.util.Log
-import androidx.fragment.app.viewModels
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.frompet.MatchSharedViewModel
 import com.example.frompet.data.model.Filter
 import com.example.frompet.data.model.User
+import com.example.frompet.data.model.UserLocation
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -18,7 +23,9 @@ import com.google.firebase.database.Transaction
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-class HomeFilterViewModel: ViewModel() {
+import com.example.frompet.util.showToast
+
+class HomeFilterViewModel(private val app :Application): ViewModel() {
     private val _filteredUsers = MutableLiveData<List<User>>()
     val filteredUsers: MutableLiveData<List<User>> get() = _filteredUsers
 
@@ -31,7 +38,38 @@ class HomeFilterViewModel: ViewModel() {
     private val currentUser = FirebaseAuth.getInstance().currentUser?.uid?:""
     private val swipedUsersRef = database.getReference("swipedUsers").child(currentUser)
     private val filteredUsersRef = database.getReference("filteredUsers").child(currentUser)
+    private val usersLocationRef = database.getReference("locations")
+    private var currentFilter: Filter? = null
     private var lastFilter: Filter? = null
+    private val distanceFilter = 10000f //10km 미터 단위로 변환
+    private var fusedLocationClient: FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(app)
+
+    // 거리 필터 (예: 10km)
+    private var currentUserLocation: Location? = null
+
+    init {
+        getCurrentUserLocation()
+    }
+    private fun getCurrentUserLocation() {
+        try {
+            val task: Task<Location> = fusedLocationClient.lastLocation
+            task.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    currentUserLocation = location
+                    app.showToast("위치권한을 성공적으로 가져왔습니다", Toast.LENGTH_SHORT)
+                    currentFilter?.let { filter ->
+                        loadLocationUsers(filter) // 현재 필터를 사용하여 사용자 위치를 로드
+                    }
+                }
+            }.addOnFailureListener {
+                app.showToast("위치권한을 가져오는데 실패 했습니다.", Toast.LENGTH_SHORT)
+            }
+        } catch (e: SecurityException) {
+            app.showToast("위치권한이 없습니다.", Toast.LENGTH_SHORT)
+        }
+    }
+
 
 
 
@@ -114,6 +152,51 @@ class HomeFilterViewModel: ViewModel() {
         filteredUsersRef.child(userId).removeValue()
     }
 
+    fun loadLocationUsers(filter: Filter) {
+        _isLoading.value = true
+        usersLocationRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val usersWithinDistance = mutableListOf<User>()
+
+                snapshot.children.forEach { userSnapshot ->
+                    val userLocation = userSnapshot.getValue(UserLocation::class.java) ?: return@forEach
+                    val otherUserLocation = Location("").apply {
+                        latitude = userLocation.latitude
+                        longitude = userLocation.longitude
+                    }
+
+                    currentUserLocation?.let { currentUserLocation ->
+                        val distance = currentUserLocation.distanceTo(otherUserLocation)
+                        if (distance >= filter.distanceFrom && distance <= filter.distanceTo) {
+                            val userId = userSnapshot.key ?: return@forEach
+                            store.collection("User").document(userId).get().addOnSuccessListener { document ->
+                                val user = document.toObject(User::class.java)
+                                user?.let {
+                                    it.userLocation = userLocation
+                                    usersWithinDistance.add(it)
+                                }
+                                _filteredUsers.value = usersWithinDistance.filter { user ->
+                                    user.userLocation?.let { location ->
+                                        val userDistance = currentUserLocation.distanceTo(Location("").apply {
+                                            latitude = location.latitude
+                                            longitude = location.longitude
+                                        })
+                                        userDistance >= filter.distanceFrom && userDistance <= filter.distanceTo
+                                    } ?: false
+                                }
+                            }
+                        }
+                    }
+                }
+                _isLoading.value = false
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                _isLoading.value = false
+            }
+        })
+    }
+
     // 필터링된 사용자 목록을 업데이트하는 함수입니당
     private fun updateFilteredUsers(users: List<User>) {
     //이 트랜잭션을 사용하는 이유: 여러 사용자가 동시에 같은 데이터를 수정할 때 발생할 수 있는 충돌을 방지하기 위해(현재상태기반으로 데이터를 읽고 쓰는 방식)
@@ -136,7 +219,21 @@ class HomeFilterViewModel: ViewModel() {
             }
         })
     }
+
+
 }
+
+
+    class HomeFilterViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(HomeFilterViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return HomeFilterViewModel(application) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+
 
 
 
