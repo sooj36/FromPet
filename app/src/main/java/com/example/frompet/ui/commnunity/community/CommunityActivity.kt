@@ -1,10 +1,17 @@
 package com.example.frompet.ui.commnunity.community
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityBinding
@@ -65,7 +72,7 @@ class CommunityActivity : AppCompatActivity() {
 
 
         binding.recyclerview.adapter = communityAdapter
-        binding.recyclerview.scrollToPosition(0) // 수정 예정
+//        binding.recyclerview.scrollToPosition(0) // 수정 예정
 
         // Firebase 현재 사용자 가져오기 (일단 남겨놈)
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -88,7 +95,7 @@ class CommunityActivity : AppCompatActivity() {
         binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
             val currentFilter = getFilter()
             Log.d("sooj", "123 ${currentFilter}")
-            viewModel.loadCommunityListData(currentFilter)
+            viewModel.loadCommunityListData(currentFilter.first)
 
         }
 
@@ -108,14 +115,35 @@ class CommunityActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        viewModel.loadCommunityListData(getFilter())
+        viewModel.loadCommunityListData(getFilter().first)
     }
     private fun getFilter() =  when (binding.chipGroup.checkedChipId) {
-        R.id.chip_share -> "나눔"
-        R.id.chip_walk -> "산책"
-        R.id.chip_love -> "사랑"
-        R.id.chip_exchange -> "정보교환"
-        R.id.chip_all -> "전체"
-        else -> ""
+        R.id.chip_share -> {
+            val colorShare = ContextCompat.getColor(this, R.color.chip_background_share)
+            Pair("나눔", colorShare)
+        }
+        R.id.chip_walk -> {
+            val colorWalk = ContextCompat.getColor(this, R.color.chip_background_walk)
+            Pair("산책", colorWalk)
+        }
+        R.id.chip_love -> {
+            val colorLove = ContextCompat.getColor(this, R.color.chip_background_love)
+            Pair("사랑", colorLove)
+        }
+        R.id.chip_exchange -> {
+            val colorExchange = ContextCompat.getColor(this, R.color.chip_background_exchange)
+            Pair("정보교환", colorExchange)
+        }
+        R.id.chip_all -> Pair("전체", Color.TRANSPARENT)
+        else -> Pair("", Color.TRANSPARENT)
+    }
+
+    private fun scrollToLastItem(view: View) {
+        var manager = findViewById<RecyclerView>(R.id.recyclerview).layoutManager as? LinearLayoutManager
+        val last = manager!!.findLastVisibleItemPosition()
+        Handler(Looper.getMainLooper()).postDelayed(
+            Runnable { manager!!.scrollToPositionWithOffset(last,0)},
+            300
+        )
     }
 }
