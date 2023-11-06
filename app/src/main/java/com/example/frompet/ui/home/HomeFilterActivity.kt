@@ -62,7 +62,7 @@ class HomeFilterActivity : AppCompatActivity() {
     private fun setupDistanceSlider()= with(binding) {
         slider.value = selectedDistance
         slider.valueFrom = 10.0f // 슬라이더의 최소값
-        slider.valueTo = 360.0f // 슬라이더의 최대값
+        slider.valueTo = 600.0f // 슬라이더의 최대값
 
         slider.setLabelFormatter { value: Float ->
             "${value.toInt()} km"
