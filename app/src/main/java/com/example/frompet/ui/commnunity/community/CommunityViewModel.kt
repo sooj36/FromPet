@@ -26,9 +26,16 @@ class CommunityViewModel(
     private val _communityList = MutableLiveData<List<CommunityData>>()
     val communityList: LiveData<List<CommunityData>> = _communityList
 
+    private val _selectedCommunityData = MutableLiveData<CommunityData?>()
+    val selectedCommunityData: MutableLiveData<CommunityData?> = _selectedCommunityData
+
 
     private val _event: SingleLiveEvent<CategoryClick> = SingleLiveEvent()
     val event: LiveData<CategoryClick> get() = _event
+
+    private val _clippedCommunityList = MutableLiveData<List<CommunityData>>()
+    val clippedCommunityList: LiveData<List<CommunityData>> = _clippedCommunityList
+
 
 
     // 데이터 로드
@@ -64,7 +71,8 @@ class CommunityViewModel(
 
                         Log.d("sooj", "test ${communityListData}")
                     }
-                    _communityList.value = communityListData
+                    _clippedCommunityList.postValue(communityListData)
+
                 }
                 .addOnFailureListener { exception ->
                     Log.e("sooj", "456 데이터 로딩 실패", exception)
@@ -99,6 +107,29 @@ class CommunityViewModel(
                 }
 
         }
+    }
+    fun setCommunityData(data: CommunityData?) {
+        _selectedCommunityData.value = data
+    }
+
+    //    }
+    fun getCommunityData(petType: String): LiveData<List<CommunityData>> {
+        val liveData = MutableLiveData<List<CommunityData>>()
+        communitydb.collection("Community")
+            .whereEqualTo("petType", petType)
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { documents ->
+                Log.d("zzzzzz", "Documents: $documents")
+
+                val communityDataList = documents.mapNotNull { document ->
+                    document.toObject(CommunityData::class.java)
+                }
+                liveData.value = communityDataList
+            }
+            .addOnFailureListener { exception ->
+            }
+        return liveData
     }
 
 }
