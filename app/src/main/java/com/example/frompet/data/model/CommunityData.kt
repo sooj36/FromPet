@@ -25,3 +25,4 @@ data class CommunityData(
                 "petProfile=$petProfile, petName=$petName)"
     }
 }
+

@@ -14,6 +14,7 @@ import com.example.frompet.databinding.ActivityMainBinding
 import com.example.frompet.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import android.Manifest
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 
 class MainActivity : AppCompatActivity() {
@@ -24,10 +25,18 @@ class MainActivity : AppCompatActivity() {
 
     private val fcmTokenManager = FCMTokenManager()
     private val binding get() = _binding!!
+
+    val clientId = BuildConfig.NAVER_CLIENT_ID
+    val clientSecret = BuildConfig.NAVER_CLIENT_SECRET
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        Log.d("naver", "네이버 아이디${clientId}")
+        Log.d("naver", "네이버 시크릿${clientSecret}")
+
         binding.myBottomNav.itemIconTintList = null
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
