@@ -69,7 +69,9 @@ class HomeFilterActivity : AppCompatActivity() {
         }
         slider.addOnChangeListener { slider, value, _ ->
             selectedDistance = value // 사용자가 선택한 최소 거리
+            tvKm.text = "${value.toInt()} km"
         }
+        tvKm.text = "${selectedDistance.toInt()} km"
     }
 
 
@@ -153,6 +155,7 @@ class HomeFilterActivity : AppCompatActivity() {
                     chipGroup2.check(neuterChipId)
                     slider.value = distance
                     selectedDistance = distance
+                    tvKm.text = "${selectedDistance.toInt()} km"
                 }
 
 
