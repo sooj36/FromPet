@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="15dp"
-                android:text="@string/home_name"
+                android:text=""
                 android:textColor="@color/dark_gray"
                 android:textSize="20sp"
                 android:transitionName="petTypeTransition"
@@ -90,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/activity_detail_petgender"
+                android:text=""
                 android:textColor="@color/dark_gray"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@+id/tv_pet_type"
@@ -121,12 +121,15 @@
 
             <TextView
                 android:id="@+id/tv_pet_des"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/activity_detail_petdes"
                 android:textColor="@color/dark_gray"
                 android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView12"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
@@ -156,12 +159,15 @@
 
             <TextView
                 android:id="@+id/tv_pet_intro"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/activity_detail_petintro"
                 android:textColor="@color/dark_gray"
                 android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView13"
                 app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
@@ -183,7 +189,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="TextView"
+                android:text=""
                 android:textColor="@color/dark_gray"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@+id/tv_pet_gender"
