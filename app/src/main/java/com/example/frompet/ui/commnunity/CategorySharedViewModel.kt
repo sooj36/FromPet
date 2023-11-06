@@ -10,6 +10,7 @@ class CategorySharedViewModel : ViewModel() {
     private val _selectCategory = MutableLiveData<CommunityData>()
     val selectCategory: LiveData<CommunityData> = _selectCategory
 
+
     fun selectPetCategory(data:CommunityData){
         _selectCategory.value = data
         Log.e("ssh4","${data}")
