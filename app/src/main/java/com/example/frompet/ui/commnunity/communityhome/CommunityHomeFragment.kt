@@ -29,7 +29,7 @@ class CommunityHomeFragment : Fragment() {
     private var _binding: FragmentCommunityhomeBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MatchSharedViewModel by viewModels()
-    private val sharedViewModel : CategorySharedViewModel by viewModels()
+    private val sharedViewModel: CategorySharedViewModel by viewModels()
     private val _viewModel by lazy {
         ViewModelProvider(
             this,
@@ -39,11 +39,11 @@ class CommunityHomeFragment : Fragment() {
     private val imageSliderAdapter: ImageSliderAdapter by lazy { ImageSliderAdapter() }
 
     private val communityHomeAdapter by lazy {
-        CommunityHomeAdapter(onClicked = {item->
+        CommunityHomeAdapter(onClicked = { item ->
             toCategory(item)
             _viewModel.listClickCategory(item.petType)
-            Log.e("sshL", item.petType)
-            Log.e("sshL1", item.toString())
+            Log.e("sshHome", item.petType)
+            Log.e("sshHome", item.toString())
 
         })
     }
@@ -67,6 +67,7 @@ class CommunityHomeFragment : Fragment() {
             if (!selectPetType.isNullOrEmpty()) {
                 // 카테고리 변경 시 카테고리 데이터를 다시 로드
                 _viewModel.getHomeCategory()
+                Log.e("sshHome", "$selectPetType")
             }
         }
 
@@ -86,50 +87,52 @@ class CommunityHomeFragment : Fragment() {
     }
 
 
-
     private fun initView() = with(binding) {
         categoryBt.layoutManager = GridLayoutManager(requireContext(), 4)
         categoryBt.adapter = communityHomeAdapter
-        Log.e("zzzzzzz", "Adapter set with ${communityHomeAdapter.itemCount} items")
+        Log.e("sshHome", "Adapter set with ${communityHomeAdapter.itemCount} items")
         _viewModel.commuHomeDataList.observe(viewLifecycleOwner) { CateHomeList ->
-            Log.d("zzzzzzz", "CategoryList 변경됨")
+            Log.d("sshHome", "CategoryList 변경됨")
             communityHomeAdapter.submitList(CateHomeList)
+            Log.e("sshHome인데?", "$CateHomeList")
         }
-        /*communityHomeAdapter.onClicked = { item ->
-            item.petType?.let { petType ->
-                _viewModel.listClickCategory(petType)
-            }
-        }*/
         _viewModel.getHomeCategory()
+        Log.e("ssh10", "${communityHomeAdapter}")
 
     }
 
-    private fun toCategory(item: CommunityHomeData) = with(_viewModel){
-        /*_viewModel.onCategoryClicked(item) // 클릭된 아이템 전달
-        sharedViewModel.selectPetCategory(item.toCommunityData())*/
-        val selectedData = item.toCommunityData()
-        // CommunityActivity로 이동하며 필터링된 데이터를 전달
-        val intent = Intent(requireContext(), CommunityActivity::class.java)
-        intent.putExtra(CommunityActivity.EXTRA_PET_TYPE, item.petType)
-        intent.putExtra(CommunityActivity.EXTRA_PET_TYPE, selectedData)
-        startActivity(intent)
-        onCategoryClicked(item.toCommunityData())
-        Log.e("dasd","${item.toCommunityData()}")
+    private fun toCategory(item: CommunityHomeData) = with(_viewModel) {
+        val selectedData = _viewModel.getHomeCategory()
+        selectedData?.let {
+            val selectedCommunityDataList = clickedCategoryData
+            selectedCommunityDataList.observe(viewLifecycleOwner) { communityData ->
+                _viewModel.onCategoryClicked(communityData)
+            }
+            sharedViewModel.selectPetCategory(item.toCommunityData())
+            Log.e("sshHome", "$item.toCommunityData()")
+            val intent = Intent(requireContext(), CommunityActivity::class.java)
+            intent.putExtra(CommunityActivity.EXTRA_PET_TYPE, item.petType)
+            intent.putExtra(CommunityActivity.EXTRA_DATA,item.toCommunityData())
+            startActivity(intent)
+        } ?: run {
+            Log.e("sshHome", "Selected Data is null")
+        }
+        _viewModel.listClickCategory(item.petType)
     }
 
     private fun initViewModel() {
-        Log.e("ㅁㅁㅁㅁㅁ", "initViewModel function called")
+        Log.e("sshHome", "initViewModel function called")
         with(_viewModel) {
             event.observe(viewLifecycleOwner) { event ->
                 when (event) {
                     is CategoryClick.PetCategory -> {
-                        Log.e("ssh2", "Event observed: $event")
+                        Log.e("sshHome", "Event observed: $event")
                         // 클릭 이벤트 처리
-                        val selectedCommunityData = selectPetType.value
+                        val selectedCommunityData = communityList.value?.firstOrNull()
                         if (selectedCommunityData != null) {
-                            Log.e("ssh3", "Selected Community Data: $selectedCommunityData")
+                            Log.e("sshHome", "Selected Community Data: $selectedCommunityData")
                             Intent(requireContext(), CommunityActivity::class.java).apply {
-                                putExtra(CommunityActivity.EXTRA_DATA, selectedCommunityData)
+                                putExtra(CommunityActivity.EXTRA_PET_TYPE, selectedCommunityData)
                                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             }.run { requireContext().startActivity(this) }
                         }
@@ -138,6 +141,7 @@ class CommunityHomeFragment : Fragment() {
             }
         }
     }
+
     fun onCategoryClicked(data: CommunityData) {
         _viewModel.onCategoryClicked(data)
     }

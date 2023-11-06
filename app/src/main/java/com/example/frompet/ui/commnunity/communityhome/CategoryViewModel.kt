@@ -42,16 +42,28 @@ class CategoryViewModel(
 
     fun onCategoryClicked(data: CommunityData) {
         _clickedCategoryData.value = data
+        _event.value = CategoryClick.PetCategory(CommunityData())
     }
 
     fun getHomeCategory(){
         viewModelScope.launch {
-            try{
+            try {
                 val categories = categoryRepository.getCategory()
-                Log.e("zzzzzzz", "getHomeCategory executed successfully") // 디버그 로그
+                Log.e("sshView", "getHomeCategory executed successfully") // 디버그 로그
                 _commuHomeDataList.postValue(categories)
-            }catch (e:Exception){
-                Log.e("zzzzz", "Error in getHomeCategory: ${e.message}", e) // 오류 로그
+
+                // 모든 카테고리를 가져오고, 그에 해당하는 CommunityData를 생성하여 저장
+                val allCommunityData = mutableListOf<CommunityData>()
+                for (category in categories) {
+                    val petType = category.petType
+                    val communityData = categoryRepository.getCommunityData(petType)
+                    allCommunityData.addAll(communityData)
+                }
+
+                // 필터링되지 않은 모든 데이터를 _communityList에 저장
+                _communityList.postValue(allCommunityData)
+            } catch (e: Exception) {
+                Log.e("sshView", "Error in getHomeCategory: ${e.message}", e) // 오류 로그
             }
         }
     }
@@ -59,23 +71,20 @@ class CategoryViewModel(
     fun listClickCategory(petType: String) {
         viewModelScope.launch {
             try {
-                Log.e("zzzzzzz", petType)
+                Log.e("sshView", petType)
                 val category = categoryRepository.getCommunityData(petType)
                 val cateMatchCategory = category.filter { it.petType == petType }
                 if (cateMatchCategory.isNotEmpty()) {
                     _communityList.value = cateMatchCategory
-                    Log.e("zzzzzzz","$petType,$cateMatchCategory")
+                    _selectPetType.value = petType
+                    Log.e("sshView","$petType,$cateMatchCategory")
                 } else {
-                    Log.e("zzzzzzz", petType)
+                    Log.e("sshView", petType)
                 }
             }catch (e: Exception){
-                Log.e("zzzzzzz","errot",e)
+                Log.e("sshView","errot",e)
             }
         }
-    }
-    fun onCategoryClicked(data: CommunityHomeData) {
-        // 클릭한 카테고리 데이터를 Event로 전달
-        _event.value = CategoryClick.PetCategory(data.toCommunityData())
     }
 
 }
@@ -84,7 +93,7 @@ class CategoryViewModelFactory(
 ): ViewModelProvider.Factory{
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CategoryViewModel::class.java)) {
-            Log.e("hhhhh", "CategoryViewModel instance created")
+            Log.e("sshView", "CategoryViewModel instance created")
             return CategoryViewModel(CategoryRepositoryImp(context)) as T
         } else {
             throw IllegalArgumentException("Not found ViewModel class.")
