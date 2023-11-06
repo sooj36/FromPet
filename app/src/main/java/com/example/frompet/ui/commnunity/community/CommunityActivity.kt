@@ -21,6 +21,7 @@ class CommunityActivity : AppCompatActivity() {
         const val COMMUNITY_DATA = "communityData"
         const val EXTRA_DATA = "extra_data"
         const val EXTRA_PET_TYPE = "petT"
+        const val EXTRA_DATA_LIST = "com"
     }
 
     private var _binding: ActivityCommunityBinding? = null
@@ -33,7 +34,7 @@ class CommunityActivity : AppCompatActivity() {
                 add(item) // Add the clicked item
             }
             //전달하는 데이터
-            val intent: Intent = Intent(this, CommunityDetailActivity::class.java)
+            val intent = Intent(this, CommunityDetailActivity::class.java)
             Log.d("sooj", "item ${item}")
             intent.putExtra(COMMUNITY_DATA, item)
             startActivity(intent)
@@ -53,16 +54,11 @@ class CommunityActivity : AppCompatActivity() {
         _binding = ActivityCommunityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        val petType = intent.getStringExtra(CommunityActivity.EXTRA_PET_TYPE)
+        val petType = intent.getStringExtra(EXTRA_PET_TYPE)
         if (petType != null) {
-            // 필터 정보 사용
             filterItemsByPetType(petType)
-            observeCommunityList()
-            Log.d("ㅂㅂㅂㅂ", "petType $petType")
-        } else {
-            // 아무 필터도 없을 때 전체 아이템 표시
-            filterItemsByPetType("전체")
+
+        }else{
         }
 
 
@@ -72,10 +68,10 @@ class CommunityActivity : AppCompatActivity() {
         // Firebase 현재 사용자 가져오기 (일단 남겨놈)
         val currentUser = FirebaseAuth.getInstance().currentUser
 
-        viewModel.communityList.observe(this) { communityList ->
-            communityAdapter.submitList(communityList)
-        }
 
+      /*  viewModel.communityList.observe(this) { communityList ->
+            communityAdapter.submitList(communityList)
+        }*/
 
         binding.backBtn.setOnClickListener {
             finish()
@@ -90,13 +86,8 @@ class CommunityActivity : AppCompatActivity() {
         binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
             val currentFilter = getFilter()
             Log.d("sooj", "123 ${currentFilter}")
-            viewModel.loadCommunityListData(currentFilter)
-
+            // 현재 필터에 따라 데이터 필터링 또는 업데이트
         }
-   /*     _viewModel.selectPetCategory.observe(this, Observer { selectedData ->
-            adapter.submitList(listOf(selectedData))
-        })*/
-
 
         viewModel.event.observe(this) { categoryClick ->
             when (categoryClick) {
@@ -112,13 +103,9 @@ class CommunityActivity : AppCompatActivity() {
     }
     // CommunityActivity
     private fun filterItemsByPetType(petType: String) {
-        // petType과 일치하는 아이템을 필터링
-        val filteredItems = communityAdapter.currentList.filter { item ->
-            item.petType == petType
+        viewModel.getCommunityData(petType).observe(this) { communityDataList ->
+            communityAdapter.submitList(communityDataList)
         }
-
-        // 리사이클러뷰 어댑터에 필터링된 아이템 목록을 설정
-        communityAdapter.submitList(filteredItems)
     }
     private fun observeCommunityList() {
         viewModel.communityList.observe(this) { communityList ->
