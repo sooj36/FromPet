@@ -26,16 +26,16 @@ class MainActivity : AppCompatActivity() {
     private val fcmTokenManager = FCMTokenManager()
     private val binding get() = _binding!!
 
-    val clientId = BuildConfig.NAVER_CLIENT_ID
-    val clientSecret = BuildConfig.NAVER_CLIENT_SECRET
+//    val clientId = BuildConfig.NAVER_CLIENT_ID
+//    val clientSecret = BuildConfig.NAVER_CLIENT_SECRET
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Log.d("naver", "네이버 아이디${clientId}")
-        Log.d("naver", "네이버 시크릿${clientSecret}")
+//        Log.d("naver", "네이버 아이디${clientId}")
+//        Log.d("naver", "네이버 시크릿${clientSecret}")
 
         binding.myBottomNav.itemIconTintList = null
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
