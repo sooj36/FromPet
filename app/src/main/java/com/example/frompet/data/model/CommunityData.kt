@@ -17,5 +17,12 @@ data class CommunityData(
     val petProfile: String?= null,
     val petName: String = "",
 
-    ): Parcelable
+    ): Parcelable{
+    // 기본 toString() 메서드를 오버라이드하여 원하는 형식으로 출력
+    override fun toString(): String {
+        return "CommunityData(title=$title, tag=$tag, timestamp=$timestamp, " +
+                "contents=$contents, uid=$uid, docsId=$docsId, petType=$petType, " +
+                "petProfile=$petProfile, petName=$petName)"
+    }
+}
 
