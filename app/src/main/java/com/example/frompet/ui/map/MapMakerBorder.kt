@@ -23,7 +23,7 @@ class MapMakerBorder(private val context: Context, private val borderWidth: Floa
         val output = pool.get(input.width, input.height, input.config)
         val canvas = Canvas(output)
         val redColor = ContextCompat.getColor(context, R.color.red)
-        val pinkColor = ContextCompat.getColor(context, R.color.lip_pink)
+        val pinkColor = ContextCompat.getColor(context, R.color.orange)
 
         val paint = Paint().apply {
             style = Paint.Style.STROKE

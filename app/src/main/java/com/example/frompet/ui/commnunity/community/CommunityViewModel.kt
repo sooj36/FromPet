@@ -5,16 +5,12 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.frompet.SingleLiveEvent
 import com.example.frompet.data.model.CommunityData
-import com.example.frompet.data.repository.category.CategoryRepository
 import com.example.frompet.ui.commnunity.communityhome.CategoryClick
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import kotlinx.coroutines.launch
-import java.util.Arrays
 
 class CommunityViewModel(
 ) : ViewModel() {
@@ -43,7 +39,7 @@ class CommunityViewModel(
 
 
     // 데이터 로드
-    fun loadCommunityListData(filter: String) {
+    fun loadCommunityListData(filter: String?) {
         val currentUserId = auth.currentUser?.uid
 //        val chipQuery = communitydb.collection("Community")
 //
