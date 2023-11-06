@@ -1,5 +1,3 @@
-@file:Suppress("UNREACHABLE_CODE")
-
 package com.example.frompet.ui.map
 
 import android.Manifest
@@ -121,8 +119,6 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         this.naverMap = naverMap
         setUpMap()
 
-
-
         // Firebase
         val database = Firebase.database
         val locationRef = database.getReference("location")
@@ -144,7 +140,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
             if (location != null) {
                 // 사용자 현재 위치 파베에 업로드
                 val userLocation = UserLocation(location.latitude, location.longitude) // 사용자 위도 경도
-                location?.let {
+                location.let {
                     UserLocation(latitude = location.latitude, longitude = it.longitude)
                     locationRef.child(currentUserId).setValue(userLocation)
                     Log.d(
@@ -172,18 +168,8 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
             override fun onCancelled(error: DatabaseError) {}
         })
-//        // 이동 마다 호출되는 콜백 설정
-//        naverMap.addOnCameraChangeListener { reason, animated ->
-//            // 현재 보이는 영역만 가져옴
-//            val visibleRegion = naverMap.contentBounds
-//
-//            // fb realtime db에서 해당 데이터만 가져옴
-//            val geoFire = GeoFire(FirebaseDatabase.getInstance().getReference("location"))
-//            val geoQuery = geoFire.queryAtLocation(
-//                GeoLocation(visibleRegion.center.latitude, visibleRegion.center.longitude),
-//                max(visibleRegion.latitudeSize, visibleRegion.longitudeSize)
-//            )
-//        }
+
+
     }
 
     private fun setUpMap() {
@@ -207,6 +193,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
     }
 
+    // userlocation, useruid 받아서 naver 지도에 마커 생성, 반환
     private fun createMarker(location: UserLocation, userUid: String): Marker {
         val marker = Marker()
 
@@ -228,13 +215,13 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
         marker.onClickListener = Overlay.OnClickListener {
             markerClick(userUid)
-
             true
         }
         return marker
 
     }
 
+    // 마커 클릭 시, 프로필 띄우기
     private fun markerClick(userUid : String) {
         lifecycleScope.launch {
             val userDocument = firestore.collection("User").document(userUid).get().await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
@@ -245,6 +232,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    // 특정 사용자의 프로필 이미지 -> 마커 아이콘
     private fun setUserProfileImage(userUid: String, marker: Marker) = lifecycleScope.launch {
         val userDocument = firestore.collection("User").document(userUid).get()
             .await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
