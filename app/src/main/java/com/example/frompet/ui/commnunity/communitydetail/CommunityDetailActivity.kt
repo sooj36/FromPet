@@ -5,18 +5,26 @@ import android.icu.text.SimpleDateFormat
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.PopupMenu
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.frompet.R
+import com.example.frompet.data.model.CommentData
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.data.model.User
 import com.example.frompet.databinding.ActivityCommunityDetailBinding
+import com.example.frompet.ui.setting.FriendsListAdapter
 import com.example.frompet.util.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -32,6 +40,11 @@ class CommunityDetailActivity : AppCompatActivity() {
 
     private var communityData: CommunityData? = null
 
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: CommentAdapter
+
+
+
     companion object {
         const val COMMUNITY_DATA = "communityData"
         const val DOCS_ID = "docsId"
@@ -45,6 +58,20 @@ class CommunityDetailActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
+        recyclerView = binding.rvReply
+        adapter = CommentAdapter()
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        communityData = intent.getParcelableExtra(DOCS_ID)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            communityData = intent.getParcelableExtra(COMMUNITY_DATA, CommunityData::class.java)
+        } else {
+            communityData = intent.extras?.getParcelable(COMMUNITY_DATA) as CommunityData?
+        }
+
+
+
+
 
         communityData = intent.getParcelableExtra(DOCS_ID)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -55,11 +82,14 @@ class CommunityDetailActivity : AppCompatActivity() {
 
         }
 
+
         // 화면에 표시
         val title = binding.tvDetailTitle
         val contents = binding.tvDetailContents
         val tag = binding.chipTag
         val lastTime = binding.tvLastTime
+
+
 
 
         // CommunityData에서 가져오기
@@ -79,8 +109,15 @@ class CommunityDetailActivity : AppCompatActivity() {
             showPopup(it, communityData?.docsId) // 팝업 메뉴 표시
         }
 
+
+        binding.btnDetailEnroll.setOnClickListener {
+            // 댓글 추가 버튼 클릭 시 호출되는 함수
+            addComment()
+        }
+        loadComments()
     }
-    private fun loadUserData(uid: String)= with(binding) {
+
+    private fun loadUserData(uid: String) = with(binding) {
         store.collection("User").document(uid)
             .get()
             .addOnSuccessListener { docsSnapshot ->
@@ -145,9 +182,8 @@ class CommunityDetailActivity : AppCompatActivity() {
     }
 
 
-
     private fun updateActivity() {
-        val intent : Intent = Intent(this, CommunityDetailUpdateActivity::class.java)
+        val intent: Intent = Intent(this, CommunityDetailUpdateActivity::class.java)
         intent.putExtra(COMMUNITY_DATA, communityData)
         startActivity(intent)
         finish()
@@ -169,4 +205,58 @@ class CommunityDetailActivity : AppCompatActivity() {
                 }
         }
     }
+
+    private fun addComment() {
+        val etComments = binding.etDetailComments
+        val commentText = etComments.text.toString()
+        if (commentText.isNotEmpty()) {
+            val authorName = currentUser?.displayName ?: ""
+            val authorProfile =
+                currentUser?.photoUrl?.toString() ?: ""
+
+            val commentData = CommentData(
+                content = commentText,
+                authorUid = currentUser?.uid ?: "",
+                authorName = authorName,
+                authorProfile = authorProfile,
+                postDocumentId = communityData?.docsId ?: "",
+                timestamp = System.currentTimeMillis()
+            )
+            store.collection("Community")
+                .document(communityData?.docsId ?: "")
+                .collection("Comment")
+                .add(commentData)
+                .addOnSuccessListener {
+                    showToast("댓글이 추가되었습니다", Toast.LENGTH_SHORT)
+                    etComments.text.clear()
+
+                }
+                .addOnFailureListener {
+                    showToast("댓글 추가에 실패했습니다", Toast.LENGTH_SHORT)
+                }
+        } else {
+            showToast("댓글 내용을 입력하세요", Toast.LENGTH_SHORT)
+        }
+    }
+
+    private fun loadComments() {
+        val commentsRef = store.collection("Community")
+            .document(communityData?.docsId ?: "")
+            .collection("Comment")
+
+        val query = commentsRef.orderBy("timestamp", Query.Direction.ASCENDING)
+
+        query.addSnapshotListener { querySnapshot, error ->
+            if (error != null) {
+                return@addSnapshotListener
+            }
+
+            querySnapshot?.let {
+                val comments = it.toObjects(CommentData::class.java)
+                adapter.submitList(comments)
+                Log.d("2222", "Loaded ${comments.size} comments")
+            }
+        }
+    }
+
 }
