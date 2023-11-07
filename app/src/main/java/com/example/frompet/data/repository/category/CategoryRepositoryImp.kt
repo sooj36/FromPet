@@ -19,17 +19,17 @@ class CategoryRepositoryImp(
         )
         Log.e("sshImp", "getCategory called with categories: $categories")
         return categories.map { categoryString ->
+            val stringResourceId = context.resources.getIdentifier(categoryString, "string", context.packageName)
+            val categoryText = if (stringResourceId != 0) {
+                context.getString(stringResourceId)
+            } else {
+                "Category Not Found"
+            }
+
             CommunityHomeData(
                 getAnimalImage(categoryString), // 이미지 리소스 ID 가져오기
-                context.getString(
-                    context.resources.getIdentifier(
-                        categoryString,
-                        "string",
-                        context.packageName
-                    )
-                )
+                categoryText
             )
-
         }
     }
 
