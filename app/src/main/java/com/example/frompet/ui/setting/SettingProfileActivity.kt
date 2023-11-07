@@ -237,8 +237,8 @@ class SettingProfileActivity : AppCompatActivity() {
 
     private fun updateImageViewBasedOnPetGender(petGender: String?) {
         when (petGender) {
-            "수컷" -> binding.ivPetType.setImageResource(R.drawable.icon_male)
-            "암컷" -> binding.ivPetType.setImageResource(R.drawable.icon_female)
+            "수컷" -> binding.ivPetGender.setImageResource(R.drawable.icon_male)
+            "암컷" -> binding.ivPetGender.setImageResource(R.drawable.icon_female)
         }
     }
 

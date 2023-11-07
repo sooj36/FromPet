@@ -206,35 +206,52 @@ class CommunityDetailActivity : AppCompatActivity() {
     private fun addComment() {
         val etComments = binding.etDetailComments
         val commentText = etComments.text.toString()
+
         if (commentText.isNotEmpty()) {
-            val authorName = currentUser?.displayName ?: ""
-            val authorProfile =
-                currentUser?.photoUrl?.toString() ?: ""
+            val uid = currentUser?.uid
+            if (uid != null) {
+                store.collection("User")
+                    .document(uid)
+                    .get()
+                    .addOnSuccessListener { userSnapshot ->
+                        val user = userSnapshot.toObject(User::class.java)
+                        if (user != null) {
+                            val petName = user.petName
+                            val petProfile = user.petProfile
 
-            val commentData = CommentData(
-                content = commentText,
-                authorUid = currentUser?.uid ?: "",
-                authorName = authorName,
-                authorProfile = authorProfile,
-                postDocumentId = communityData?.docsId ?: "",
-                timestamp = System.currentTimeMillis()
-            )
-            store.collection("Community")
-                .document(communityData?.docsId ?: "")
-                .collection("Comment")
-                .add(commentData)
-                .addOnSuccessListener {
-                    showToast("댓글이 추가되었습니다", Toast.LENGTH_SHORT)
-                    etComments.text.clear()
+                            val commentData = CommentData(
+                                content = commentText,
+                                authorUid = currentUser?.uid ?: "",
+                                authorName = petName,
+                                authorProfile = petProfile,
+                                postDocumentId = communityData?.docsId ?: "",
+                                timestamp = System.currentTimeMillis()
+                            )
 
-                }
-                .addOnFailureListener {
-                    showToast("댓글 추가에 실패했습니다", Toast.LENGTH_SHORT)
-                }
+                            store.collection("Community")
+                                .document(communityData?.docsId ?: "")
+                                .collection("Comment")
+                                .add(commentData)
+                                .addOnSuccessListener {
+                                    showToast("댓글이 추가되었습니다", Toast.LENGTH_SHORT)
+                                    etComments.text.clear()
+                                }
+                                .addOnFailureListener {
+                                    showToast("댓글 추가에 실패했습니다", Toast.LENGTH_SHORT)
+                                }
+                        } else {
+                            showToast("사용자 정보를 불러오는데 실패했습니다.", Toast.LENGTH_SHORT)
+                        }
+                    }
+                    .addOnFailureListener {
+                        showToast("사용자 정보를 불러오는데 실패했습니다.", Toast.LENGTH_SHORT)
+                    }
+            }
         } else {
             showToast("댓글 내용을 입력하세요", Toast.LENGTH_SHORT)
         }
     }
+
 
     private fun loadComments() {
         val commentsRef = store.collection("Community")
@@ -255,5 +272,4 @@ class CommunityDetailActivity : AppCompatActivity() {
             }
         }
     }
-
 }

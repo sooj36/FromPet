@@ -150,7 +150,7 @@ class SettingFragment : Fragment() {
                 database.child("usersToken").child(auth.currentUser?.uid ?: "").child("notificationsEnabled").setValue(false)
             }
         }
-        //앱 시작시 리얼타임베이스에서 noti의 상태를 불러와서 버튼에 적용
+        //앱 시작시 리얼타임베이스에서 noti의 상태를 불러와서 버튼에 적용!
         database.child("usersToken").child(auth.currentUser?.uid ?: "")
             .child("notificationsEnabled").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
