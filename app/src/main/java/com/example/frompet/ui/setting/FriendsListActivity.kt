@@ -3,6 +3,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frompet.MatchSharedViewModel
@@ -22,10 +23,15 @@ class FriendsListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         recyclerView = binding.rvFriends
-        adapter = FriendsListAdapter(this) { user ->
+        adapter = FriendsListAdapter(this) { user, imageView ->
             val intent = Intent(this, ChatClickUserDetailActivity::class.java)
             intent.putExtra(ChatClickUserDetailActivity.USER, user)
-            startActivity(intent)
+            val options: ActivityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                androidx.core.util.Pair(imageView, "imageTransition")
+            )
+
+            startActivity(intent, options.toBundle())
         }
 
         recyclerView.adapter = adapter
