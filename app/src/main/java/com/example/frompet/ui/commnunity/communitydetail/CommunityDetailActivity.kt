@@ -2,12 +2,15 @@ package com.example.frompet.ui.commnunity.communitydetail
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -24,6 +27,7 @@ import com.example.frompet.databinding.ActivityCommunityDetailBinding
 import com.example.frompet.ui.commnunity.community.CommunityViewModel
 
 import com.example.frompet.util.showToast
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -41,16 +45,19 @@ class CommunityDetailActivity : AppCompatActivity() {
 
     private val store = FirebaseFirestore.getInstance()
 
+
     private var communityData: CommunityData? = null
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CommentAdapter
+    private lateinit var replyCountTextView: TextView
 
 
 
     companion object {
         const val COMMUNITY_DATA = "communityData"
         const val DOCS_ID = "docsId"
+        const val REQUEST_CODE_COMMENT_MODIFY = 1004
     }
 
 
@@ -62,7 +69,9 @@ class CommunityDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         recyclerView = binding.rvReply
-        adapter = CommentAdapter()
+        adapter = CommentAdapter { commentData ->
+            showBottomSheet(commentData)
+        }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         communityData = intent.getParcelableExtra(DOCS_ID)
@@ -91,6 +100,7 @@ class CommunityDetailActivity : AppCompatActivity() {
         val contents = binding.tvDetailContents
         val tag = binding.chipTag
         val lastTime = binding.tvLastTime
+        replyCountTextView = binding.tvReplyCount
 
 
 
@@ -102,7 +112,11 @@ class CommunityDetailActivity : AppCompatActivity() {
             tag.text = it.tag
             lastTime.text = formatDate(it.timestamp)
             loadUserData(it.uid)
+            setChipColor(it.tag)
+            Log.d("tag","what is tag${it.tag}")
         }
+
+
 
         binding.backBtn.setOnClickListener {
             finish()
@@ -119,6 +133,18 @@ class CommunityDetailActivity : AppCompatActivity() {
         }
         loadComments()
     }
+
+    private fun setChipColor(tag: String) {
+        val chipColor = when (tag) {
+            "나눔" -> R.color.colorTagShare
+            "사랑" -> R.color.colorTagLove
+            "산책" -> R.color.colorTagWalk
+            "정보교환" -> R.color.colorTagExchange
+            else -> R.color.dark_gray
+        }
+        binding.chipTag.chipBackgroundColor = getColorStateList(chipColor)
+    }
+
 
     private fun loadUserData(uid: String) = with(binding) {
         store.collection("User").document(uid)
@@ -165,6 +191,7 @@ class CommunityDetailActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.popup_menu, popup.menu) // 메뉴 레이아웃 inflate
 
 
+
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.delete -> {
@@ -193,37 +220,47 @@ class CommunityDetailActivity : AppCompatActivity() {
     }
 
     private fun deleteCommunity(docsId: String?) {
-        if (docsId != null) {
-            communityViewModel.deleteCommunityData(docsId)
-            val dataIntent = Intent().apply {
-                putExtra(DOCS_ID, docsId)
-            }
-            setResult(Activity.RESULT_OK, dataIntent)
-            finish()
+        docsId?.let {
+            communityViewModel.deleteCommunityData(it)
+            observeDeleteStatus()
         }
     }
+
+    private fun observeDeleteStatus() {
+        communityViewModel.deleteResult.observe(this) { isSuccess ->
+            if (isSuccess) {
+                showToast("게시물이 삭제되었습니다.", Toast.LENGTH_SHORT)
+                setResult(Activity.RESULT_OK, Intent().apply { putExtra(DOCS_ID, communityData?.docsId) })
+                finish()
+            } else {
+                showToast("게시물 삭제권한이 없습니다.", Toast.LENGTH_SHORT)
+            }
+        }
+    }
+
 
     private fun addComment() {
         val etComments = binding.etDetailComments
         val commentText = etComments.text.toString()
+        val commentId = store.collection("Community")
+            .document(communityData?.docsId ?: "")
+            .collection("Comment")
+            .document().id
 
         if (commentText.isNotEmpty()) {
             val uid = currentUser?.uid
             if (uid != null) {
+
                 store.collection("User")
                     .document(uid)
                     .get()
                     .addOnSuccessListener { userSnapshot ->
                         val user = userSnapshot.toObject(User::class.java)
                         if (user != null) {
-                            val petName = user.petName
-                            val petProfile = user.petProfile
-
                             val commentData = CommentData(
+                                commentId,
                                 content = commentText,
                                 authorUid = currentUser?.uid ?: "",
-                                authorName = petName,
-                                authorProfile = petProfile,
                                 postDocumentId = communityData?.docsId ?: "",
                                 timestamp = System.currentTimeMillis()
                             )
@@ -231,7 +268,8 @@ class CommunityDetailActivity : AppCompatActivity() {
                             store.collection("Community")
                                 .document(communityData?.docsId ?: "")
                                 .collection("Comment")
-                                .add(commentData)
+                                .document(commentId)
+                                .set(commentData)
                                 .addOnSuccessListener {
                                     showToast("댓글이 추가되었습니다", Toast.LENGTH_SHORT)
                                     etComments.text.clear()
@@ -253,6 +291,7 @@ class CommunityDetailActivity : AppCompatActivity() {
     }
 
 
+
     private fun loadComments() {
         val commentsRef = store.collection("Community")
             .document(communityData?.docsId ?: "")
@@ -268,8 +307,59 @@ class CommunityDetailActivity : AppCompatActivity() {
             querySnapshot?.let {
                 val comments = it.toObjects(CommentData::class.java)
                 adapter.submitList(comments)
-                Log.d("2222", "Loaded ${comments.size} comments")
+                val commentCount = comments.size
+                replyCountTextView.text = commentCount.toString()
             }
         }
     }
+    private fun showBottomSheet(commentData: CommentData) {
+
+        val view = layoutInflater.inflate(R.layout.bottom_sheet_layout, null)
+
+
+        val modifyTextView = view.findViewById<TextView>(R.id.bottom_sheet_modify)
+        val deleteTextView = view.findViewById<TextView>(R.id.bottom_sheet_delete)
+
+
+        val dialog = BottomSheetDialog(this)
+        dialog.setContentView(view)
+
+
+        modifyTextView.setOnClickListener {
+            val intent = Intent(this, CommentModify::class.java)
+            intent.putExtra("commentText", commentData.content) // 댓글 내용을 인텐트에 추가!
+            startActivity(intent)
+            dialog.dismiss()
+        }
+
+        deleteTextView.setOnClickListener {
+            val commentDocumentRef = store.collection("Community")
+                .document(communityData?.docsId ?: "")
+                .collection("Comment")
+                .document(commentData.commentId)
+            commentDocumentRef.delete()
+                .addOnSuccessListener {
+                    showToast("댓글이 삭제되었습니다", Toast.LENGTH_SHORT)
+                    dialog.dismiss()
+                }
+                .addOnFailureListener {
+                    showToast("댓글 삭제에 실패했습니다", Toast.LENGTH_SHORT)
+                    dialog.dismiss()
+                }
+        }
+
+
+
+        dialog.show()
+
+        val dimView = View(this)
+        dimView.setBackgroundColor(Color.parseColor("#80000000"))
+        val parentLayout = findViewById<ViewGroup>(android.R.id.content)
+        parentLayout.addView(dimView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+
+        dialog.setOnDismissListener {
+            parentLayout.removeView(dimView)
+        }
+    }
+
 }

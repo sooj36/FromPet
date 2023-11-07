@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.example.frompet.SingleLiveEvent
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.ui.commnunity.communityhome.CategoryClick
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -26,73 +27,18 @@ class CommunityViewModel(
 
     private val _communityList = MutableLiveData<List<CommunityData>?>()
     val communityList: MutableLiveData<List<CommunityData>?> = _communityList
+    private val _deleteResult = MutableLiveData<Boolean>()
+    val deleteResult: LiveData<Boolean> get() = _deleteResult
 
 
-
+    private val _filteredCommunityList = MutableLiveData<List<CommunityData>?>()
+    val filteredCommunityList: LiveData<List<CommunityData>?> = _filteredCommunityList
 
     private val _event: SingleLiveEvent<CategoryClick> = SingleLiveEvent()
     val event: LiveData<CategoryClick> get() = _event
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
 
-    // 데이터 로드
-//    fun loadCommunityListData(filter: String) {
-//
-//        val communityListData = mutableListOf<CommunityData>()
-//        if (filter == "전체") {
-//            communitydb
-//                .collection("Community")
-//                .orderBy("timestamp", Query.Direction.DESCENDING)
-//                .get()
-//
-//                .addOnSuccessListener { querySnapshot ->
-//                    Log.d("sooj", "tagadd ${querySnapshot.size()}")
-//
-//
-//                    if (querySnapshot.isEmpty.not()) {
-//                        for (document in querySnapshot.documents) {
-//                            val data = document.toObject(CommunityData::class.java)
-//                            data?.let {
-//                                communityListData.add(it)
-//                            }
-//                        }
-//
-//
-//                        Log.d("sooj", "test ${communityListData}")
-//                    }
-//                    _communityList.value = communityListData
-//                }
-//                .addOnFailureListener { exception ->
-//                    Log.e("sooj", "456 데이터 로딩 실패", exception)
-//                }
-//        } else {
-//            communitydb
-//                .collection("Community")
-//                .whereEqualTo("tag", filter)
-//                .orderBy("timestamp", Query.Direction.DESCENDING)
-//                .get()
-//
-//                .addOnSuccessListener { querySnapshot ->
-//                    Log.d("sooj", "tagadd ${querySnapshot.size()}")
-//
-//
-//                    if (querySnapshot.isEmpty.not()) {
-//                        for (document in querySnapshot.documents) {
-//                            val data = document.toObject(CommunityData::class.java)
-//                            data?.let {
-//                                communityListData.add(it)
-//                            }
-//                        }
-//                        Log.d("sooj", "test ${communityListData}")
-//                    }
-//                    _communityList.value = communityListData
-//                }
-//                .addOnFailureListener { exception ->
-//                    Log.e("sooj", "456 데이터 로딩 실패", exception)
-//                }
-//
-//        }
-//    }
     fun getCommunityData(petType: String): LiveData<List<CommunityData>> {
         val liveData = MutableLiveData<List<CommunityData>>()
         firestore.collection("Community")
@@ -107,8 +53,7 @@ class CommunityViewModel(
                 }
                 liveData.value = communityDataList
             }
-            .addOnFailureListener { exception ->
-            }
+            .addOnFailureListener {}
         return liveData
     }
 
@@ -132,13 +77,11 @@ class CommunityViewModel(
     }
     fun deleteCommunityData(docsId: String) {
         firestore.collection("Community").document(docsId).delete()
-            .addOnSuccessListener {
-                val updatedList = _communityList.value?.filterNot { it.docsId == docsId }
-                _communityList.postValue(updatedList)
-            }
-            .addOnFailureListener { e ->
+            .addOnCompleteListener { task ->
+                _deleteResult.value = task.isSuccessful
             }
     }
+
 }
 
 

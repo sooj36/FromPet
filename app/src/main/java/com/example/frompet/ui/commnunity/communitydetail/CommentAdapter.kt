@@ -9,15 +9,19 @@ import coil.load
 import com.bumptech.glide.Glide
 import com.example.frompet.R
 import com.example.frompet.data.model.CommentData
+import com.example.frompet.data.model.CommunityData
 import com.example.frompet.data.model.User
 import com.example.frompet.databinding.ItemReplyBinding
+import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
 
-class CommentAdapter : ListAdapter <CommentData, CommentAdapter.ViewHolder>(CommentDiffCallback){
+class CommentAdapter(private val modifyClick: (CommentData) -> Unit) :
+    ListAdapter<CommentData, CommentAdapter.ViewHolder>(CommentDiffCallback) {
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -33,24 +37,41 @@ class CommentAdapter : ListAdapter <CommentData, CommentAdapter.ViewHolder>(Comm
 
 
     inner class ViewHolder(private val binding: ItemReplyBinding) :
-
         RecyclerView.ViewHolder(binding.root) {
-        fun bindItems(user: CommentData) {
+        fun bindItems(commentData: CommentData) {
             with(binding) {
-                tvPetName.text = user.authorName
-                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
-                sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-                val formattedDate = sdf.format(Date(user.timestamp))
-                tvLastTime.text = formattedDate
-                tvDetailContents.text = user.content
-                ivPetProfile.load(user.authorProfile) {
-                    error(R.drawable.sampleiamge)
+                val authorUid = commentData.authorUid
+
+                if (authorUid.isNotEmpty()) {
+                    val userRef = FirebaseFirestore.getInstance().collection("User").document(authorUid)
+                    userRef.get()
+                        .addOnSuccessListener { userSnapshot ->
+                            val user = userSnapshot.toObject(User::class.java)
+                            user?.let {
+
+                                ivPetProfile.load(user.petProfile) {
+                                    error(R.drawable.sampleiamge)
+                                }
+
+                                tvPetName.text = user.petName
+                            }
+                        }
+
                 }
 
-            }
+                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
+                sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+                val formattedDate = sdf.format(Date(commentData.timestamp))
+                tvLastTime.text = formattedDate
+                tvDetailContents.text = commentData.content
 
+                threedots3.setOnClickListener {
+                    modifyClick(commentData)
+                }
             }
         }
+    }
+
     object CommentDiffCallback : DiffUtil.ItemCallback<CommentData>() {
         override fun areItemsTheSame(oldItem: CommentData, newItem: CommentData): Boolean {
             return oldItem.postDocumentId == newItem.postDocumentId
@@ -60,4 +81,5 @@ class CommentAdapter : ListAdapter <CommentData, CommentAdapter.ViewHolder>(Comm
             return oldItem == newItem
         }
     }
+
 }
