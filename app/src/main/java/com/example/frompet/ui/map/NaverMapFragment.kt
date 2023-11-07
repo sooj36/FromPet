@@ -228,46 +228,35 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
     private fun createMarker(location: UserLocation, userUid: String): Marker {
         val marker = Marker()
 
-         if (location !=null && location != UserLocation()) {
-             marker.position = LatLng(location.latitude, location.longitude)}
-         TedNaverClustering.with<UserLocation>(requireActivity(), naverMap)
-             .customMarker {
-                 marker.apply {
-                     icon = OverlayImage.fromResource(R.drawable.heart)
-                     width = 150
-                     height = 150
-                     zIndex = 10
-                     map = naverMap
-                     isIconPerspectiveEnabled = true
-                     alpha = 1.0f
+//         if (location !=null && location != UserLocation()) {
+//             marker.position = LatLng(location.latitude, location.longitude)}
+//         TedNaverClustering.with<UserLocation>(requireActivity(), naverMap)
+//             .minClusterSize(10)
+//             .items(listOf(location))
+//             .make()
 
-                     onClickListener = Overlay.OnClickListener {
-                         markerClick(userUid)
-                         true
-                     }
-                 }
-             }
-             .items(listOf(location))
-             .make()
-         return marker
 
-//        if (location != null && location != UserLocation()) {
-//            marker.position = LatLng(location.latitude, location.longitude)
-//        } // 마커 위치
-//        marker.zIndex = 10 // 마커 우선순위
-//        marker.map = naverMap  // 마커 표시
-//        marker.isIconPerspectiveEnabled = true // 원근감 표시
-//        marker.alpha = 0.8f // 마커의 투명도
-//
-//        marker.width = 200
-//        marker.height = 200
-//
-//        marker.onClickListener = Overlay.OnClickListener {
-//            markerClick(userUid)
-//            true
-//        }
-//        return marker
+        // 기본 네이버 초록 마커
+        if (location != null && location != UserLocation()) {
+            marker.position = LatLng(location.latitude, location.longitude)
+        } // 마커 위치
+        marker.apply {
+//            zIndex = 10 // 마커 우선순위
+            map = naverMap
+            isIconPerspectiveEnabled = true
+            alpha = 1.0f
+            width = 200
+            height = 200
+            setIcon(OverlayImage.fromResource(R.drawable.reset))
+            onClickListener = Overlay.OnClickListener {
+                markerClick(userUid)
+                true
+            }
+            return marker
+        }
     }
+
+
 
     /** 마커 클릭 시, 프로필 띄우기 **/
     private fun markerClick(userUid: String) {
@@ -288,7 +277,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         val user = userDocument.toObject(User::class.java) //위에서 얻은 문서들을 user클래스의 인스턴스로 변환
         val profileUrl = user?.petProfile //유저인스턴스에 해당 사용자들의 프로필 사진 변수
 
-        if (profileUrl != null) { // 이미지가 널값이 아닐때
+        if (profileUrl != null) {
             val imageLoader = context?.let { Coil.imageLoader(it) }
             val request = ImageRequest.Builder(requireActivity())
                 .data(profileUrl)
