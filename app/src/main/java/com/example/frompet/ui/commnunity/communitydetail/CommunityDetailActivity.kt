@@ -302,7 +302,7 @@ class CommunityDetailActivity : AppCompatActivity() {
 
         modifyTextView.setOnClickListener {
             val intent = Intent(this, CommentModify::class.java)
-            intent.putExtra("commentText", commentData.content) // 댓글 내용을 인텐트에 추가
+            intent.putExtra("commentText", commentData.content) // 댓글 내용을 인텐트에 추가!
             startActivity(intent)
             dialog.dismiss()
         }
