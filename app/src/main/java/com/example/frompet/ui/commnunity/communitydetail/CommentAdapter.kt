@@ -14,6 +14,7 @@ import com.example.frompet.databinding.ItemReplyBinding
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 
 class CommentAdapter : ListAdapter <CommentData, CommentAdapter.ViewHolder>(CommentDiffCallback){
@@ -37,7 +38,8 @@ class CommentAdapter : ListAdapter <CommentData, CommentAdapter.ViewHolder>(Comm
         fun bindItems(user: CommentData) {
             with(binding) {
                 tvPetName.text = user.authorName
-                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
+                sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
                 val formattedDate = sdf.format(Date(user.timestamp))
                 tvLastTime.text = formattedDate
                 tvDetailContents.text = user.content
