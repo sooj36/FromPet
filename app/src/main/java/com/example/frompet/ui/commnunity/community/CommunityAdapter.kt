@@ -1,6 +1,8 @@
 package com.example.frompet.ui.commnunity.community
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -66,11 +68,9 @@ class CommunityAdapter(private val ListClick: (CommunityData) -> Unit) :
             }
             binding.tvLastTime.text =FormatDate.formatDate(communityData.timestamp)
             binding.tvViewCount.text = communityData.viewCount.toString()
+            val chipColor = getChipColor(communityData.tag)
+            binding.chipTag.chipBackgroundColor = ColorStateList.valueOf(chipColor)
 
-
-//            binding.linearlayoutAdd.setOnClickListener {
-//                ListClick(communityData)
-//            }
 
         }
     }
@@ -91,6 +91,15 @@ class CommunityAdapter(private val ListClick: (CommunityData) -> Unit) :
             val longitude = dataSnapshot.child("longitude").getValue(Double::class.java) ?: 0.0
             onLocationFetched(latitude, longitude)
         }.addOnFailureListener {
+        }
+    }
+    private fun getChipColor(category: String): Int {
+        return when (category) {
+            "정보교환" -> Color.parseColor("#C885DC")
+            "사랑" -> Color.parseColor("#E95F6F")
+            "나눔" -> Color.parseColor("#FACD5E")
+            "산책" -> Color.parseColor("#51C957")
+            else -> Color.parseColor("#778C64")
         }
     }
 }
