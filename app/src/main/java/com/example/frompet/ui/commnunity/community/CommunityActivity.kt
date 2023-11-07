@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
@@ -86,7 +85,6 @@ class CommunityActivity : AppCompatActivity() {
                 if (newText.isNullOrBlank()) {
                     return true
                 }
-                Log.e("sshOriginList Tag","$newText")
                 return true
             }
         })
@@ -153,9 +151,7 @@ class CommunityActivity : AppCompatActivity() {
                 }
             }
             originalList.addAll(communityDataList)
-            Log.e("sshOriginList be","$originalList")
             communityAdapter.submitList(communityDataList)
-            Log.e("sshOriginList after","$originalList")
         }
     }
 
