@@ -7,21 +7,66 @@
 
     tools:context=".ui.commnunity.community.CommunityActivity">
 
-    <ImageView
-        android:id="@+id/back_btn"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_margin="10dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toTopOf="@+id/chip_constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_back" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/icon_back" />
+
+        <ImageView
+            android:id="@+id/iv_category"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/des"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_petT"
+            app:layout_constraintStart_toEndOf="@+id/back_btn"
+            app:layout_constraintTop_toTopOf="@+id/tv_petT" />
+
+        <TextView
+            android:id="@+id/tv_petT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/skybori"
+            android:text="펫이름"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.081"
+            app:layout_constraintStart_toEndOf="@+id/iv_category"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/list_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:queryBackground="@drawable/border_search_bar"
+            app:queryHint="검색어를 입력하시오"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/chip_constraintLayout"
         android:layout_marginTop="65dp"
-        app:layout_constraintTop_toBottomOf="@id/back_btn"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <View
@@ -158,14 +203,15 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
         </ScrollView>
+
         <ImageView
             android:id="@+id/iv_pen"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="15dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/pen" />
 
 
