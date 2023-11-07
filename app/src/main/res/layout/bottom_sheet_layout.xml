@@ -1,0 +1,53 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="수정 또는 삭제"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="16dp"
+        android:gravity="center"
+        android:id="@+id/bottom_sheet_header" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerHorizontal" />
+
+    <TextView
+        android:id="@+id/bottom_sheet_modify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="수정"
+        android:textStyle="bold"
+        android:padding="16dp"
+        android:gravity="center"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerHorizontal" />
+
+    <TextView
+        android:id="@+id/bottom_sheet_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="삭제"
+        android:textStyle="bold"
+        android:textColor="@color/red"
+        android:padding="16dp"
+        android:gravity="center"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true" />
+
+</LinearLayout>
