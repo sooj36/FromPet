@@ -15,6 +15,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import coil.Coil
 import coil.request.ImageRequest
@@ -50,6 +52,8 @@ import kotlinx.coroutines.tasks.await
 import ted.gun0912.clustering.naver.TedNaverClustering
 
 class NaverMapFragment : Fragment(), OnMapReadyCallback {
+
+    val viewModel : MapViewModel by viewModels()
 
     private lateinit var locationSource: FusedLocationSource
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -91,6 +95,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         } else {
             initMapView()
         }
+
     }
 
     private fun initMapView() {
@@ -187,8 +192,8 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         naverMap.uiSettings.isLocationButtonEnabled = true // 현 위치 버튼 기능
         naverMap.locationTrackingMode = LocationTrackingMode.Follow // 위치를 추적하면서 카메라도 같이 움직임
         // 줌
-        naverMap.maxZoom = 15.0  // (최대 21)
-        naverMap.minZoom = 5.0
+        naverMap.maxZoom = 8.0  // (최대 21)
+        naverMap.minZoom = 8.0
     }
 
     private fun loadLocationData(bounds: LatLngBounds) {
@@ -217,8 +222,8 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setMark(userUid: String, location: UserLocation) = lifecycleScope.launch {
-        if (!isAdded) return@launch //프래그먼트에서 액티비티가 연결되어 있는지 확인 만약 연결되어 있지 않다면 빠르게 종료해서requireContext호출을 방지
-        if (userUid != currentUserId) {
+        if (!isAdded) return@launch // 프래그먼트에서 액티비티가 연결되어 있는지 확인 만약 연결되어 있지 않다면 빠르게 종료해서requireContext호출을 방지
+        if (userUid != viewModel.currentUserId) {
             val marker = createMarker(location, userUid)
             setUserProfileImage(userUid, marker)
         }

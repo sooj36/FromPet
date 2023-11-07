@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityBinding
@@ -103,7 +104,10 @@ class CommunityActivity : AppCompatActivity() {
 
 
     private fun getFilter() =  when (binding.chipGroup.checkedChipId) {
-        R.id.chip_share -> "나눔"
+        R.id.chip_share -> {
+            val colorShare = ContextCompat.getColor(this, R.color.chip_background_share)
+            "나눔"
+        }
         R.id.chip_walk -> "산책"
         R.id.chip_love -> "사랑"
         R.id.chip_exchange -> "정보교환"
