@@ -50,9 +50,10 @@
         android:layout_height="wrap_content"
         android:text="@string/comu_thisweekend_matched"
         android:textColor="@color/black"
-        android:textSize="20sp"
+        android:textSize="30sp"
         android:layout_marginTop="10dp"
         android:textStyle="bold"
+        android:fontFamily="@font/skybori"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -121,18 +122,42 @@
                 app:layout_constraintTop_toTopOf="@+id/tv_notice" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/category_bt">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/category_bt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout7"
-            tools:listitem="@layout/item_coummunication" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Community"
+                    android:textSize="30sp"
+                    android:fontFamily="@font/kyobo"
+                    android:textStyle="bold"
+                    android:background="@color/light_gray"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/category_bt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout7"
+                tools:listitem="@layout/item_coummunication" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
