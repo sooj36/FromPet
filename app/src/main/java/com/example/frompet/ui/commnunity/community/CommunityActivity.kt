@@ -39,11 +39,19 @@ class CommunityActivity : AppCompatActivity() {
             val docsId = result.data?.getStringExtra(CommunityDetailActivity.DOCS_ID)
             docsId?.let { id ->
                 viewModel.deleteCommunityData(id)
+
             }
         }
     }
+    private val startForAddResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
 
-
+            val petType = intent.getStringExtra(EXTRA_PET_TYPE)
+            petType?.let {
+                fetchCommunityData(it)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,12 +66,7 @@ class CommunityActivity : AppCompatActivity() {
             communityAdapter.submitList(communityDataList)
         }
 
-
         binding.recyclerview.adapter = communityAdapter
-        binding.recyclerview.scrollToPosition(0) // 수정 예정
-
-
-
         binding.backBtn.setOnClickListener {
             finish()
         }
@@ -71,7 +74,7 @@ class CommunityActivity : AppCompatActivity() {
         binding.ivPen.setOnClickListener {
             val intent: Intent =
                 Intent(this@CommunityActivity, CommunityAddActivity::class.java)
-            startActivity(intent)
+            startForAddResult.launch(intent)
         }
 
         binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
@@ -97,9 +100,14 @@ class CommunityActivity : AppCompatActivity() {
     }
     private fun fetchCommunityData(petType: String) {
         viewModel.getCommunityData(petType).observe(this) { communityDataList ->
-            communityAdapter.submitList(communityDataList)
+            communityAdapter.submitList(communityDataList) {
+                if (communityDataList.isNotEmpty()) {
+                    binding.recyclerview.scrollToPosition(0)
+                }
+            }
         }
     }
+
 
 
     private fun getFilter() =  when (binding.chipGroup.checkedChipId) {
@@ -116,4 +124,13 @@ class CommunityActivity : AppCompatActivity() {
         }
         startForDetailResult.launch(intent)
     }
+    override fun onResume() {
+        super.onResume()
+
+        val petType = intent.getStringExtra(EXTRA_PET_TYPE)
+        petType?.let {
+            fetchCommunityData(it)
+        }
+    }
+
 }

@@ -35,64 +35,6 @@ class CommunityViewModel(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
 
-    // 데이터 로드
-//    fun loadCommunityListData(filter: String) {
-//
-//        val communityListData = mutableListOf<CommunityData>()
-//        if (filter == "전체") {
-//            communitydb
-//                .collection("Community")
-//                .orderBy("timestamp", Query.Direction.DESCENDING)
-//                .get()
-//
-//                .addOnSuccessListener { querySnapshot ->
-//                    Log.d("sooj", "tagadd ${querySnapshot.size()}")
-//
-//
-//                    if (querySnapshot.isEmpty.not()) {
-//                        for (document in querySnapshot.documents) {
-//                            val data = document.toObject(CommunityData::class.java)
-//                            data?.let {
-//                                communityListData.add(it)
-//                            }
-//                        }
-//
-//
-//                        Log.d("sooj", "test ${communityListData}")
-//                    }
-//                    _communityList.value = communityListData
-//                }
-//                .addOnFailureListener { exception ->
-//                    Log.e("sooj", "456 데이터 로딩 실패", exception)
-//                }
-//        } else {
-//            communitydb
-//                .collection("Community")
-//                .whereEqualTo("tag", filter)
-//                .orderBy("timestamp", Query.Direction.DESCENDING)
-//                .get()
-//
-//                .addOnSuccessListener { querySnapshot ->
-//                    Log.d("sooj", "tagadd ${querySnapshot.size()}")
-//
-//
-//                    if (querySnapshot.isEmpty.not()) {
-//                        for (document in querySnapshot.documents) {
-//                            val data = document.toObject(CommunityData::class.java)
-//                            data?.let {
-//                                communityListData.add(it)
-//                            }
-//                        }
-//                        Log.d("sooj", "test ${communityListData}")
-//                    }
-//                    _communityList.value = communityListData
-//                }
-//                .addOnFailureListener { exception ->
-//                    Log.e("sooj", "456 데이터 로딩 실패", exception)
-//                }
-//
-//        }
-//    }
     fun getCommunityData(petType: String): LiveData<List<CommunityData>> {
         val liveData = MutableLiveData<List<CommunityData>>()
         firestore.collection("Community")
@@ -107,8 +49,7 @@ class CommunityViewModel(
                 }
                 liveData.value = communityDataList
             }
-            .addOnFailureListener { exception ->
-            }
+            .addOnFailureListener {}
         return liveData
     }
 
@@ -136,8 +77,7 @@ class CommunityViewModel(
                 val updatedList = _communityList.value?.filterNot { it.docsId == docsId }
                 _communityList.postValue(updatedList)
             }
-            .addOnFailureListener { e ->
-            }
+            .addOnFailureListener { }
     }
 }
 
