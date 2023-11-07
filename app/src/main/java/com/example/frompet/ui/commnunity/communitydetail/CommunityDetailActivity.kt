@@ -102,7 +102,11 @@ class CommunityDetailActivity : AppCompatActivity() {
             tag.text = it.tag
             lastTime.text = formatDate(it.timestamp)
             loadUserData(it.uid)
+            setChipColor(it.tag)
+            Log.d("tag","what is tag${it.tag}")
         }
+
+
 
         binding.backBtn.setOnClickListener {
             finish()
@@ -119,6 +123,18 @@ class CommunityDetailActivity : AppCompatActivity() {
         }
         loadComments()
     }
+
+    private fun setChipColor(tag: String) {
+        val chipColor = when (tag) {
+            "나눔" -> R.color.colorTagShare
+            "사랑" -> R.color.colorTagLove
+            "산책" -> R.color.colorTagWalk
+            "정보교환" -> R.color.colorTagExchange
+            else -> R.color.dark_gray
+        }
+        binding.chipTag.chipBackgroundColor = getColorStateList(chipColor)
+    }
+
 
     private fun loadUserData(uid: String) = with(binding) {
         store.collection("User").document(uid)

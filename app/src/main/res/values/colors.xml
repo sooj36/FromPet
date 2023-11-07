@@ -26,5 +26,12 @@
     <color name="transparent">#00000000</color>
     <color name="deep_green">#778C64</color>
 
+        <color name="colorTagShare">#FACD5E</color>
+        <color name="colorTagLove">#E95F6F</color>
+        <color name="colorTagWalk">#51C957</color>
+        <color name="colorTagExchange">#C885DC</color>
+
+
+
 
 </resources>
