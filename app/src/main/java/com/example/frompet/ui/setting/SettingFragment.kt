@@ -14,14 +14,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
-import android.widget.Switch
 import androidx.fragment.app.viewModels
 import coil.load
-import com.bumptech.glide.Glide
 import com.example.frompet.R
 import com.example.frompet.databinding.FragmentSettingBinding
+import com.example.frompet.ui.chat.activity.ChatPullScreenActivity
 import com.example.frompet.ui.login.LoginActivity
-import com.example.frompet.ui.setting.fcm.FCMTokenManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -79,9 +78,18 @@ class SettingFragment : Fragment() {
         }
 
 
-        binding.ibLogOut.setOnClickListener {
-            showLogoutDialog()
+        binding.ivPet.setOnClickListener {
+            val intent = Intent(requireActivity(), ChatPullScreenActivity::class.java)
+            val imageUrl = viewModel.petProfile.value
+            intent.putExtra("image_url", imageUrl)
+            startActivity(intent)
         }
+
+
+        binding.ibLogOut.setOnClickListener {
+            showLogoutBottomSheet()
+        }
+
 
 
         binding.btModify.setOnClickListener {
@@ -158,24 +166,38 @@ class SettingFragment : Fragment() {
             })
     }
 
-    private fun showLogoutDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_logout, null)
-        val dialogBuilder = AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-        val alertDialog = dialogBuilder.create()
-        alertDialog.setCancelable(false)
-        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val buttonYes = dialogView.findViewById<Button>(R.id.btn_yes)
-        val buttonNo = dialogView.findViewById<Button>(R.id.btn_no)
+    private fun showLogoutBottomSheet() {
+        val view = layoutInflater.inflate(R.layout.bottom_sheet_logout, null)
+        val dialog = BottomSheetDialog(requireContext())
+
+        dialog.setContentView(view)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val buttonYes = view.findViewById<Button>(R.id.btn_yes)
+        val buttonNo = view.findViewById<Button>(R.id.btn_no)
+
         buttonYes.setOnClickListener {
             performLogout()
-            alertDialog.dismiss()
+            dialog.dismiss()
         }
+
         buttonNo.setOnClickListener {
-            alertDialog.dismiss()
+            dialog.dismiss()
         }
-        alertDialog.show()
+
+        dialog.show()
+
+        val dimView = View(requireContext())
+        dimView.setBackgroundColor(Color.parseColor("#80000000"))
+        val parentLayout = requireActivity().findViewById<ViewGroup>(android.R.id.content)
+        parentLayout.addView(dimView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+
+        dialog.setOnDismissListener {
+            parentLayout.removeView(dimView)
+        }
     }
+
+
     private fun performLogout() {
         val currentUser = FirebaseAuth.getInstance().currentUser
 

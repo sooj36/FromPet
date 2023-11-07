@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottomSheetCommunityAdd"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/light_gray"
+    android:padding="16dp">
+
+    <View
+        android:layout_width="30dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="20dp"
+        android:background="@color/gray"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="로그아웃하시겠습니까?"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/dark_gray"
+        android:text="회원님의 로그인 정보가 저장됩니다. 다음에 로그인할 때 로그인 정보를 다시 입력하지 않아도 됩니다."
+        android:layout_marginBottom="10dp"
+        android:textSize="16sp" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:background="@color/light_gray"
+        android:id="@+id/btn_yes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/red"
+        android:text="로그아웃" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_no"
+        android:textColor="@color/red"
+        android:background="@color/light_gray"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="취소" />
+
+</LinearLayout>
