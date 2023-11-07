@@ -47,6 +47,7 @@ import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import ted.gun0912.clustering.naver.TedNaverClustering
 
 class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
@@ -146,9 +147,10 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
                     UserLocation(latitude = location.latitude, longitude = it.longitude)
                     locationRef.child(currentUserId).setValue(userLocation)
 
-                    val cameraUpdate = CameraUpdate.scrollTo(LatLng(location.latitude, location.longitude))
-                        .animate(CameraAnimation.Easing, 2000)
-                        .reason(CameraUpdate.REASON_GESTURE)
+                    val cameraUpdate =
+                        CameraUpdate.scrollTo(LatLng(location.latitude, location.longitude))
+                            .animate(CameraAnimation.Easing, 2000)
+                            .reason(CameraUpdate.REASON_GESTURE)
                     naverMap.moveCamera(cameraUpdate)
 
                     naverMap.addOnCameraIdleListener {
@@ -156,11 +158,9 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
                         Toast.makeText(context, "카메라 움직임 종료", Toast.LENGTH_SHORT).show()
                     }
 
-                    Log.d(
-                        "CameraUpdate", "스크롤 : ${location.latitude}, longitude: ${location.longitude}")
+
                 }
 
-                Log.d("sooj", "${locationRef.child(currentUserId).setValue(userLocation)}")
             }
         }
         locationRef.addValueEventListener(object : ValueEventListener {
@@ -177,6 +177,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
                     }
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {}
         })
     }
@@ -187,7 +188,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         naverMap.locationTrackingMode = LocationTrackingMode.Follow // 위치를 추적하면서 카메라도 같이 움직임
         // 줌
         naverMap.maxZoom = 15.0  // (최대 21)
-        naverMap.minZoom = 9.0
+        naverMap.minZoom = 5.0
     }
 
     private fun loadLocationData(bounds: LatLngBounds) {
@@ -198,7 +199,13 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         locationRef.get().addOnSuccessListener { snapshot ->
             for (locationSnapshot in snapshot.children) {
                 val location = locationSnapshot.getValue(UserLocation::class.java)
-                if (location != null && bounds.contains(LatLng(location.latitude, location.longitude))) {
+                if (location != null && bounds.contains(
+                        LatLng(
+                            location.latitude,
+                            location.longitude
+                        )
+                    )
+                ) {
 
                     Log.d("LoadLocationData", "유저 아이디: ${locationSnapshot.key}")
                     // 지도 영역에 포함되는 위치만 처리
@@ -211,32 +218,58 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
     private fun setMark(userUid: String, location: UserLocation) = lifecycleScope.launch {
         if (!isAdded) return@launch //프래그먼트에서 액티비티가 연결되어 있는지 확인 만약 연결되어 있지 않다면 빠르게 종료해서requireContext호출을 방지
-        val marker = createMarker(location, userUid)
-        setUserProfileImage(userUid, marker)
+        if (userUid != currentUserId) {
+            val marker = createMarker(location, userUid)
+            setUserProfileImage(userUid, marker)
+        }
     }
 
-     /** userlocation, useruid 받아서 naver 지도에 마커 생성, 반환 **/
+    /** userlocation, useruid 받아서 naver 지도에 마커 생성, 반환 **/
     private fun createMarker(location: UserLocation, userUid: String): Marker {
         val marker = Marker()
 
-        if (location != null) {
-            marker.position = LatLng(location.latitude, location.longitude) } // 마커 위치
-        marker.zIndex = 10 // 마커 우선순위
-        marker.map = naverMap  // 마커 표시
-        marker.isIconPerspectiveEnabled = true // 원근감 표시
+         if (location !=null && location != UserLocation()) {
+             marker.position = LatLng(location.latitude, location.longitude)}
+         TedNaverClustering.with<UserLocation>(requireActivity(), naverMap)
+             .customMarker {
+                 marker.apply {
+                     icon = OverlayImage.fromResource(R.drawable.heart)
+                     width = 150
+                     height = 150
+                     zIndex = 10
+                     map = naverMap
+                     isIconPerspectiveEnabled = true
+                     alpha = 1.0f
+
+                     onClickListener = Overlay.OnClickListener {
+                         markerClick(userUid)
+                         true
+                     }
+                 }
+             }
+             .items(listOf(location))
+             .make()
+         return marker
+
+//        if (location != null && location != UserLocation()) {
+//            marker.position = LatLng(location.latitude, location.longitude)
+//        } // 마커 위치
+//        marker.zIndex = 10 // 마커 우선순위
+//        marker.map = naverMap  // 마커 표시
+//        marker.isIconPerspectiveEnabled = true // 원근감 표시
 //        marker.alpha = 0.8f // 마커의 투명도
-
-        marker.width = 150
-        marker.height = 150
-
-        marker.onClickListener = Overlay.OnClickListener {
-            markerClick(userUid)
-            true
-        }
-        return marker
+//
+//        marker.width = 200
+//        marker.height = 200
+//
+//        marker.onClickListener = Overlay.OnClickListener {
+//            markerClick(userUid)
+//            true
+//        }
+//        return marker
     }
 
-      /** 마커 클릭 시, 프로필 띄우기 **/
+    /** 마커 클릭 시, 프로필 띄우기 **/
     private fun markerClick(userUid: String) {
         lifecycleScope.launch {
             val userDocument = firestore.collection("User").document(userUid).get()
@@ -248,7 +281,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-        /** 특정 사용자의 프로필 이미지 -> 마커 아이콘 **/
+    /** 특정 사용자의 프로필 이미지 -> 마커 아이콘 **/
     private fun setUserProfileImage(userUid: String, marker: Marker) = lifecycleScope.launch {
         val userDocument = firestore.collection("User").document(userUid).get()
             .await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
@@ -259,7 +292,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
             val imageLoader = context?.let { Coil.imageLoader(it) }
             val request = ImageRequest.Builder(requireActivity())
                 .data(profileUrl)
-                .size(200, 200)
+                .size(800, 800)
                 .transformations(
                     CircleCropTransformation(),
                     MapMakerBorder(requireContext(), 15f)

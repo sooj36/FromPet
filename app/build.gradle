@@ -57,6 +57,8 @@ android {
 
 dependencies {
 
+    implementation 'io.github.ParkSangGwon:tedclustering-naver:1.0.2' // 네이버 지도용 클러스터링 라이브러리
+
     implementation 'com.naver.maps:map-sdk:3.17.0' //네이버 지도 SDK
     implementation "com.google.android.gms:play-services-location:21.0.1" // 네이버 지도 위치 추적
     implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0' // 권한 요청 다이얼로그 라이브러리
