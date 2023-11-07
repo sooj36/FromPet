@@ -26,6 +26,7 @@ class CommunityActivity : AppCompatActivity() {
     private val binding get() = _binding!!
     private val auth = FirebaseAuth.getInstance()
     private val viewModel : CommunityViewModel by viewModels()
+    private var originalList = mutableListOf<CommunityData>()
     private val communityAdapter: CommunityAdapter by lazy {
         CommunityAdapter(
             ListClick = { item ->
@@ -34,6 +35,7 @@ class CommunityActivity : AppCompatActivity() {
             }
         )
     }
+
     private val startForDetailResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val docsId = result.data?.getStringExtra(CommunityDetailActivity.DOCS_ID)
@@ -58,15 +60,56 @@ class CommunityActivity : AppCompatActivity() {
         _binding = ActivityCommunityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.recyclerview.adapter = communityAdapter
+        binding.listSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                val searchTerms = query?.trim()?.split("\\s+".toRegex()) // 띄어쓰기로 단어 분리
+
+                val filteredList = if (!searchTerms.isNullOrEmpty()) {
+                    originalList.filter { item ->
+                        // 검색어 중 하나라도 포함되는 경우 필터링
+                        searchTerms.any { term ->
+                            item.title.contains(term, ignoreCase = true)
+                            item.contents.contains(term, ignoreCase = true)
+                        }
+                    }
+                } else {
+                    originalList // query가 빈 문자열이거나 null인 경우, 원본 목록을 반환
+                }
+                communityAdapter.submitList(filteredList)
+                return true // 검색 이벤트 처리 완료
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrBlank()) {
+                    return true
+                }
+                Log.e("sshOriginList Tag","$newText")
+                return true
+            }
+        })
+
+
         val petType = intent.getStringExtra(EXTRA_PET_TYPE)
         if (petType != null) {
             fetchCommunityData(petType)
         }
-        viewModel.communityList.observe(this) { communityDataList ->
-            communityAdapter.submitList(communityDataList)
+
+        viewModel.filteredCommunityList.observe(this) { communityDataList ->
+            if (communityDataList != null) {
+                communityAdapter.submitList(communityDataList)
+            }
         }
 
         binding.recyclerview.adapter = communityAdapter
+
+       /* binding.recyclerview.scrollToPosition(0) */// 수정 예정
+
+
+        /*binding.ivCategory.setImageResource(petType)*/ //카테고리별 로고인데 int 값이라 안뜸
+        binding.tvPetT.text = "$petType 카테고리"
+
+
         binding.backBtn.setOnClickListener {
             finish()
         }
@@ -98,6 +141,8 @@ class CommunityActivity : AppCompatActivity() {
             }
         }
     }
+
+
     private fun fetchCommunityData(petType: String) {
         viewModel.getCommunityData(petType).observe(this) { communityDataList ->
             communityAdapter.submitList(communityDataList) {
@@ -105,6 +150,10 @@ class CommunityActivity : AppCompatActivity() {
                     binding.recyclerview.scrollToPosition(0)
                 }
             }
+            originalList.addAll(communityDataList)
+            Log.e("sshOriginList be","$originalList")
+            communityAdapter.submitList(communityDataList)
+            Log.e("sshOriginList after","$originalList")
         }
     }
 
@@ -133,4 +182,12 @@ class CommunityActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        if (!binding.listSearch.isIconified) {
+            binding.listSearch.isIconified = true
+        } else {
+            super.onBackPressed()
+        }
+    }
 }
+

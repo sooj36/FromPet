@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frompet.data.model.CommunityData
+import com.example.frompet.data.model.Filter
 import com.example.frompet.databinding.ItemCommunityBinding
 import com.example.frompet.util.FormatDate
 import com.example.frompet.util.ViewCountManager
@@ -71,6 +72,9 @@ class CommunityAdapter(private val ListClick: (CommunityData) -> Unit) :
             val chipColor = getChipColor(communityData.tag)
             binding.chipTag.chipBackgroundColor = ColorStateList.valueOf(chipColor)
 
+            binding.linearlayoutAdd.setOnClickListener {
+                ListClick(communityData)
+            }
 
         }
     }

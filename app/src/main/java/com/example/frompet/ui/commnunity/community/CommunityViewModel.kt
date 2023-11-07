@@ -31,7 +31,8 @@ class CommunityViewModel(
     val deleteResult: LiveData<Boolean> get() = _deleteResult
 
 
-
+    private val _filteredCommunityList = MutableLiveData<List<CommunityData>?>()
+    val filteredCommunityList: LiveData<List<CommunityData>?> = _filteredCommunityList
 
     private val _event: SingleLiveEvent<CategoryClick> = SingleLiveEvent()
     val event: LiveData<CategoryClick> get() = _event
