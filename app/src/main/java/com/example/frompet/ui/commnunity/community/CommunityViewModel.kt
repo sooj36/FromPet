@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.example.frompet.SingleLiveEvent
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.ui.commnunity.communityhome.CategoryClick
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -26,6 +27,8 @@ class CommunityViewModel(
 
     private val _communityList = MutableLiveData<List<CommunityData>?>()
     val communityList: MutableLiveData<List<CommunityData>?> = _communityList
+    private val _deleteResult = MutableLiveData<Boolean>()
+    val deleteResult: LiveData<Boolean> get() = _deleteResult
 
 
 
@@ -73,12 +76,11 @@ class CommunityViewModel(
     }
     fun deleteCommunityData(docsId: String) {
         firestore.collection("Community").document(docsId).delete()
-            .addOnSuccessListener {
-                val updatedList = _communityList.value?.filterNot { it.docsId == docsId }
-                _communityList.postValue(updatedList)
+            .addOnCompleteListener { task ->
+                _deleteResult.value = task.isSuccessful
             }
-            .addOnFailureListener { }
     }
+
 }
 
 

@@ -209,15 +209,24 @@ class CommunityDetailActivity : AppCompatActivity() {
     }
 
     private fun deleteCommunity(docsId: String?) {
-        if (docsId != null) {
-            communityViewModel.deleteCommunityData(docsId)
-            val dataIntent = Intent().apply {
-                putExtra(DOCS_ID, docsId)
-            }
-            setResult(Activity.RESULT_OK, dataIntent)
-            finish()
+        docsId?.let {
+            communityViewModel.deleteCommunityData(it)
+            observeDeleteStatus()
         }
     }
+
+    private fun observeDeleteStatus() {
+        communityViewModel.deleteResult.observe(this) { isSuccess ->
+            if (isSuccess) {
+                showToast("게시물이 삭제되었습니다.", Toast.LENGTH_SHORT)
+                setResult(Activity.RESULT_OK, Intent().apply { putExtra(DOCS_ID, communityData?.docsId) })
+                finish()
+            } else {
+                showToast("게시물 삭제권한이 없습니다.", Toast.LENGTH_SHORT)
+            }
+        }
+    }
+
 
     private fun addComment() {
         val etComments = binding.etDetailComments
