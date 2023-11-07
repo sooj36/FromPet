@@ -4,11 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.widget.SearchView
 import com.example.frompet.R
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.databinding.ActivityCommunityBinding
@@ -44,9 +41,20 @@ class CommunityActivity : AppCompatActivity() {
             val docsId = result.data?.getStringExtra(CommunityDetailActivity.DOCS_ID)
             docsId?.let { id ->
                 viewModel.deleteCommunityData(id)
+
             }
         }
     }
+    private val startForAddResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+
+            val petType = intent.getStringExtra(EXTRA_PET_TYPE)
+            petType?.let {
+                fetchCommunityData(it)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityCommunityBinding.inflate(layoutInflater)
@@ -93,6 +101,7 @@ class CommunityActivity : AppCompatActivity() {
             }
         }
 
+        binding.recyclerview.adapter = communityAdapter
 
        /* binding.recyclerview.scrollToPosition(0) */// 수정 예정
 
@@ -108,7 +117,7 @@ class CommunityActivity : AppCompatActivity() {
         binding.ivPen.setOnClickListener {
             val intent: Intent =
                 Intent(this@CommunityActivity, CommunityAddActivity::class.java)
-            startActivity(intent)
+            startForAddResult.launch(intent)
         }
 
         binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
@@ -136,12 +145,18 @@ class CommunityActivity : AppCompatActivity() {
 
     private fun fetchCommunityData(petType: String) {
         viewModel.getCommunityData(petType).observe(this) { communityDataList ->
+            communityAdapter.submitList(communityDataList) {
+                if (communityDataList.isNotEmpty()) {
+                    binding.recyclerview.scrollToPosition(0)
+                }
+            }
             originalList.addAll(communityDataList)
             Log.e("sshOriginList be","$originalList")
             communityAdapter.submitList(communityDataList)
             Log.e("sshOriginList after","$originalList")
         }
     }
+
 
 
     private fun getFilter() =  when (binding.chipGroup.checkedChipId) {
@@ -158,6 +173,15 @@ class CommunityActivity : AppCompatActivity() {
         }
         startForDetailResult.launch(intent)
     }
+    override fun onResume() {
+        super.onResume()
+
+        val petType = intent.getStringExtra(EXTRA_PET_TYPE)
+        petType?.let {
+            fetchCommunityData(it)
+        }
+    }
+
     override fun onBackPressed() {
         if (!binding.listSearch.isIconified) {
             binding.listSearch.isIconified = true

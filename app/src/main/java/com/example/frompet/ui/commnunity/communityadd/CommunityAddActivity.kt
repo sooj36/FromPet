@@ -1,5 +1,6 @@
 package com.example.frompet.ui.commnunity.communityadd
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -99,10 +100,7 @@ class CommunityAddActivity : AppCompatActivity() {
                                         showToast("게시글이 등록되었습니다", Toast.LENGTH_SHORT)
 
                                         val dataIntent = Intent()
-                                        setResult(
-                                            RESULT_OK,
-                                            Intent().putExtra(DOCS_ID, community.docsId)
-                                        )
+                                        setResult(Activity.RESULT_OK, dataIntent)
                                         finish()
                                     }
                                     .addOnFailureListener {
