@@ -1,5 +1,6 @@
 package com.example.frompet.ui.commnunity.communitydetail
 
+import android.app.Activity
 import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.os.Build
@@ -7,9 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +20,9 @@ import com.example.frompet.data.model.CommentData
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.data.model.User
 import com.example.frompet.databinding.ActivityCommunityDetailBinding
-import com.example.frompet.ui.setting.FriendsListAdapter
+
+import com.example.frompet.ui.commnunity.community.CommunityViewModel
+
 import com.example.frompet.util.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -35,6 +37,7 @@ class CommunityDetailActivity : AppCompatActivity() {
     private val binding get() = _binding!!
 
     private val currentUser = FirebaseAuth.getInstance().currentUser
+    private val communityViewModel: CommunityViewModel by viewModels()
 
     private val store = FirebaseFirestore.getInstance()
 
@@ -189,20 +192,14 @@ class CommunityDetailActivity : AppCompatActivity() {
         finish()
     }
 
-
-    // 삭제
     private fun deleteCommunity(docsId: String?) {
         if (docsId != null) {
-            store.collection("Community")
-                .document(docsId)
-                .delete()
-                .addOnSuccessListener {
-                    showToast("게시글이 삭제되었습니다", Toast.LENGTH_SHORT)
-                    finish()
-                }
-                .addOnFailureListener {
-                    showToast("해당 작성자만 게시글 삭제가 가능합니다", Toast.LENGTH_SHORT)
-                }
+            communityViewModel.deleteCommunityData(docsId)
+            val dataIntent = Intent().apply {
+                putExtra(DOCS_ID, docsId)
+            }
+            setResult(Activity.RESULT_OK, dataIntent)
+            finish()
         }
     }
 

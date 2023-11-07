@@ -60,7 +60,10 @@ class HomeFragment : Fragment() {
     private lateinit var manager : CardStackLayoutManager
     private val viewModel: MatchSharedViewModel by viewModels()
     private val fcmViewModel: FCMNotificationViewModel by viewModels()
-    private val filterViewModel: HomeFilterViewModel by activityViewModels()
+    private val filterViewModel: HomeFilterViewModel by viewModels {
+        HomeFilterViewModelFactory(requireActivity().application)
+    }
+
 
     private val currentUser = FirebaseAuth.getInstance().currentUser
     private val firestore = FirebaseFirestore.getInstance()

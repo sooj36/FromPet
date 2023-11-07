@@ -29,6 +29,11 @@ android {
 //        buildConfigField "String", "FCM_API_KEY", properties["fcm_api_key"]
         //로컬프로퍼티에 API값
 //        manifestPlaceholders["fcm_key"] = localProperties.getProperty('FCM_API_KEY')
+
+        // 프로젝트 내에서 언제든지 사용이 가능한 변수들
+        // 타입 - 키 - 값으로 저장
+//        buildConfigField "String", "NAVER_CLIENT_ID", properties['naver_client_id']
+//        buildConfigField "String", "NAVER_CLIENT_SECRET", properties['naver_client_secret']
     }
 
     buildTypes {

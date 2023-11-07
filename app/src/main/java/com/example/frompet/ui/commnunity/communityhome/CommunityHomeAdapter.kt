@@ -15,59 +15,49 @@ import com.example.frompet.databinding.ItemCoummunicationBinding
 import com.example.frompet.ui.commnunity.community.CommunityActivity
 
 class CommunityHomeAdapter(
-    var onClicked: (CommunityHomeData,Int) -> Unit) :
-    ListAdapter<CommunityHomeData, CommunityHomeAdapter.CommunicationViewHolder>(
-        object : DiffUtil.ItemCallback<CommunityHomeData>() {
-            override fun areItemsTheSame(
-                oldItem: CommunityHomeData,
-                newItem: CommunityHomeData
-            ): Boolean {
-                return oldItem == newItem
-            }
-
-            override fun areContentsTheSame(
-                oldItem: CommunityHomeData,
-                newItem: CommunityHomeData
-            ): Boolean {
-                return oldItem == newItem
-            }
+    private val onClicked: (CommunityHomeData) -> Unit
+) : ListAdapter<CommunityHomeData, CommunityHomeAdapter.CommunicationViewHolder>(
+    object : DiffUtil.ItemCallback<CommunityHomeData>() {
+        override fun areItemsTheSame(
+            oldItem: CommunityHomeData,
+            newItem: CommunityHomeData
+        ): Boolean {
+            return oldItem.petType == newItem.petType
         }
-    ) {
+
+        override fun areContentsTheSame(
+            oldItem: CommunityHomeData,
+            newItem: CommunityHomeData
+        ): Boolean {
+            return oldItem == newItem
+        }
+    }
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommunicationViewHolder {
         return CommunicationViewHolder(
             ItemCoummunicationBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false,
+                LayoutInflater.from(parent.context), parent, false
             ), onClicked
         )
     }
 
     override fun onBindViewHolder(holder: CommunicationViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item,position)
+        holder.bind(item)
     }
+
 
     class CommunicationViewHolder(
         private val binding: ItemCoummunicationBinding,
-        private val onItemClick: (CommunityHomeData, Int) -> Unit
+        private val onItemClicked: (CommunityHomeData) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
-        private val context = binding.root.context
-        fun bind(item: CommunityHomeData,position: Int) = with(binding) {
+        fun bind(item: CommunityHomeData) = with(binding) {
             ivPetNameComm.load(item.petLogo)
             tvPetNameComm.text = item.petType
-            /*binding.communicationId.setOnClickListener {
-                val intent = Intent(it.context, CommunityActivity::class.java)
-                it.context.startActivity(intent)
-            }*/
             itemView.setOnClickListener {
-                onItemClick(item,adapterPosition)
-                val item = item.toCommunityData()
-                Intent(context, CommunityActivity::class.java).apply {
-                    putExtra(CommunityActivity.EXTRA_DATA, item)
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }.run { context.startActivity(this) }
-                Log.e("zzzzzzz", "Clicked item: ${item.petType}, Index: $adapterPosition")
+                onItemClicked(item) // 아이템 클릭 시 onClicked 클로저를 호출하여 클릭 이벤트 처리
             }
         }
     }

@@ -195,6 +195,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tv_km"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginStart="200dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_pet_distance"
+        app:layout_constraintStart_toEndOf="@+id/tv_pet_distance"
+        app:layout_constraintTop_toTopOf="@+id/tv_pet_distance" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/slider"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:valueFrom="10.0"
+         android:valueTo="600.0"
+        app:tickVisible="false"
+        app:labelBehavior="withinBounds"
+        android:layout_marginBottom="170dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pet_distance" />
+
+
     <Button
         android:id="@+id/bt_complete"
         android:layout_width="wrap_content"

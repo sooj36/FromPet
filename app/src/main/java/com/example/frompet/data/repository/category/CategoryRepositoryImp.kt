@@ -17,7 +17,7 @@ class CategoryRepositoryImp(
             "category_dog", "category_cat", "category_raccoon", "category_fox",
             "category_chick", "category_pig", "category_snake", "category_fish"
         )
-        Log.e("zzzzz", "getCategory called with categories: $categories")
+        Log.e("sshImp", "getCategory called with categories: $categories")
         return categories.map { categoryString ->
             CommunityHomeData(
                 getAnimalImage(categoryString), // 이미지 리소스 ID 가져오기
@@ -42,11 +42,11 @@ class CategoryRepositoryImp(
                 .orderBy("timestamp",Query.Direction.DESCENDING)
                 .get()
                 .await()
-            Log.e("aaaaaa", "$petType")
+            Log.e("sshImp", "$petType")
             for (document in querySnapshot.documents) {
                 val title = document.getString("title") ?: ""
                 val tag = document.getString("tag") ?: ""
-                val timestamp = document.getString("timestamp") ?: ""
+                val timestamp = document.getLong("timestamp") ?: 0L
                 val contents = document.getString("contents") ?: ""
                 val uid = document.getString("uid") ?: ""
                 val docsId = document.id
@@ -55,7 +55,7 @@ class CategoryRepositoryImp(
                 val communityData = CommunityData(
                     title = title,
                     tag = tag,
-                    timestamp = System.currentTimeMillis(),
+                    timestamp = timestamp,
                     contents = contents,
                     uid = uid,
                     docsId = docsId,
@@ -63,10 +63,10 @@ class CategoryRepositoryImp(
                 )
                 communityDataList.add(communityData)
             }
-            Log.e("aaaaa", "$communityDataList")
+            Log.e("sshImp", "$communityDataList")
 
         } catch (e: Exception) {
-            Log.e("aaaaaa", "error", e)
+            Log.e("sshImp", "error", e)
         }
         return communityDataList
 

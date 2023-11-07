@@ -22,9 +22,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 class HomeFilterActivity : AppCompatActivity() {
     private var _binding: ActivityHomeFilterBinding? = null
     private val binding get() = _binding!!
+    val viewModel: HomeFilterViewModel by viewModels { HomeFilterViewModelFactory(application) }
 
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+    private var selectedDistance: Float = 10.0f // 기본 최소 거리
 
     companion object {
         const val FILTER_DATA = "filter_data"
@@ -39,26 +41,41 @@ class HomeFilterActivity : AppCompatActivity() {
 
         setupCloseButton()
         setupPetTypeSpinner()
+        setupDistanceSlider()
         restoreFilterOptions()
 
         binding.btComplete.setOnClickListener {
             val selectedPetType = binding.spPetType.selectedItem.toString()
             val selectedGender = getSelectedGender()
             val selectNeuter = getSelectedNeuter()
-            val filter = Filter(petType = selectedPetType, petGender = selectedGender,petNeuter = selectNeuter)
-
-            saveFilterOptions(selectedPetType, selectedGender,selectNeuter)
+            val filter = Filter(
+                petType = selectedPetType,
+                petGender = selectedGender,
+                petNeuter = selectNeuter,
+                distanceFrom = selectedDistance
+            )
+            saveFilterOptions(selectedPetType, selectedGender, selectNeuter, selectedDistance)
             returnFilterResult(filter)
         }
     }
 
-    private fun setupCloseButton() {
-        binding.ivClose.setOnClickListener {
-            finish()
+    private fun setupDistanceSlider()= with(binding) {
+        slider.value = selectedDistance
+        slider.valueFrom = 10.0f // 슬라이더의 최소값
+        slider.valueTo = 600.0f // 슬라이더의 최대값
+
+        slider.setLabelFormatter { value: Float ->
+            "${value.toInt()} km"
         }
+        slider.addOnChangeListener { slider, value, _ ->
+            selectedDistance = value // 사용자가 선택한 최소 거리
+            tvKm.text = "${value.toInt()} km"
+        }
+        tvKm.text = "${selectedDistance.toInt()} km"
     }
 
-    private fun setupPetTypeSpinner() {
+
+        private fun setupPetTypeSpinner() {
         val adapter = ArrayAdapter.createFromResource(
             this,
             R.array.pet_types,
@@ -69,7 +86,8 @@ class HomeFilterActivity : AppCompatActivity() {
         val petTypes = resources.getStringArray(R.array.pet_types)
         val defaultPosition = petTypes.indexOf("전체")
         binding.spPetType.setSelection(defaultPosition)
-        binding.spPetType.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        binding.spPetType.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 // 스피너의 넓이
                 val spinnerWidth = binding.spPetType.width
@@ -84,53 +102,66 @@ class HomeFilterActivity : AppCompatActivity() {
 
     private fun getSelectedGender(): String? {
         return when (binding.chipGroup.checkedChipId) {
-            R.id.chip_male -> "남"
-            R.id.chip_female -> "여"
+            R.id.chip_male -> "수컷"
+            R.id.chip_female -> "암컷"
             else -> "all"
         }
     }
-  private fun getSelectedNeuter():String?{
-      return when(binding.chipGroup2.checkedChipId){
-          R.id.chip_done -> "중성화"
-          R.id.chip_nope -> "중성화 안함"
-          else -> "상관없음"
-      }
-  }
 
-    private fun saveFilterOptions(petType: String, petGender: String?,petNeuter: String?) {
-        val filterOptions = mapOf("petType" to petType, "petGender" to petGender,"petNeuter" to petNeuter)
+    private fun getSelectedNeuter(): String? {
+        return when (binding.chipGroup2.checkedChipId) {
+            R.id.chip_done -> "중성화"
+            R.id.chip_nope -> "중성화 안함"
+            else -> "상관없음"
+        }
+    }
+
+    private fun saveFilterOptions(petType: String, petGender: String?, petNeuter: String?, distance: Float) {
+        val filterOptions =
+            mapOf("petType" to petType, "petGender" to petGender, "petNeuter" to petNeuter, "distanceFrom" to distance)
         database.reference.child("userSaveFilter").child(currentUserUid).setValue(filterOptions)
     }
 
-    private fun restoreFilterOptions() {
-        database.reference.child("userSaveFilter").child(currentUserUid).addListenerForSingleValueEvent(object :
-            ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val petType = snapshot.child("petType").getValue(String::class.java) ?: "전체"
-                val petGender = snapshot.child("petGender").getValue(String::class.java) ?: "all"
-                val petNeuter = snapshot.child("petNeuter").getValue(String::class.java)?:"상관없음"
-                val petTypePosition = resources.getStringArray(R.array.pet_types).indexOf(petType)
+    private fun restoreFilterOptions()= with(binding) {
+        database.reference.child("userSaveFilter").child(currentUserUid)
+            .addListenerForSingleValueEvent(object :
+                ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val petType = snapshot.child("petType").getValue(String::class.java) ?: "전체"
+                    val petGender =
+                        snapshot.child("petGender").getValue(String::class.java) ?: "all"
+                    val petNeuter =
+                        snapshot.child("petNeuter").getValue(String::class.java) ?: "상관없음"
+                    val petTypePosition =
+                        resources.getStringArray(R.array.pet_types).indexOf(petType)
+                    val distance = snapshot.child("distanceFrom").getValue(Float::class.java) ?: 10.0f
 
-                binding.spPetType.setSelection(petTypePosition)
 
-                val genderChipId = when (petGender) {
-                    "남" -> R.id.chip_male
-                    "여" -> R.id.chip_female
-                    else -> R.id.chip_all
+
+                    spPetType.setSelection(petTypePosition)
+
+                    val genderChipId = when (petGender) {
+                        "수컷" -> R.id.chip_male
+                        "암컷" -> R.id.chip_female
+                        else -> R.id.chip_all
+                    }
+                    chipGroup.check(genderChipId)
+
+                    val neuterChipId = when (petNeuter) {
+                        "중성화" -> R.id.chip_done
+                        "중성화 안함" -> R.id.chip_nope
+                        else -> R.id.chip_dont_care
+                    }
+                    chipGroup2.check(neuterChipId)
+                    slider.value = distance
+                    selectedDistance = distance
+                    tvKm.text = "${selectedDistance.toInt()} km"
                 }
-                binding.chipGroup.check(genderChipId)
 
-                val neuterChipId = when(petNeuter){
-                    "중성화"-> R.id.chip_done
-                    "중성화 안함"->R.id.chip_nope
-                    else -> R.id.chip_dont_care
+
+                override fun onCancelled(error: DatabaseError) {
                 }
-                binding.chipGroup2.check(neuterChipId)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-            }
-        })
+            })
     }
 
     private fun returnFilterResult(filter: Filter) {
@@ -139,6 +170,11 @@ class HomeFilterActivity : AppCompatActivity() {
         }
         setResult(Activity.RESULT_OK, result)
         finish()
+    }
+    private fun setupCloseButton()= with(binding) {
+        ivClose.setOnClickListener {
+            finish()
+        }
     }
 
     override fun onDestroy() {
