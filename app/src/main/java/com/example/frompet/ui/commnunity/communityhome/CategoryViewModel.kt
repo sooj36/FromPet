@@ -19,23 +19,19 @@ import kotlin.Exception
 
 class CategoryViewModel(
     private val categoryRepository: CategoryRepository
-):ViewModel() {
-    //버튼 카테고리
-    private val _btnList: MutableLiveData<List<CommunityData>> = MutableLiveData()
-    val btnList: LiveData<List<CommunityData>> get() = _btnList
+) : ViewModel() {
 
     private val _commuHomeDataList: MutableLiveData<List<CommunityHomeData>> = MutableLiveData()
-    val commuHomeDataList: LiveData<List<CommunityHomeData>> =_commuHomeDataList
+    val commuHomeDataList: LiveData<List<CommunityHomeData>> = _commuHomeDataList
 
     private val _communityList: MutableLiveData<List<CommunityData>> = MutableLiveData()
     val communityList: LiveData<List<CommunityData>> = _communityList
 
     private val _selectPetType: MutableLiveData<String> = MutableLiveData()
-    val selectPetType:LiveData<String> = _selectPetType
+    val selectPetType: LiveData<String> = _selectPetType
 
     private val _event: SingleLiveEvent<CategoryClick> = SingleLiveEvent()
     val event: LiveData<CategoryClick> get() = _event
-
 
     private val _clickedCategoryData: MutableLiveData<CommunityData> = MutableLiveData()
     val clickedCategoryData: LiveData<CommunityData> get() = _clickedCategoryData
@@ -45,14 +41,11 @@ class CategoryViewModel(
         _event.value = CategoryClick.PetCategory(CommunityData())
     }
 
-    fun getHomeCategory(){
+    fun getHomeCategory() {
         viewModelScope.launch {
             try {
                 val categories = categoryRepository.getCategory()
-                Log.e("sshView", "getHomeCategory executed successfully") // 디버그 로그
                 _commuHomeDataList.postValue(categories)
-
-                // 모든 카테고리를 가져오고, 그에 해당하는 CommunityData를 생성하여 저장
                 val allCommunityData = mutableListOf<CommunityData>()
                 for (category in categories) {
                     val petType = category.petType
@@ -60,10 +53,8 @@ class CategoryViewModel(
                     allCommunityData.addAll(communityData)
                 }
 
-                // 필터링되지 않은 모든 데이터를 _communityList에 저장
                 _communityList.postValue(allCommunityData)
             } catch (e: Exception) {
-                Log.e("sshView", "Error in getHomeCategory: ${e.message}", e) // 오류 로그
             }
         }
     }
@@ -71,29 +62,27 @@ class CategoryViewModel(
     fun listClickCategory(petType: String) {
         viewModelScope.launch {
             try {
-                Log.e("sshView", petType)
                 val category = categoryRepository.getCommunityData(petType)
                 val cateMatchCategory = category.filter { it.petType == petType }
                 if (cateMatchCategory.isNotEmpty()) {
                     _communityList.value = cateMatchCategory
                     _selectPetType.value = petType
-                    Log.e("sshView","$petType,$cateMatchCategory")
                 } else {
-                    Log.e("sshView", petType)
+
                 }
-            }catch (e: Exception){
-                Log.e("sshView","errot",e)
+            } catch (e: Exception) {
             }
+
         }
     }
 
 }
+
 class CategoryViewModelFactory(
     private val context: Context
-): ViewModelProvider.Factory{
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CategoryViewModel::class.java)) {
-            Log.e("sshView", "CategoryViewModel instance created")
             return CategoryViewModel(CategoryRepositoryImp(context)) as T
         } else {
             throw IllegalArgumentException("Not found ViewModel class.")

@@ -1,18 +1,19 @@
 package com.example.frompet.ui.commnunity.community
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frompet.data.model.CommunityData
+import com.example.frompet.data.model.Filter
 import com.example.frompet.databinding.ItemCommunityBinding
 import okhttp3.internal.platform.android.AndroidLogHandler.getFilter
 
 class CommunityAdapter(private val ListClick: (CommunityData) -> Unit) :
     ListAdapter<CommunityData, CommunityAdapter.CommunityViewHolder>(DiffCallback()) {
-
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int

@@ -28,7 +28,8 @@ class CommunityViewModel(
     val communityList: MutableLiveData<List<CommunityData>?> = _communityList
 
 
-
+    private val _filteredCommunityList = MutableLiveData<List<CommunityData>?>()
+    val filteredCommunityList: LiveData<List<CommunityData>?> = _filteredCommunityList
 
     private val _event: SingleLiveEvent<CategoryClick> = SingleLiveEvent()
     val event: LiveData<CategoryClick> get() = _event
@@ -139,6 +140,7 @@ class CommunityViewModel(
             .addOnFailureListener { e ->
             }
     }
+
 }
 
 
