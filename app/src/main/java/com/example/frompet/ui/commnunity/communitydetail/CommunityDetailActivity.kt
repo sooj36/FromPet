@@ -112,7 +112,11 @@ class CommunityDetailActivity : AppCompatActivity() {
             tag.text = it.tag
             lastTime.text = formatDate(it.timestamp)
             loadUserData(it.uid)
+            setChipColor(it.tag)
+            Log.d("tag","what is tag${it.tag}")
         }
+
+
 
         binding.backBtn.setOnClickListener {
             finish()
@@ -129,6 +133,18 @@ class CommunityDetailActivity : AppCompatActivity() {
         }
         loadComments()
     }
+
+    private fun setChipColor(tag: String) {
+        val chipColor = when (tag) {
+            "나눔" -> R.color.colorTagShare
+            "사랑" -> R.color.colorTagLove
+            "산책" -> R.color.colorTagWalk
+            "정보교환" -> R.color.colorTagExchange
+            else -> R.color.dark_gray
+        }
+        binding.chipTag.chipBackgroundColor = getColorStateList(chipColor)
+    }
+
 
     private fun loadUserData(uid: String) = with(binding) {
         store.collection("User").document(uid)
@@ -204,15 +220,24 @@ class CommunityDetailActivity : AppCompatActivity() {
     }
 
     private fun deleteCommunity(docsId: String?) {
-        if (docsId != null) {
-            communityViewModel.deleteCommunityData(docsId)
-            val dataIntent = Intent().apply {
-                putExtra(DOCS_ID, docsId)
-            }
-            setResult(Activity.RESULT_OK, dataIntent)
-            finish()
+        docsId?.let {
+            communityViewModel.deleteCommunityData(it)
+            observeDeleteStatus()
         }
     }
+
+    private fun observeDeleteStatus() {
+        communityViewModel.deleteResult.observe(this) { isSuccess ->
+            if (isSuccess) {
+                showToast("게시물이 삭제되었습니다.", Toast.LENGTH_SHORT)
+                setResult(Activity.RESULT_OK, Intent().apply { putExtra(DOCS_ID, communityData?.docsId) })
+                finish()
+            } else {
+                showToast("게시물 삭제권한이 없습니다.", Toast.LENGTH_SHORT)
+            }
+        }
+    }
+
 
     private fun addComment() {
         val etComments = binding.etDetailComments

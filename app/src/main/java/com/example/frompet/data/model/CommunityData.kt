@@ -16,6 +16,8 @@ data class CommunityData(
     val petType: String? = "",
     val petProfile: String?= null,
     val petName: String = "",
+    var viewCount :Int? = 0,
+    val userLocation: UserLocation = UserLocation()
 
     ): Parcelable{
     // 기본 toString() 메서드를 오버라이드하여 원하는 형식으로 출력
