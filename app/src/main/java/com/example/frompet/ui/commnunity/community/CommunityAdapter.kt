@@ -72,10 +72,6 @@ class CommunityAdapter(private val ListClick: (CommunityData) -> Unit) :
             val chipColor = getChipColor(communityData.tag)
             binding.chipTag.chipBackgroundColor = ColorStateList.valueOf(chipColor)
 
-            binding.linearlayoutAdd.setOnClickListener {
-                ListClick(communityData)
-            }
-
         }
     }
 

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
@@ -68,31 +69,34 @@ class CommunityActivity : AppCompatActivity() {
 
                 val filteredList = if (!searchTerms.isNullOrEmpty()) {
                     originalList.filter { item ->
-                        // 검색어 중 하나라도 포함되는 경우 필터링
+                        // 검색어 중 하나라도 제목이나 내용에 포함되는 경우 필터링
                         searchTerms.any { term ->
-                            item.title.contains(term, ignoreCase = true)
-                            item.contents.contains(term, ignoreCase = true)
+                            item.title.contains(term, ignoreCase = true) || item.contents.contains(term, ignoreCase = true)
                         }
                     }
                 } else {
-                    originalList // query가 빈 문자열이거나 null인 경우, 원본 목록을 반환
+                    originalList.toList() // query가 빈 문자열이거나 null인 경우, 원본 목록을 반환
                 }
                 communityAdapter.submitList(filteredList)
                 return true // 검색 이벤트 처리 완료
             }
 
+
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrBlank()) {
+                    communityAdapter.submitList(originalList.toList())
                     return true
                 }
+                Log.e("sshOriginList Tag","$newText")
                 return true
             }
         })
 
 
         val petType = intent.getStringExtra(EXTRA_PET_TYPE)
-        if (petType != null) {
-            fetchCommunityData(petType)
+        petType?.let {
+            fetchCommunityData(it)
+            setCategoryImage(it)
         }
 
         viewModel.filteredCommunityList.observe(this) { communityDataList ->
@@ -103,11 +107,9 @@ class CommunityActivity : AppCompatActivity() {
 
         binding.recyclerview.adapter = communityAdapter
 
-       /* binding.recyclerview.scrollToPosition(0) */// 수정 예정
-
 
         /*binding.ivCategory.setImageResource(petType)*/ //카테고리별 로고인데 int 값이라 안뜸
-        binding.tvPetT.text = "$petType 카테고리"
+        binding.tvPetT.text = "$petType"
 
 
         binding.backBtn.setOnClickListener {
@@ -145,17 +147,29 @@ class CommunityActivity : AppCompatActivity() {
 
     private fun fetchCommunityData(petType: String) {
         viewModel.getCommunityData(petType).observe(this) { communityDataList ->
-            communityAdapter.submitList(communityDataList) {
-                if (communityDataList.isNotEmpty()) {
-                    binding.recyclerview.scrollToPosition(0)
-                }
-            }
+            originalList.clear()
             originalList.addAll(communityDataList)
-            communityAdapter.submitList(communityDataList)
+            communityAdapter.submitList(communityDataList.toList()) {
+
+                binding.recyclerview.scrollToPosition(0)
+            }
+            Log.e("sshOriginList after","$originalList")
         }
     }
-
-
+    private fun setCategoryImage(petType: String) {
+        val petsType = when (petType) {
+            "강아지" -> R.drawable.dog
+            "고양이" -> R.drawable.cat
+            "라쿤" -> R.drawable.raccoon
+            "물고기" -> R.drawable.fish
+            "여우" -> R.drawable.fox
+            "파충류" -> R.drawable.frog
+            "돼지" -> R.drawable.pig
+            "새" -> R.drawable.chick
+            else -> R.drawable.splash
+        }
+        binding.ivCategory.setImageResource(petsType)
+    }
 
     private fun getFilter() =  when (binding.chipGroup.checkedChipId) {
         R.id.chip_share -> "나눔"

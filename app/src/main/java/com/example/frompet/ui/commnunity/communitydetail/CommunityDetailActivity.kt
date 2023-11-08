@@ -28,12 +28,17 @@ import com.example.frompet.data.model.User
 import com.example.frompet.databinding.ActivityCommunityDetailBinding
 
 import com.example.frompet.ui.commnunity.community.CommunityViewModel
+import com.example.frompet.util.getAddressGeocoder
 
 import com.example.frompet.util.showToast
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -111,6 +116,7 @@ class CommunityDetailActivity : AppCompatActivity() {
         val tag = binding.chipTag
         val lastTime = binding.tvLastTime
         replyCountTextView = binding.tvReplyCount
+        val address =binding.tvAddress
 
 
 
@@ -121,6 +127,10 @@ class CommunityDetailActivity : AppCompatActivity() {
             contents.text = it.contents
             tag.text = it.tag
             lastTime.text = formatDate(it.timestamp)
+            fetchUserLocation(this, communityData!!.uid) { latitude, longitude ->
+                val addressText = getAddressGeocoder(this, latitude, longitude)
+                address.text = addressText
+            }
             loadUserData(it.uid)
             setChipColor(it.tag)
             Log.d("tag","what is tag${it.tag}")
@@ -142,7 +152,18 @@ class CommunityDetailActivity : AppCompatActivity() {
             addComment()
         }
         loadComments()
+
     }
+    fun fetchUserLocation(context: Context, uid: String, onLocationFetched: (Double, Double) -> Unit) {
+        val locationRef = FirebaseDatabase.getInstance().getReference("location/$uid")
+        locationRef.get().addOnSuccessListener { dataSnapshot ->
+            val latitude = dataSnapshot.child("latitude").getValue(Double::class.java) ?: 0.0
+            val longitude = dataSnapshot.child("longitude").getValue(Double::class.java) ?: 0.0
+            onLocationFetched(latitude, longitude)
+        }.addOnFailureListener {
+        }
+    }
+
 
     private fun setChipColor(tag: String) {
         val chipColor = when (tag) {
@@ -154,6 +175,7 @@ class CommunityDetailActivity : AppCompatActivity() {
         }
         binding.chipTag.chipBackgroundColor = getColorStateList(chipColor)
     }
+
 
 
     private fun loadUserData(uid: String) = with(binding) {
