@@ -62,8 +62,6 @@ class HomeFilterViewModel(private val app :Application): ViewModel() {
                     updateUserLocationFirestore(currentUser, userLocation)
                     currentUserLocation = location
                     Log.d("Filter", "Current user location: $currentUserLocation")
-
-                    app.showToast("위치권한을 성공적으로 가져왔습니다", Toast.LENGTH_SHORT)
                     currentFilter?.let { filter ->
                         filterUsers(filter) // 이 함수는 _filteredUsers를 업데이트합니다!
                     } ?: run {

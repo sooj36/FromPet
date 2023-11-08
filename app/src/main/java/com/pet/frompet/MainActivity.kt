@@ -15,7 +15,9 @@ import com.pet.frompet.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import android.Manifest
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+import com.pet.frompet.util.showToast
 
 class MainActivity : AppCompatActivity() {
     //    private val fcmTokenManagerViewModel by lazy {
@@ -26,16 +28,29 @@ class MainActivity : AppCompatActivity() {
     private val fcmTokenManager = FCMTokenManager()
     private val binding get() = _binding!!
 
-//    val clientId = BuildConfig.NAVER_CLIENT_ID
-//    val clientSecret = BuildConfig.NAVER_CLIENT_SECRET
+    private val locationPermissions = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
+    private val requestLocationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val granted = permissions.entries.all { it.value }
+            if (granted) {
+
+                showToast( "위치 권한이 승인되었습니다.", Toast.LENGTH_SHORT)
+                // 위치 기능을 초기화하거나 위치 기반 서비스 시작
+            } else {
+                // 사용자가 권한을 거부했을 때의 처리
+                showToast( "위치 권한이 필요합니다.", Toast.LENGTH_LONG)
+            }
+        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        Log.d("naver", "네이버 아이디${clientId}")
-//        Log.d("naver", "네이버 시크릿${clientSecret}")
 
         binding.myBottomNav.itemIconTintList = null
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -59,15 +74,10 @@ class MainActivity : AppCompatActivity() {
             finish() // 현재 화면 종료
         } else {
             setStartApp()
+            checkLocationPermission()
         }
-//        fcmTokenManagerViewModel.retrieveAndSaveFCMToken() 해야함
-        /* viewModel.user.observe(this) { firebaseUser ->
-             if (firebaseUser != null) {
-                 val uid = firebaseUser.uid
-                 Log.d("ㅋㅋㅋㅋㅋ", "사용자 UID: $uid")
-             }git pull origin release/1.0.0
-         }*/
     }
+
     private fun setStartApp() {
         val navHostFragment = supportFragmentManager.findFragmentById(com.pet.frompet.R.id.my_nav_host) as NavHostFragment
         val navController = navHostFragment.navController
@@ -75,23 +85,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkAppPushNotification() {
-        // Android 13 이상 && 푸시 권한 없음
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-            && PackageManager.PERMISSION_DENIED == ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)) {
-            // 푸시 권한 없음
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
+            // 푸시 권한 요청
             permissionPostNotification.launch(Manifest.permission.POST_NOTIFICATIONS)
-            return
         }
-        // TODO: 권한이 허용된 경우의 동작을 구현
+        // 권한이 허용된 경우의 동작을 구현
     }
+
     private val permissionPostNotification = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
         if (isGranted) {
-            // 권한 허용
-            // TODO: 권한이 허용된 경우의 동작을 구현
+            // 권한 허용된 경우의 동작
         } else {
-            // 권한 비허용
-            // TODO: 권한이 거부된 경우의 동작을 구현
+            // 권한 비허용된 경우의 동작
+            showToast( "푸시 알림 권한이 필요합니다.", Toast.LENGTH_LONG)
         }
+    }
+
+    private fun checkLocationPermission() {
+        // 모든 위치 권한이 이미 승인되었는지 확인
+        val allPermissionsGranted = locationPermissions.all {
+            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+        }
+        if (!allPermissionsGranted) {
+            // 하나라도 거부된 권한이 있다면 모든 위치 권한을 요청
+            requestLocationPermissionLauncher.launch(locationPermissions)
+        }
+    }
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
 }
