@@ -36,6 +36,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.pet.frompet.ui.map.MapUserDetailActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -184,11 +185,15 @@ class CommunityDetailActivity : AppCompatActivity() {
             .addOnSuccessListener { docsSnapshot ->
                 val user = docsSnapshot.toObject(User::class.java)
                 user?.let {
-
                     ivPetProfile.load(user.petProfile) {
                         error(R.drawable.sampleiamge)
                     }
                     tvPetName.text = user.petName
+                }
+                ivPetProfile.setOnClickListener {
+                    val intent = Intent(this@CommunityDetailActivity,MapUserDetailActivity::class.java)
+                    intent.putExtra(MapUserDetailActivity.USER,user)
+                    startActivity(intent)
                 }
             }
             .addOnFailureListener { e ->

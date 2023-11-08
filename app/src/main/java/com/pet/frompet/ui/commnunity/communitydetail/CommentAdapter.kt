@@ -1,10 +1,12 @@
 package com.pet.frompet.ui.commnunity.communitydetail
 
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +19,7 @@ import com.pet.frompet.data.model.User
 import com.pet.frompet.databinding.ItemReplyBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.pet.frompet.ui.map.MapUserDetailActivity
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -75,6 +78,12 @@ class CommentAdapter(
                                 }
 
                                 tvPetName.text = user.petName
+                                ivPetProfile.setOnClickListener {
+                                    val context = it.context
+                                    val intent = Intent(context, MapUserDetailActivity::class.java)
+                                    intent.putExtra(MapUserDetailActivity.USER, user)
+                                    context.startActivity(intent)
+                                }
                             }
                         }
 
