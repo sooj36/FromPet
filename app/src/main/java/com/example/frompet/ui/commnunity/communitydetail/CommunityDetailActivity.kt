@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -57,7 +58,6 @@ class CommunityDetailActivity : AppCompatActivity() {
     companion object {
         const val COMMUNITY_DATA = "communityData"
         const val DOCS_ID = "docsId"
-        const val REQUEST_CODE_COMMENT_MODIFY = 1004
     }
 
 
@@ -69,9 +69,12 @@ class CommunityDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         recyclerView = binding.rvReply
-        adapter = CommentAdapter { commentData ->
+        adapter = CommentAdapter({ commentData ->
             showBottomSheet(commentData)
-        }
+        }, { commentData, imageView, textView1, textView2 ->
+            likeClick(commentData, imageView, textView1, textView2)
+        })
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         communityData = intent.getParcelableExtra(DOCS_ID)
@@ -313,42 +316,71 @@ class CommunityDetailActivity : AppCompatActivity() {
         }
     }
     private fun showBottomSheet(commentData: CommentData) {
+        val layoutId = if (commentData.authorUid == FirebaseAuth.getInstance().currentUser?.uid) {
+            R.layout.bottom_sheet_layout
+        } else {
+            R.layout.bottom_sheet_layout2
+        }
 
-        val view = layoutInflater.inflate(R.layout.bottom_sheet_layout, null)
-
-
-        val modifyTextView = view.findViewById<TextView>(R.id.bottom_sheet_modify)
-        val deleteTextView = view.findViewById<TextView>(R.id.bottom_sheet_delete)
-
-
+        val view = layoutInflater.inflate(layoutId, null)
         val dialog = BottomSheetDialog(this)
         dialog.setContentView(view)
 
+        if (layoutId == R.layout.bottom_sheet_layout) {
+            val modifyTextView = view.findViewById<TextView>(R.id.bottom_sheet_modify)
+            val deleteTextView = view.findViewById<TextView>(R.id.bottom_sheet_delete)
 
-        modifyTextView.setOnClickListener {
-            val intent = Intent(this, CommentModify::class.java)
-            intent.putExtra("commentText", commentData.content) // 댓글 내용을 인텐트에 추가!
-            startActivity(intent)
-            dialog.dismiss()
-        }
+            modifyTextView.setOnClickListener {
+                val intent = Intent(this, CommentModify::class.java)
+                intent.putExtra("commentText", commentData.content)
+                intent.putExtra("commentData", commentData)
+                intent.putExtra("communityData", communityData)
+                startActivity(intent)
+                dialog.dismiss()
+            }
 
-        deleteTextView.setOnClickListener {
-            val commentDocumentRef = store.collection("Community")
-                .document(communityData?.docsId ?: "")
-                .collection("Comment")
-                .document(commentData.commentId)
-            commentDocumentRef.delete()
-                .addOnSuccessListener {
-                    showToast("댓글이 삭제되었습니다", Toast.LENGTH_SHORT)
+            deleteTextView.setOnClickListener {
+                val commentDocumentRef = store.collection("Community")
+                    .document(communityData?.docsId ?: "")
+                    .collection("Comment")
+                    .document(commentData.commentId)
+                commentDocumentRef.delete()
+                    .addOnSuccessListener {
+                        showToast("댓글이 삭제되었습니다", Toast.LENGTH_SHORT)
+                        dialog.dismiss()
+                    }
+                    .addOnFailureListener {
+                        showToast("댓글 삭제에 실패했습니다", Toast.LENGTH_SHORT)
+                        dialog.dismiss()
+                    }
+            }
+        } else {
+            val reportTextView = view.findViewById<TextView>(R.id.bottom_sheet_report)
+
+            reportTextView.setOnClickListener {
+                val commentDocumentRef = store.collection("Community")
+                    .document(communityData?.docsId ?: "")
+                    .collection("Comment")
+                    .document(commentData.commentId)
+                store.runTransaction { transaction ->
+                    val snapshot = transaction.get(commentDocumentRef)
+                    val newReportCount = snapshot.getLong("reportCount")?.plus(1) ?: 1
+                    transaction.update(commentDocumentRef, "reportCount", newReportCount)
+
+                    // 신고 횟수가 10회 이상이면 해당 댓글 삭제, 나중에 신고는 개인 당 한 번만 할 수 있게 바꿀 예정
+                    if (newReportCount >= 10) {
+                        transaction.delete(commentDocumentRef)
+                    }
+                    null
+                }.addOnSuccessListener {
+                    showToast("신고가 접수되었습니다", Toast.LENGTH_SHORT)
+                    dialog.dismiss()
+                }.addOnFailureListener {
+                    showToast("신고 접수에 실패했습니다", Toast.LENGTH_SHORT)
                     dialog.dismiss()
                 }
-                .addOnFailureListener {
-                    showToast("댓글 삭제에 실패했습니다", Toast.LENGTH_SHORT)
-                    dialog.dismiss()
-                }
+            }
         }
-
-
 
         dialog.show()
 
@@ -361,5 +393,36 @@ class CommunityDetailActivity : AppCompatActivity() {
             parentLayout.removeView(dimView)
         }
     }
+
+    private fun likeClick(commentData: CommentData, imageView: ImageView, textView1: TextView, textView2: TextView) {
+        Log.d("CommunityDetailActivity", "likeClick called with $commentData")
+        val likeUsers = commentData.likeUsers
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val commentDocumentRef = store.collection("Community")
+            .document(communityData?.docsId ?: "")
+            .collection("Comment")
+            .document(commentData.commentId)
+        store.runTransaction { transaction ->
+            Log.d("CommunityDetailActivity", "Running transaction...")
+            val snapshot = transaction.get(commentDocumentRef)
+            val newLikeCount: Long
+            val newLikeUsers: List<String>
+            if (likeUsers.contains(uid)) {
+                newLikeCount = (snapshot.getLong("likeCount") ?: 1) - 1
+                newLikeUsers = likeUsers - uid
+            } else {
+                newLikeCount = (snapshot.getLong("likeCount") ?: 0) + 1
+                newLikeUsers = likeUsers + uid
+            }
+            transaction.update(commentDocumentRef, "likeCount", newLikeCount)
+            transaction.update(commentDocumentRef, "likeUsers", newLikeUsers)
+            null
+        }.addOnFailureListener {
+            runOnUiThread { showToast("좋아요 실패했습니다", Toast.LENGTH_SHORT) }
+        }
+    }
+
+
+
 
 }
