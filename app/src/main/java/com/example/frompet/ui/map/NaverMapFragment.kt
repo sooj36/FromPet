@@ -51,7 +51,6 @@ import kotlinx.coroutines.tasks.await
 
 class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
-    val viewModel : NaverMapViewModel by viewModels()
 
     private lateinit var locationSource: FusedLocationSource
     private lateinit var fusedLocationClient: FusedLocationProviderClient

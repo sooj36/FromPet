@@ -1,6 +1,7 @@
 package com.example.frompet.ui.commnunity.communitydetail
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.icu.text.SimpleDateFormat
@@ -10,6 +11,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -45,6 +47,11 @@ class CommunityDetailActivity : AppCompatActivity() {
     private val communityViewModel: CommunityViewModel by viewModels()
 
     private val store = FirebaseFirestore.getInstance()
+    private fun hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+    }
+
 
 
     private var communityData: CommunityData? = null
@@ -276,6 +283,7 @@ class CommunityDetailActivity : AppCompatActivity() {
                                 .addOnSuccessListener {
                                     showToast("댓글이 추가되었습니다", Toast.LENGTH_SHORT)
                                     etComments.text.clear()
+                                    hideKeyboard()
                                 }
                                 .addOnFailureListener {
                                     showToast("댓글 추가에 실패했습니다", Toast.LENGTH_SHORT)
