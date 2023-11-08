@@ -7,6 +7,7 @@ import android.widget.Button
 import com.example.frompet.R
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import com.example.frompet.data.model.CommentData
 import com.example.frompet.data.model.CommunityData
 import com.google.firebase.firestore.FirebaseFirestore
@@ -26,7 +27,6 @@ class CommentModify : AppCompatActivity() {
         // CommentModify 액티비티로 전달된 데이터 가져오기
         commentData = intent.getParcelableExtra("commentData")
         communityData = intent.getParcelableExtra("communityData")
-
         val commentText = intent.getStringExtra("commentText")
         etComment.setText(commentText)
 
@@ -44,7 +44,7 @@ class CommentModify : AppCompatActivity() {
 
                 commentDocumentRef.update("content", modifiedComment)
                     .addOnSuccessListener {
-
+                        Toast.makeText(this, "댓글이 수정되었습니다.", Toast.LENGTH_SHORT).show()
                         val dataIntent = Intent().apply {
                             putExtra("modifiedComment", modifiedComment)
                         }
@@ -52,13 +52,12 @@ class CommentModify : AppCompatActivity() {
                         finish()
                     }
                     .addOnFailureListener {
-
+                        Toast.makeText(this, "댓글 수정에 실패했습니다.", Toast.LENGTH_SHORT).show()
                     }
             } else {
-
+                Toast.makeText(this, "댓글 내용을 입력하세요.", Toast.LENGTH_SHORT).show()
             }
         }
-
         val backBtn = findViewById<ImageView>(R.id.back_btn)
         backBtn.setOnClickListener {
             finish()

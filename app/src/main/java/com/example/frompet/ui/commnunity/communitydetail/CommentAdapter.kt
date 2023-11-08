@@ -1,7 +1,10 @@
 package com.example.frompet.ui.commnunity.communitydetail
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +15,7 @@ import com.example.frompet.data.model.CommentData
 import com.example.frompet.data.model.CommunityData
 import com.example.frompet.data.model.User
 import com.example.frompet.databinding.ItemReplyBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -19,8 +23,10 @@ import java.util.Locale
 import java.util.TimeZone
 
 
-class CommentAdapter(private val modifyClick: (CommentData) -> Unit) :
-    ListAdapter<CommentData, CommentAdapter.ViewHolder>(CommentDiffCallback) {
+class CommentAdapter(
+    private val modifyClick: (CommentData) -> Unit,
+    private val likeClick: (CommentData,ImageView , TextView , TextView) -> Unit
+) : ListAdapter<CommentData, CommentAdapter.ViewHolder>(CommentDiffCallback) {
 
 
 
@@ -41,6 +47,21 @@ class CommentAdapter(private val modifyClick: (CommentData) -> Unit) :
         fun bindItems(commentData: CommentData) {
             with(binding) {
                 val authorUid = commentData.authorUid
+                val uid = FirebaseAuth.getInstance().currentUser?.uid
+                val likeUsers = commentData.likeUsers
+                val likeCount = commentData.likeCount
+
+                if (likeUsers.contains(uid)) {
+                    textView11.text = likeCount.toString()
+                    textView11.setTextColor(Color.parseColor("#FF88C1"))
+                    textView9.setTextColor(Color.parseColor("#FF88C1"))
+                    ivThumbsUp.setImageResource(R.drawable.icon_sel_thumb)
+                } else {
+                    textView11.text = if (likeCount > 0) likeCount.toString() else ""
+                    textView11.setTextColor(Color.parseColor("#000000"))
+                    textView9.setTextColor(Color.parseColor("#000000"))
+                    ivThumbsUp.setImageResource(R.drawable.icon_unsel_thumb)
+                }
 
                 if (authorUid.isNotEmpty()) {
                     val userRef = FirebaseFirestore.getInstance().collection("User").document(authorUid)
@@ -68,6 +89,12 @@ class CommentAdapter(private val modifyClick: (CommentData) -> Unit) :
                 threedots3.setOnClickListener {
                     modifyClick(commentData)
                 }
+
+                btThumbsUp.setOnClickListener {
+                    likeClick.invoke(commentData, ivThumbsUp, textView11, textView9)
+
+                }
+
             }
         }
     }
