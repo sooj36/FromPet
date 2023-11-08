@@ -94,8 +94,9 @@ class CommunityActivity : AppCompatActivity() {
 
 
         val petType = intent.getStringExtra(EXTRA_PET_TYPE)
-        if (petType != null) {
-            fetchCommunityData(petType)
+        petType?.let {
+            fetchCommunityData(it)
+            setCategoryImage(it)
         }
 
         viewModel.filteredCommunityList.observe(this) { communityDataList ->
@@ -108,7 +109,7 @@ class CommunityActivity : AppCompatActivity() {
 
 
         /*binding.ivCategory.setImageResource(petType)*/ //카테고리별 로고인데 int 값이라 안뜸
-        binding.tvPetT.text = "$petType 카테고리"
+        binding.tvPetT.text = "$petType"
 
 
         binding.backBtn.setOnClickListener {
@@ -154,6 +155,20 @@ class CommunityActivity : AppCompatActivity() {
             }
             Log.e("sshOriginList after","$originalList")
         }
+    }
+    private fun setCategoryImage(petType: String) {
+        val petsType = when (petType) {
+            "강아지" -> R.drawable.dog
+            "고양이" -> R.drawable.cat
+            "라쿤" -> R.drawable.raccoon
+            "물고기" -> R.drawable.fish
+            "여우" -> R.drawable.fox
+            "파충류" -> R.drawable.frog
+            "돼지" -> R.drawable.pig
+            "새" -> R.drawable.chick
+            else -> R.drawable.splash
+        }
+        binding.ivCategory.setImageResource(petsType)
     }
 
     private fun getFilter() =  when (binding.chipGroup.checkedChipId) {
