@@ -16,7 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import coil.Coil
 import coil.request.ImageRequest
@@ -30,7 +30,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
@@ -49,11 +48,10 @@ import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import ted.gun0912.clustering.naver.TedNaverClustering
 
 class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
-    val viewModel : MapViewModel by viewModels()
+    val viewModel : NaverMapViewModel by viewModels()
 
     private lateinit var locationSource: FusedLocationSource
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -80,10 +78,13 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
     private val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: "" // 현재 uid 갖고 옴
 
+    private val markers = mutableListOf<Marker>()
+
+
     /** onCreateView 에서 권한 확인+ 위치 권한 없을 시, 사용자에게 권한 요청 **/
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -159,13 +160,11 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
                     naverMap.moveCamera(cameraUpdate)
 
                     naverMap.addOnCameraIdleListener {
+                        resetMarker() // 마커리셋
                         loadLocationData(naverMap.contentBounds)
                         Toast.makeText(context, "카메라 움직임 종료", Toast.LENGTH_SHORT).show()
                     }
-
-
                 }
-
             }
         }
         locationRef.addValueEventListener(object : ValueEventListener {
@@ -187,13 +186,31 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         })
     }
 
+    private fun addMarker(marker: Marker) {
+        markers.add(marker)
+        Log.d("LoadLocationData", "마커 저장 띵 ${marker}")
+    }
+
+    private fun removeMarkers() {
+        markers.forEach { marker ->
+            marker.map = null //  마커 삭제
+            Log.d("LoadLocationData", "마커 삭제 떽 ${marker}")
+        }
+        markers.clear()
+        Log.d("LoadLocationData", "마커 삭제 떽 ${markers.size}")
+    }
+
+    private fun resetMarker() {
+        removeMarkers()
+    }
+
     private fun setUpMap() {
         naverMap.locationSource = locationSource //현위치
         naverMap.uiSettings.isLocationButtonEnabled = true // 현 위치 버튼 기능
         naverMap.locationTrackingMode = LocationTrackingMode.Follow // 위치를 추적하면서 카메라도 같이 움직임
         // 줌
-        naverMap.maxZoom = 8.0  // (최대 21)
-        naverMap.minZoom = 8.0
+        naverMap.maxZoom = 10.0  // (최대 21)
+        naverMap.minZoom = 7.0
     }
 
     private fun loadLocationData(bounds: LatLngBounds) {
@@ -202,6 +219,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         val locationRef = database.getReference("location")
 
         locationRef.get().addOnSuccessListener { snapshot ->
+
             for (locationSnapshot in snapshot.children) {
                 val location = locationSnapshot.getValue(UserLocation::class.java)
                 if (location != null && bounds.contains(
@@ -211,21 +229,22 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
                         )
                     )
                 ) {
-
                     Log.d("LoadLocationData", "유저 아이디: ${locationSnapshot.key}")
                     // 지도 영역에 포함되는 위치만 처리
                     // null 방지 위해 orEmpty()
-                    setMark(locationSnapshot.key.orEmpty(), location)
+                    val userUid = locationSnapshot.key.orEmpty()
+                    setMark(userUid, location)
                 }
             }
         }
     }
 
     private fun setMark(userUid: String, location: UserLocation) = lifecycleScope.launch {
-        if (!isAdded) return@launch // 프래그먼트에서 액티비티가 연결되어 있는지 확인 만약 연결되어 있지 않다면 빠르게 종료해서requireContext호출을 방지
-        if (userUid != viewModel.currentUserId) {
+        if (!isAdded) return@launch //프래그먼트에서 액티비티가 연결되어 있는지 확인 만약 연결되어 있지 않다면 빠르게 종료해서requireContext호출을 방지
+        if (userUid != currentUserId) {
             val marker = createMarker(location, userUid)
             setUserProfileImage(userUid, marker)
+            addMarker(marker)
         }
     }
 
@@ -250,18 +269,17 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
             map = naverMap
             isIconPerspectiveEnabled = true
             alpha = 1.0f
-            width = 200
-            height = 200
+            width = 150
+            height = 150
             setIcon(OverlayImage.fromResource(R.drawable.reset))
             onClickListener = Overlay.OnClickListener {
                 markerClick(userUid)
                 true
             }
+
             return marker
         }
     }
-
-
 
     /** 마커 클릭 시, 프로필 띄우기 **/
     private fun markerClick(userUid: String) {
