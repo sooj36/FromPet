@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ViewTreeObserver
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.frompet.databinding.ActivityMemberInfoBinding
@@ -102,7 +103,17 @@ class MemberInfoActivity : AppCompatActivity() {
                     else -> " "
                 }
 
+                binding.spPetType.viewTreeObserver.addOnGlobalLayoutListener { object :
+                    ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout(){
+                        val spinnerWidth = binding.spPetType.width
+                        binding.spPetType.dropDownWidth = spinnerWidth
+                        binding.spPetType.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                }
+                }
                 val spinnerPetType = communityHomeData[spinner.selectedItemPosition].petType
+
                 val petLogo = communityHomeData[spinner.selectedItemPosition].petLogo
                 val collectionName = when (spinnerPetType) {
                     "강아지" -> "Dog"

@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    app:layoutDescription="@xml/activity_community_detail_scene"
     tools:context=".ui.commnunity.communitydetail.CommunityDetailActivity">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/back_btn"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_margin="10dp"
+            android:src="@drawable/icon_back"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/icon_back" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/detail_view_line_1"
@@ -26,12 +32,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chip_tag"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed" />
+            app:layout_constraintTop_toBottomOf="@+id/chip_tag" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_tag"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -50,32 +54,51 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <View
-            android:id="@+id/detail_view_line2"
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="@color/dark_pink"
-           android:layout_marginTop="120dp"
+        <ImageView
+            android:id="@+id/threedots"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/popupmenu"
+            android:src="@drawable/threedots"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_detail_contents"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/detail_view_line2"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/dark_pink"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/b" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout10">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_pet_profile"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginTop="15dp"
             android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_view_line_1" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_pet_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="펫네임"
             android:layout_marginStart="15dp"
+            android:text="펫네임"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -86,10 +109,10 @@
             android:id="@+id/tv_last_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="작성시간"
-            android:textSize="14sp"
             android:layout_marginStart="15dp"
+            android:text="작성시간"
             android:textColor="@color/gray"
+            android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/iv_pet_profile"
             app:layout_constraintTop_toBottomOf="@+id/tv_pet_name" />
 
@@ -99,8 +122,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
-            android:hint="@string/community_detail_title"
             android:layout_marginEnd="15dp"
+            android:hint="@string/community_detail_title"
             android:textColor="@color/black"
             android:textSize="23sp"
             android:textStyle="bold"
@@ -113,30 +136,20 @@
             android:id="@+id/tv_detail_contents"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
             android:hint="@string/community_detail_comment"
             android:textColor="@color/black"
             android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/iv_pet_profile"
             app:layout_constraintTop_toBottomOf="@+id/tv_detail_title" />
 
-
-
-
-    <ImageView
-        android:id="@+id/threedots"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_margin="10dp"
-
-        android:contentDescription="@string/popupmenu"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/threedots" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -158,11 +171,11 @@
             android:maxLines="3"
             android:padding="10dp"
             android:paddingStart="15dp"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_detail_enroll"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="visible"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_detail_enroll"
@@ -171,16 +184,17 @@
             android:background="@color/black"
             android:text="@string/enroll"
             android:textColor="@color/white"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/et_detail_comments"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="visible"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout8"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
@@ -224,12 +238,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:textSize="20dp"
             android:text="갯수"
+            android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="@+id/textView7"
             app:layout_constraintStart_toEndOf="@+id/textView7"
             app:layout_constraintTop_toTopOf="@+id/textView7" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>
