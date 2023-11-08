@@ -59,7 +59,7 @@ class CommentAdapter(private val modifyClick: (CommentData) -> Unit) :
 
                 }
 
-                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
+                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREA)
                 sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
                 val formattedDate = sdf.format(Date(commentData.timestamp))
                 tvLastTime.text = formattedDate
