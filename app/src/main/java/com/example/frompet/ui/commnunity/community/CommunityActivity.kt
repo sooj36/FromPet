@@ -69,21 +69,22 @@ class CommunityActivity : AppCompatActivity() {
 
                 val filteredList = if (!searchTerms.isNullOrEmpty()) {
                     originalList.filter { item ->
-                        // 검색어 중 하나라도 포함되는 경우 필터링
+                        // 검색어 중 하나라도 제목이나 내용에 포함되는 경우 필터링
                         searchTerms.any { term ->
-                            item.title.contains(term, ignoreCase = true)
-                            item.contents.contains(term, ignoreCase = true)
+                            item.title.contains(term, ignoreCase = true) || item.contents.contains(term, ignoreCase = true)
                         }
                     }
                 } else {
-                    originalList // query가 빈 문자열이거나 null인 경우, 원본 목록을 반환
+                    originalList.toList() // query가 빈 문자열이거나 null인 경우, 원본 목록을 반환
                 }
                 communityAdapter.submitList(filteredList)
                 return true // 검색 이벤트 처리 완료
             }
 
+
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrBlank()) {
+                    communityAdapter.submitList(originalList.toList())
                     return true
                 }
                 Log.e("sshOriginList Tag","$newText")
@@ -104,8 +105,6 @@ class CommunityActivity : AppCompatActivity() {
         }
 
         binding.recyclerview.adapter = communityAdapter
-
-       /* binding.recyclerview.scrollToPosition(0) */// 수정 예정
 
 
         /*binding.ivCategory.setImageResource(petType)*/ //카테고리별 로고인데 int 값이라 안뜸
@@ -147,19 +146,15 @@ class CommunityActivity : AppCompatActivity() {
 
     private fun fetchCommunityData(petType: String) {
         viewModel.getCommunityData(petType).observe(this) { communityDataList ->
-            communityAdapter.submitList(communityDataList) {
-                if (communityDataList.isNotEmpty()) {
-                    binding.recyclerview.scrollToPosition(0)
-                }
-            }
+            originalList.clear()
             originalList.addAll(communityDataList)
-            Log.e("sshOriginList be","$originalList")
-            communityAdapter.submitList(communityDataList)
+            communityAdapter.submitList(communityDataList.toList()) {
+
+                binding.recyclerview.scrollToPosition(0)
+            }
             Log.e("sshOriginList after","$originalList")
         }
     }
-
-
 
     private fun getFilter() =  when (binding.chipGroup.checkedChipId) {
         R.id.chip_share -> "나눔"
