@@ -162,7 +162,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
                     naverMap.addOnCameraIdleListener {
                         resetMarker() // 마커리셋
                         loadLocationData(naverMap.contentBounds)
-                        Toast.makeText(context, "카메라 움직임 종료", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(context, "카메라 움직임 종료", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -209,8 +209,8 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         naverMap.uiSettings.isLocationButtonEnabled = true // 현 위치 버튼 기능
         naverMap.locationTrackingMode = LocationTrackingMode.Follow // 위치를 추적하면서 카메라도 같이 움직임
         // 줌
-        naverMap.maxZoom = 10.0  // (최대 21)
-        naverMap.minZoom = 7.0
+        naverMap.maxZoom = 13.0  // (최대 21)
+        naverMap.minZoom = 10.0
     }
 
     private fun loadLocationData(bounds: LatLngBounds) {
@@ -269,8 +269,8 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
             map = naverMap
             isIconPerspectiveEnabled = true
             alpha = 1.0f
-            width = 150
-            height = 150
+            width = 200
+            height = 200
             setIcon(OverlayImage.fromResource(R.drawable.reset))
             onClickListener = Overlay.OnClickListener {
                 markerClick(userUid)
