@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.HomeFilterActivity">
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/icon_x"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView12"
+        app:layout_constraintStart_toStartOf="parent"
+       />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="친구 검색 필터"
+        android:textSize="18sp"
+        android:textStyle="bold|normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+     <TextView
+        android:id="@+id/tv_pet_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="친구의 종류"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/sp_pet_type"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="17dp"
+        style="@style/CustomSpinner"
+        android:paddingBottom="17dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pet_type" />
+    <TextView
+        android:id="@+id/tv_pet_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="친구의 성별"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pet_gender"
+        app:singleSelection="true"
+        app:singleLine="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_all"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="모든 성별"
+            style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+        <View
+            android:id="@+id/spacer1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:visibility="invisible" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_male"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+
+            android:text="수컷"
+            style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+        <View
+            android:id="@+id/spacer2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:visibility="invisible" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_female"
+            android:layout_width="100dp"
+            android:textAlignment="center"
+            android:layout_height="wrap_content"
+            android:text="암컷"
+            style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <TextView
+        android:id="@+id/tv_pet_neuter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="친구의 중성화 여부"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pet_neuter"
+        app:singleSelection="true"
+        app:singleLine="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_dont_care"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="상관없음"
+            style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+        <View
+            android:id="@+id/spacer3"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:visibility="invisible" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_done"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+
+            android:text="했음"
+            style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+        <View
+            android:id="@+id/spacer4"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:visibility="invisible" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_nope"
+            android:layout_width="100dp"
+            android:textAlignment="center"
+            android:layout_height="wrap_content"
+            android:text="안했음"
+            style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+
+    <TextView
+        android:id="@+id/tv_pet_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:text="친구와의 거리"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:layout_marginTop="170dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_km"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginStart="200dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_pet_distance"
+        app:layout_constraintStart_toEndOf="@+id/tv_pet_distance"
+        app:layout_constraintTop_toTopOf="@+id/tv_pet_distance" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/slider"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:valueFrom="10.0"
+         android:valueTo="600.0"
+        app:tickVisible="false"
+        app:labelBehavior="withinBounds"
+        android:layout_marginBottom="170dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pet_distance" />
+
+
+    <Button
+        android:id="@+id/bt_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="적용하기"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

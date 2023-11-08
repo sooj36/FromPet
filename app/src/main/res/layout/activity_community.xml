@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".ui.commnunity.community.CommunityActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toTopOf="@+id/chip_constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/icon_back" />
+
+        <ImageView
+            android:id="@+id/iv_category"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/des"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_petT"
+            app:layout_constraintStart_toEndOf="@+id/back_btn"
+            app:layout_constraintTop_toTopOf="@+id/tv_petT" />
+
+        <TextView
+            android:id="@+id/tv_petT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/skybori"
+            android:text="펫이름"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.081"
+            app:layout_constraintStart_toEndOf="@+id/iv_category"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/list_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:queryBackground="@drawable/border_search_bar"
+            app:queryHint="검색어를 입력하시오"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/chip_constraintLayout"
+        android:layout_marginTop="65dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <View
+            android:id="@+id/view_line_1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/chip_group"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingHorizontal="8dp"
+            app:checkedChip="@id/chip_all"
+            android:background="@color/beige"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:singleLine="false"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_all"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/community_all"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:chipStartPadding="8dp"
+                app:chipEndPadding="8dp"
+                app:checkedIcon="@drawable/splash"
+                app:chipIconEnabled="true"
+                app:chipBackgroundColor="@color/chip_background"
+                android:checkable="true"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_share"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/community_share"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/chip_background_share"
+                app:chipStartPadding="8dp"
+                app:chipEndPadding="8dp"
+                app:checkedIcon="@drawable/splash"
+                app:chipIconEnabled="true"
+                android:checkable="true"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_walk"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/community_walk"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/chip_background_walk"
+                app:chipStartPadding="8dp"
+                app:chipEndPadding="8dp"
+                app:checkedIcon="@drawable/splash"
+                app:chipIconEnabled="true"
+                android:checked="false"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_love"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/community_love"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/chip_background_love"
+                app:chipStartPadding="8dp"
+                app:chipEndPadding="8dp"
+                app:checkedIcon="@drawable/splash"
+                app:chipIconEnabled="true"
+                android:checked="false"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_exchange"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/community_exchange"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/chip_background_exchange"
+                app:chipStartPadding="8dp"
+                app:chipEndPadding="8dp"
+                app:checkedIcon="@drawable/splash"
+                app:chipIconEnabled="true"
+                android:checked="false"/>
+
+
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <View
+            android:id="@+id/view_line_2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/chip_group"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed" />
+
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintTop_toBottomOf="@+id/view_line_2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_line_2"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+        </ScrollView>
+
+        <ImageView
+            android:id="@+id/iv_pen"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/pen" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

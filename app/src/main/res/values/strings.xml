@@ -7,4 +7,106 @@
     <string name="menu_set">설정</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="activity_detail_petname">petName</string>
+    <string name="activity_detail_pettype">petType</string>
+    <string name="activity_detail_petage">petAge</string>
+    <string name="activity_detail_petgender">petGender</string>
+    <string name="activity_detail_petdes">petDes</string>
+    <string name="activity_detail_petintro">petIntro</string>
+    <string name="activity_detail_label_type">종류</string>
+    <string name="activity_detail_label_age">나이</string>
+    <string name="activity_detail_label_gender">성별</string>
+    <string name="activity_detail_label_des">특징</string>
+    <string name="activity_detail_label_intro">소개</string>
+    <string name="activity_detail_label_names">이름</string>
+    <string name="message_noti">N</string>
+    <string name="last_message">마지막 메세지</string>
+    <string name="chatroom_name">방이름</string>
+    <string name="chat_home_last_time">시간</string>
+    <string name="activity_chat_message">메세지를 입력하세영</string>
+    <string name="image_success">이미지 업로드 성공</string>
+    <string name="profile_image_choose">프로필 이미지를 선택하세요.</string>
+    <string name="update_info">회원 정보가 업데이트되었습니다.</string>
+    <string name="failure_info">회원 정보 업데이트에 실패했습니다.</string>
+    <string name="member_info_timestamp">yyyyMMdd_HHmmss</string>
+    <string name="signup_success">회원가입 성공</string>
+    <string name="signup_failure">회원가입 실패</string>
+    <string name="login_success_ac">로그인 성공</string>
+    <string name="login_failure_ac">로그인 실패</string>
+    <string name="et_login_email">이메일</string>
+    <string name="et_login_password">비밀번호</string>
+    <string name="bt_login">로그인</string>
+    <string name="tv_find_password">비밀번호 찾기</string>
+    <string name="tv_signup">이메일로 회원가입 진행하기</string>
+    <string name="tvb_signup">회원가입</string>
+    <string name="message_event">메시지: %s</string>
+    <string name="error_code_event">오류 코드: %d</string>
+    <string name="error_event">오류: %s</string>
+    <string name="toCommunity">커뮤니티게시판으로 이동</string>
+    <string name="community_exchange">정보교환</string>
+    <string name="community_love">사랑</string>
+    <string name="community_walk">산책</string>
+    <string name="community_share">나눔</string>
+    <string name="community_all">전체</string>
+    <string name="community_add">+</string>
+    <string name="community_detail_comment">내용을 입력해주세요</string>
+    <string name="community_detail_title">제목을 입력하세요</string>
+    <string name="community_add_title">제목</string>
+    <string name="community_add_content">내용을 입력하세요</string>
+    <string name="community_add_cancel">취소</string>
+    <string name="community_add_enroll">등록</string>
+    <string name="chat_home_possible_">0명과 대화가 가능해요</string>
+    <string name="chat_like_me">0명이 나를 좋아해요</string>
+    <string name="home_about_me">About Me</string>
+    <string name="friend_name">친구이름</string>
+    <string name="click_about_me">About Me</string>
+    <string name="like_about_me">About Me</string>
+    <string name="chat_list_name">username</string>
+    <string name="chat_list_type">type</string>
+    <string name="date_header">날짜</string>
+    <string name="home_name">TextView</string>
+    <string name="home_type">TextView</string>
+    <string name="message_time">시간</string>
+    <string name="message_message">메세지</string>
+    <string name="other_name">이름</string>
+    <string name="other_message">메세지</string>
+    <string name="other_time">시간</string>
+    <string name="web_client_id">1004439727084-hnfkckp796egigrp47l7ead1qa9nor1e.apps.googleusercontent.com</string>
+    <string name="communityhome_meet">만남의 광장</string>
+    <string name="comu_notice">[공지]</string>
+    <string name="comu_notice_text">공지텍스트</string>
+    <string name="comu_thisweekend_matched">이번주 매칭왕</string>
+    <string name="commu_all_add_plz">제목과 글을 모두 입력하고,\n 1개의 태그를 선택해주세요</string>
+    <string name="home_friend_find">친구를 찾고 있습니다.</string>
+    <string name="login_with_Google">Google 계정으로 로그인</string>
+    <string name="enter_a_comment">댓글을 입력하세요</string>
+    <string name="enroll">등록</string>
+    <string name="popupmenu">popupMenu</string>
+    <string name="home_tutor_image">클릭하면 프로필을 볼 수 있습니다.</string>
+    <string name="home_tutor_swipe_left">왼쪽 스와이프는 \n상대방에게 좋아요를 보낼 수 있습니다.</string>
+    <string name="home_tutor_swipe_right">오른쪽 스와이프는 \n상대방을 패스할 수 있습니다.\n한번 패스한 상대는 다시는 보이지 않습니다.</string>
+
+    <string-array name="pet_types">
+        <item>전체</item>
+        <item>강아지</item>
+        <item>고양이</item>
+        <item>라쿤</item>
+        <item>여우</item>
+        <item>돼지</item>
+        <item>새</item>
+        <item>물고기</item>
+        <item>파충류</item>
+    </string-array>
+
+
+    <string name="category_dog">강아지</string>
+    <string name="category_cat">고양이</string>
+    <string name="category_raccoon">라쿤</string>
+    <string name="category_fox">여우</string>
+    <string name="category_chick">새</string>
+    <string name="category_pig">돼지</string>
+    <string name="category_snake">파충류</string>
+    <string name="category_fish">물고기</string>
+    <string name="this_is_last_card">마지막 카드입니다</string>
+    <string name="enter_a_search_word">주소를 입력하세요</string>
 </resources>

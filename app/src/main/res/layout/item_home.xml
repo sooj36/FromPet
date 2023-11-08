@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:padding="20dp"
+    app:cardCornerRadius="30dp"
+    app:cardElevation="4dp">
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_pet_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingVertical="@dimen/cardview_compat_inset_shadow"
+            android:scaleType="centerCrop"
+            android:transitionName="imageTransition"
+            app:layout_constraintBottom_toBottomOf="@+id/view6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view6"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@drawable/ground_gradient"
+            app:layout_constraintBottom_toTopOf="@+id/view4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@color/light_beige"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_type_pet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:transitionName="petTypeTransition"
+            android:layout_marginTop="15dp"
+            android:text="@string/home_name"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tv_name_pet"
+            app:layout_constraintTop_toBottomOf="@+id/tv_name_pet" />
+
+        <TextView
+            android:id="@+id/tv_name_pet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:transitionName="petNameTransition"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="5dp"
+            android:text="@string/home_type"
+            android:textColor="@color/white"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_pet_image"
+            app:layout_constraintStart_toStartOf="@+id/view6"
+            app:layout_constraintTop_toTopOf="@+id/view6" />
+
+        <TextView
+            android:id="@+id/tv_age_pet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:transitionName="petAgeTransition"
+            android:layout_marginStart="10dp"
+            android:text="@string/home_name"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_name_pet"
+            app:layout_constraintStart_toEndOf="@+id/tv_name_pet"
+            app:layout_constraintTop_toTopOf="@+id/tv_name_pet" />
+
+        <ImageButton
+            android:id="@+id/ib_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_pet_image"
+            app:layout_constraintEnd_toEndOf="@+id/view6"
+            app:srcCompat="@drawable/icon_up" />
+
+        <FrameLayout
+            android:id="@+id/left_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:src="@drawable/like" />
+
+            <FrameLayout
+                android:id="@+id/right_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/dislike" />
+            </FrameLayout>
+
+
+        </FrameLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.cardview.widget.CardView>

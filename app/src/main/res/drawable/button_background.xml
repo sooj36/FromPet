@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/white" /> <!-- 원하는 배경 색 설정 -->
+            <corners android:radius="100dp" /> <!-- 원하는 radius 값을 설정 -->
+        </shape>
+    </item>
+</layer-list>
