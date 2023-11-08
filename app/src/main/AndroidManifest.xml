@@ -109,7 +109,7 @@
             android:name=".ui.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.pet.frompet.MainActivity"
             android:exported="false" />
 
         <service

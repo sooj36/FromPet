@@ -15,11 +15,11 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 
 
 android {
-    namespace 'com.example.frompet'
+    namespace 'com.pet.frompet'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.frompet"
+        applicationId "com.pet.frompet"
         minSdk 26
         targetSdk 33
         versionCode 1
