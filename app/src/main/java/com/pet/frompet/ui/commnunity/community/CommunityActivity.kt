@@ -163,7 +163,7 @@ class CommunityActivity : AppCompatActivity() {
             "라쿤" -> R.drawable.raccoon
             "물고기" -> R.drawable.fish
             "여우" -> R.drawable.fox
-            "파충류" -> R.drawable.frog
+            "파충류" -> R.drawable.snake
             "돼지" -> R.drawable.pig
             "새" -> R.drawable.chick
             else -> R.drawable.splash

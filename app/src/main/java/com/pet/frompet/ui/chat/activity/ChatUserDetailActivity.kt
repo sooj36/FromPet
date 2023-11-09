@@ -6,12 +6,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
 import coil.load
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import com.pet.frompet.MatchSharedViewModel
 import com.pet.frompet.R
 import com.pet.frompet.util.showToast
 import com.pet.frompet.databinding.ActivityChatUserDetailBinding
 import com.pet.frompet.data.model.User
+import com.pet.frompet.ui.home.HomeFilterViewModel
+import com.pet.frompet.ui.home.HomeFilterViewModelFactory
+import com.pet.frompet.ui.setting.fcm.FCMNotificationViewModel
 
 class ChatUserDetailActivity : AppCompatActivity() {
     companion object {
@@ -24,6 +31,13 @@ class ChatUserDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatUserDetailBinding
     private val matchSharedViewModel: MatchSharedViewModel by viewModels()
+    private val fcmViewModel: FCMNotificationViewModel by viewModels()
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
+
+    private val filterViewModel: HomeFilterViewModel by viewModels {
+        HomeFilterViewModelFactory(this.application)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +55,13 @@ class ChatUserDetailActivity : AppCompatActivity() {
     private fun setClickListeners(user: User?)= with(binding) {
         likeBtn.setOnClickListener {
             user?.uid?.let { userId ->
+                firestore.collection("User").document(currentUser?.uid?:"").get().addOnSuccessListener { docs->
+                    val currentName = docs.getString("petName")
+                    val title ="새로운 매칭!"
+                    val message = "${currentName}님과 매칭되었습니다"
+                    fcmViewModel.sendFCMNotification(user.uid,title,message)
+                }
+                filterViewModel.userSwiped(user.uid)
                 matchSharedViewModel.matchUser(userId)
                 showToast("${user.petName}님과 매치 되었습니다\n 대화방이 생성되었습니다!",Toast.LENGTH_LONG)
                 setResultAndFinish(userId, MATCH)
@@ -49,6 +70,7 @@ class ChatUserDetailActivity : AppCompatActivity() {
 
         dislikeBtn.setOnClickListener {
             user?.uid?.let { userId ->
+                filterViewModel.userSwiped(user.uid)
                 matchSharedViewModel.dislike(userId)
                 showToast("${user.petName}님과 매칭에 실패 했습니다!",Toast.LENGTH_LONG)
                 setResultAndFinish(userId, DISLIKE)
