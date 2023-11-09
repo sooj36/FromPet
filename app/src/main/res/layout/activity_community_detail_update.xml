@@ -168,6 +168,7 @@
             android:layout_margin="10dp"
             android:background="@color/light_gray"
             android:hint="@string/community_detail_comment"
+            
             android:padding="30dp"
             android:textColor="@color/black"
             android:textSize="15sp"
