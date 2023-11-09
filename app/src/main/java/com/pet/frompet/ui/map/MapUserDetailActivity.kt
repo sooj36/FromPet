@@ -72,7 +72,7 @@ class MapUserDetailActivity : AppCompatActivity() {
                     swipedUsersRef.child(otherUser.uid).child(currentUid ?: "").addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             if (snapshot.exists()) {
-
+                                binding.likeBtn.isVisible = false
                                 showToast("이미 상대방과 친구이거나 거절당한 상태입니다.", Toast.LENGTH_SHORT) // 상대방이 이미 스와이프하여 거절한 상태
                             } else {
                                 viewModel.like(otherUser.uid)
