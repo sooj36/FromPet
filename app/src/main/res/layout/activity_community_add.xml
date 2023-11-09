@@ -146,6 +146,18 @@
             app:layout_constraintTop_toBottomOf="@id/chip_group"
             app:layout_scrollFlags="scroll|exitUntilCollapsed" />
 
+        <ImageView
+            android:id="@+id/iv_go_galley"
+            android:layout_width="300dp"
+            android:layout_height="320dp"
+            android:layout_marginTop="15dp"
+            android:visibility="gone"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_view_line_2" />
+
+
         <EditText
             android:id="@+id/et_add_contents"
             android:layout_width="match_parent"
@@ -158,7 +170,17 @@
             android:textColorHint="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_view_line_2" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_go_galley" />
+
+        <ImageView
+            android:id="@+id/iv_upload_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_camera"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_add_enroll" />
 
         <Button
             android:id="@+id/btn_add_cancel"
