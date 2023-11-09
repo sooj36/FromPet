@@ -8,11 +8,14 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import coil.load
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.pet.frompet.MatchSharedViewModel
 import com.pet.frompet.R
 import com.pet.frompet.data.model.User
 import com.pet.frompet.databinding.ActivityMapUserDetailBinding
 import com.pet.frompet.ui.chat.activity.ChatPullScreenActivity
+import com.pet.frompet.ui.setting.fcm.FCMNotificationViewModel
 import com.pet.frompet.util.showToast
 
 class MapUserDetailActivity : AppCompatActivity() {
@@ -22,6 +25,9 @@ class MapUserDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMapUserDetailBinding
     private val viewModel: MatchSharedViewModel by viewModels()
+    private val currentUid = FirebaseAuth.getInstance().currentUser?.uid
+    private val firestore = FirebaseFirestore.getInstance()
+    private val fcmViewModel :FCMNotificationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,10 +54,19 @@ class MapUserDetailActivity : AppCompatActivity() {
     private fun setClickListeners(user: User?) {
         binding.likeBtn.setOnClickListener {
             user?.let {
+                if (it.uid == currentUid){
+                    showToast("본인에게는 친구신청을 할 수 없습니다.",Toast.LENGTH_SHORT)
+                }else{
                 viewModel.like(user.uid)
                 showToast("${user.petName}님에게 친구신청을 걸었습니다!", Toast.LENGTH_SHORT)
+                    firestore.collection("User").document(currentUid?:"").get().addOnSuccessListener { docs->
+                        val currentUserName = docs.get("petName")?:"알 수 없음"
+                        val title = "새로운 좋아요"
+                        val message = "${currentUserName}님이 당신을 좋아합니다."
+                        fcmViewModel.sendFCMNotification(user.uid,title,message)
+                    }
                 finish()
-            }
+            }}
         }
     }
 
