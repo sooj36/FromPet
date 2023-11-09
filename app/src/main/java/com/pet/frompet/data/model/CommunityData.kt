@@ -17,6 +17,7 @@ data class CommunityData(
     val petProfile: String?= null,
     val petName: String = "",
     var viewCount :Int? = 0,
+    var imageUrl: String? = null,
     val userLocation: UserLocation = UserLocation()
 
     ): Parcelable{
@@ -24,7 +25,7 @@ data class CommunityData(
     override fun toString(): String {
         return "CommunityData(title=$title, tag=$tag, timestamp=$timestamp, " +
                 "contents=$contents, uid=$uid, docsId=$docsId, petType=$petType, " +
-                "petProfile=$petProfile, petName=$petName)"
+                "petProfile=$petProfile, petName=$petName,imageUrl=$imageUrl)"
     }
 }
 

@@ -5,10 +5,13 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.RoundedCorner
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.transform.RoundedCornersTransformation
 import com.pet.frompet.data.model.CommunityData
 import com.pet.frompet.data.model.Filter
 import com.pet.frompet.databinding.ItemCommunityBinding
@@ -57,7 +60,9 @@ class CommunityAdapter(private val ListClick: (CommunityData) -> Unit) :
                     binding.tvViewCount.text = communityData.viewCount.toString()
                 }
             }
-
+            binding.ivUploadImage.load(communityData.imageUrl){
+                transformations(RoundedCornersTransformation(20f))
+            }
             binding.tvTitleComm.text = communityData.title
             binding.chipTag.text = communityData.tag
             binding.tvContentsComm.text = communityData.contents
