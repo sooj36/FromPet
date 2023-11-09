@@ -153,12 +153,19 @@
 
     </LinearLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+
         <EditText
             android:id="@+id/update_contents"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:layout_marginTop="25dp"
             android:background="@color/light_gray"
             android:hint="@string/community_detail_comment"
             android:padding="30dp"
@@ -166,8 +173,43 @@
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_go_galley" />
 
+        <ImageView
+            android:id="@+id/iv_go_galley"
+            android:layout_width="300dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="15dp"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/ib_image_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/ib_button_radius"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_x"
+            app:layout_constraintBottom_toTopOf="@+id/update_contents"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+        <ImageView
+            android:id="@+id/iv_upload_image"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/icon_camera"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
 
         <ImageView
             android:id="@+id/btn_done"
@@ -180,6 +222,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/done" />
 
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
