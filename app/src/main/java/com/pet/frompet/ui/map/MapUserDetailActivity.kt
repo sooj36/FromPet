@@ -2,19 +2,27 @@ package com.pet.frompet.ui.map
 
 import android.app.Activity
 import android.content.Intent
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import coil.load
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pet.frompet.MatchSharedViewModel
 import com.pet.frompet.R
 import com.pet.frompet.data.model.User
 import com.pet.frompet.databinding.ActivityMapUserDetailBinding
 import com.pet.frompet.ui.chat.activity.ChatPullScreenActivity
+import com.pet.frompet.ui.home.HomeFilterViewModel
+import com.pet.frompet.ui.home.HomeFilterViewModelFactory
 import com.pet.frompet.ui.setting.fcm.FCMNotificationViewModel
 import com.pet.frompet.util.showToast
 
@@ -28,6 +36,10 @@ class MapUserDetailActivity : AppCompatActivity() {
     private val currentUid = FirebaseAuth.getInstance().currentUser?.uid
     private val firestore = FirebaseFirestore.getInstance()
     private val fcmViewModel :FCMNotificationViewModel by viewModels()
+    private val filterViewModel: HomeFilterViewModel by viewModels {
+        HomeFilterViewModelFactory(this.application)
+    }
+    val swipedUsersRef = FirebaseDatabase.getInstance().getReference("swipedUsers")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,22 +65,34 @@ class MapUserDetailActivity : AppCompatActivity() {
 
     private fun setClickListeners(user: User?) {
         binding.likeBtn.setOnClickListener {
-            user?.let {
-                if (it.uid == currentUid){
-                    showToast("본인에게는 친구신청을 할 수 없습니다.",Toast.LENGTH_SHORT)
-                }else{
-                viewModel.like(user.uid)
-                showToast("${user.petName}님에게 친구신청을 걸었습니다!", Toast.LENGTH_SHORT)
-                    firestore.collection("User").document(currentUid?:"").get().addOnSuccessListener { docs->
-                        val currentUserName = docs.get("petName")?:"알 수 없음"
-                        val title = "새로운 좋아요"
-                        val message = "${currentUserName}님이 당신을 좋아합니다."
-                        fcmViewModel.sendFCMNotification(user.uid,title,message)
-                    }
-                finish()
-            }}
+            user?.let { otherUser ->
+                if (otherUser.uid == currentUid) {
+                    showToast("본인에게는 친구신청을 할 수 없습니다.", Toast.LENGTH_SHORT)
+                } else {
+                    swipedUsersRef.child(otherUser.uid).child(currentUid ?: "").addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.exists()) {
+
+                                showToast("이미 상대방과 친구이거나 거절당한 상태입니다.", Toast.LENGTH_SHORT) // 상대방이 이미 스와이프하여 거절한 상태
+                            } else {
+                                viewModel.like(otherUser.uid)
+                                filterViewModel.userSwiped(user.uid)
+                                showToast("${otherUser.petName}님에게 친구신청을 걸었습니다!", Toast.LENGTH_SHORT)  // 상대방이 아직 스와이프하지 않았거나 거절하지 않은 상태
+                                firestore.collection("User").document(currentUid ?: "").get().addOnSuccessListener { docs ->
+                                    val currentUserName = docs.getString("petName") ?: "알 수 없음"
+                                    val title = "새로운 좋아요"
+                                    val message = "${currentUserName}님이 당신을 좋아합니다."
+                                    fcmViewModel.sendFCMNotification(otherUser.uid, title, message)
+                                }
+                                finish()
+                            }
+                        }
+                        override fun onCancelled(error: DatabaseError) {}
+                    })}
+            }
         }
     }
+
 
 
     private fun displayUserInfo(user: User)=with(binding) {
