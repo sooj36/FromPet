@@ -180,7 +180,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
                     naverMap.addOnCameraIdleListener {
                         resetMarker() // 마커리셋
-                        //로드로케이션데이터 옵저버 할 곳 1
+
                         viewModel.getloadLocationData(naverMap.contentBounds)
 
 //                        loadLocationData(naverMap.contentBounds)
