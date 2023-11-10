@@ -3,94 +3,106 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_pet_profile"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_pet_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:text="펫네임"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/iv_pet_profile"
+        app:layout_constraintTop_toTopOf="@+id/iv_pet_profile" />
+
+    <TextView
+        android:id="@+id/tv_last_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:text="작성시간"
+        android:textColor="@color/gray"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/iv_pet_profile"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pet_name" />
+
+    <ImageView
+        android:id="@+id/threedots"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/popupmenu"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/threedots" />
+
+
+    <TextView
+        android:id="@+id/tv_detail_contents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="15dp"
+        android:hint="@string/community_detail_comment"
+        android:textColor="@color/black"
+        android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintHorizontal_bias="0.928"
+        app:layout_constraintStart_toStartOf="@id/tv_last_time"
+        app:layout_constraintTop_toBottomOf="@id/tv_last_time" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_pet_profile"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="15dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/iv_thumbs_up"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="-5dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/thumbsup"
+        app:layout_constraintStart_toStartOf="@+id/tv_detail_contents"
+        app:layout_constraintTop_toBottomOf="@+id/tv_detail_contents" />
 
-        <TextView
-            android:id="@+id/tv_pet_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:text="펫네임"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/iv_pet_profile"
-            app:layout_constraintTop_toTopOf="@+id/iv_pet_profile" />
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="좋아요"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_thumbs_up"
+        app:layout_constraintStart_toEndOf="@+id/iv_thumbs_up"
+        app:layout_constraintTop_toTopOf="@+id/iv_thumbs_up" />
 
-        <TextView
-            android:id="@+id/tv_last_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:text="작성시간"
-            android:textColor="@color/gray"
-            android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@+id/iv_pet_profile"
-            app:layout_constraintTop_toBottomOf="@+id/tv_pet_name" />
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="@+id/textView9"
+        app:layout_constraintStart_toEndOf="@+id/textView9"
+        app:layout_constraintTop_toTopOf="@+id/textView9" />
 
-        <ImageView
-            android:id="@+id/threedots"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_margin="10dp"
-            android:contentDescription="@string/popupmenu"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/threedots" />
+    <ImageButton
+        android:id="@+id/bt_thumbs_up"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/textView9"
+        app:layout_constraintEnd_toEndOf="@+id/textView9"
+        app:layout_constraintStart_toStartOf="@+id/iv_thumbs_up"
+        app:layout_constraintTop_toTopOf="@+id/textView9" />
 
-
-        <TextView
-            android:id="@+id/tv_detail_contents"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="70dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="15dp"
-            android:hint="@string/community_detail_comment"
-            android:textColor="@color/black"
-            android:textSize="17sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.928"
-            app:layout_constraintStart_toStartOf="@id/tv_last_time"
-            app:layout_constraintTop_toBottomOf="@id/tv_last_time" />
-
-        <ImageView
-            android:id="@+id/bt_thumbs_up"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginStart="-5dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/thumbsup"
-            app:layout_constraintStart_toStartOf="@+id/tv_detail_contents"
-            app:layout_constraintTop_toBottomOf="@+id/tv_detail_contents" />
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="좋아요"
-            app:layout_constraintBottom_toBottomOf="@+id/bt_thumbs_up"
-            app:layout_constraintStart_toEndOf="@+id/bt_thumbs_up"
-            app:layout_constraintTop_toTopOf="@+id/bt_thumbs_up" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
