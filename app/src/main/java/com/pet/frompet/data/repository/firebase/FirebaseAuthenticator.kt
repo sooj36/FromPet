@@ -40,6 +40,20 @@ class FirebaseAuthenticator : BaseAuthenticator {
         }
     }
 
+    override suspend fun deleteAccount(): Boolean {
+        val currentUser = Firebase.auth.currentUser
+        return if (currentUser != null){
+            try {
+                currentUser.delete().await()
+                true
+            }catch (e: Exception){
+                false
+            }
+        }else{
+            false
+        }
+    }
+
     override fun signOut(): FirebaseUser? {
         Firebase.auth.signOut()
         return Firebase.auth.currentUser

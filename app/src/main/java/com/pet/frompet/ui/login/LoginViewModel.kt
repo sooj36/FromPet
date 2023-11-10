@@ -118,6 +118,20 @@ class LoginViewModel @Inject constructor(
             eventsChannel.send(AllEvents.Error(error[1]))
         }
     }
+    fun deleteAccount() = viewModelScope.launch {
+        try {
+            val result = userRepository.deleteAccount()
+            if(result){
+                eventsChannel.send(AllEvents.Message("회원 탈퇴 성공"))
+            }else{
+                eventsChannel.send(AllEvents.Error("회원 탈퇴 실패"))
+            }
+        }catch (e: Exception){
+            val error = e.toString().split(":").toTypedArray()
+            eventsChannel.send(AllEvents.Error(error[1]))
+        }
+    }
+
 
     fun signOut() = viewModelScope.launch {
         try {
