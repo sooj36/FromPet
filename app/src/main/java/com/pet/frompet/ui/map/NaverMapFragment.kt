@@ -183,7 +183,6 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
                         viewModel.getloadLocationData(naverMap.contentBounds)
 
-//                        loadLocationData(naverMap.contentBounds)
                     }
                 }
             }
