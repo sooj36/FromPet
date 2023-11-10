@@ -11,7 +11,7 @@ data class ReCommentData(
     val authorUid: String = "",
     val timestamp: Long = System.currentTimeMillis(),
     val reportCount: Int = 0,
-    val likeCount: Int = 0,
+    val likeCount: Int = 0,//뭐야!
     val likeUsers: List<String> = listOf()
 ): Parcelable {
     constructor() : this("", "", "", "", 0,0,0,listOf()) // 기본 생성자 추가
