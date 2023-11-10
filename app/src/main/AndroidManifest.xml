@@ -25,6 +25,9 @@
         android:theme="@style/Base.Theme.FromPet"
         tools:targetApi="31">
         <activity
+            android:name=".ui.more.MoreActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.commnunity.communitydetail.CommentModify"
             android:exported="false" />
         <activity
@@ -71,8 +74,8 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.commnunity.communityadd.CommunityAddActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.commnunity.community.CommunityActivity"
             android:exported="false" />
@@ -110,7 +113,7 @@
             android:name=".ui.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name="com.pet.frompet.MainActivity"
+            android:name=".MainActivity"
             android:exported="false" />
 
         <service

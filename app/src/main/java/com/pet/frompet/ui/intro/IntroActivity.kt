@@ -87,9 +87,9 @@ class IntroActivity : AppCompatActivity() {
             }
         }
 
-        pageItemList.add(PageItem(R.color.light_orange, R.drawable.splash, "From Pet~!!"))
-        pageItemList.add(PageItem(R.color.warm_blue, R.drawable.type, "반려동물을 위한 "))
-        pageItemList.add(PageItem(R.color.light_gray, R.drawable.loginprofile, "소개팅 시작~"))
+        pageItemList.add(PageItem(R.color.light_orange, R.drawable.splash, "From Pet"))
+        pageItemList.add(PageItem(R.color.warm_blue, R.drawable.loginprofile2, "반려동물을 위한 "))
+        pageItemList.add(PageItem(R.color.light_gray, R.drawable.loginprofile, "소개팅 시작"))
 
         myIntroPagerRecyclerAdapter = IntroAdapter(pageItemList)
 

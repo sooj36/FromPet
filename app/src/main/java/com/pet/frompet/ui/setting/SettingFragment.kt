@@ -85,10 +85,10 @@ class SettingFragment : Fragment() {
             startActivity(intent)
         }
 
-
+/*
         binding.ibLogOut.setOnClickListener {
             showLogoutBottomSheet()
-        }
+        }*/
 
 
 
