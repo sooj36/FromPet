@@ -170,7 +170,6 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
                 // 사용자 현재 위치 파베에 업로드
                 val userLocation = UserLocation(location.latitude, location.longitude) // 사용자 위도 경도
                 location.let {//null있어서 let필요 x
-//                    UserLocation(latitude = location.latitude, longitude = it.longitude)
                     locationRef.child(currentUserId).setValue(userLocation) //viewmodel로 1 --
 
                     val cameraUpdate =
