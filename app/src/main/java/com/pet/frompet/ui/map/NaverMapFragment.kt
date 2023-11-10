@@ -7,7 +7,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,16 +14,13 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import coil.Coil
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
-import com.pet.frompet.R
-import com.pet.frompet.data.model.User
-import com.pet.frompet.data.model.UserLocation
-import com.pet.frompet.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
@@ -37,6 +33,7 @@ import com.google.firebase.ktx.Firebase
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraAnimation
+import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
@@ -46,17 +43,25 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import com.pet.frompet.R
+import com.pet.frompet.data.model.User
+import com.pet.frompet.data.model.UserLocation
+import com.pet.frompet.databinding.FragmentMapBinding
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import ted.gun0912.clustering.naver.TedNaverClustering
 
 class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
+    private val viewModel: MapViewModel by viewModels()
 
     private lateinit var locationSource: FusedLocationSource
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private lateinit var naverMap: NaverMap
     private val firestore = FirebaseFirestore.getInstance()
+    private val database = Firebase.database
+    private val locationRef = database.getReference("location")
 
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
@@ -96,6 +101,22 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
             initMapView()
         }
 
+        observeViewModel()
+
+    }
+
+    private fun observeViewModel() {
+        viewModel.userLocation.observe(viewLifecycleOwner) {
+            it?.let { userLocationInfo ->
+                val userUid = userLocationInfo.userUid
+                val userLocation = userLocationInfo.userLocations
+
+                if (userUid.isNotEmpty() && userLocation.isNotEmpty()) {
+                    for (i in userUid.indices)
+                        setMark(userUid[i], userLocation[i])
+                }
+            }
+        }
     }
 
     private fun initMapView() {
@@ -148,9 +169,8 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
             if (location != null) {
                 // 사용자 현재 위치 파베에 업로드
                 val userLocation = UserLocation(location.latitude, location.longitude) // 사용자 위도 경도
-                location.let {
-                    UserLocation(latitude = location.latitude, longitude = it.longitude)
-                    locationRef.child(currentUserId).setValue(userLocation)
+                location.let {//null있어서 let필요 x
+                    locationRef.child(currentUserId).setValue(userLocation) //viewmodel로 1 --
 
                     val cameraUpdate =
                         CameraUpdate.scrollTo(LatLng(location.latitude, location.longitude))
@@ -160,8 +180,9 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
                     naverMap.addOnCameraIdleListener {
                         resetMarker() // 마커리셋
-                        loadLocationData(naverMap.contentBounds)
-//                        Toast.makeText(context, "카메라 움직임 종료", Toast.LENGTH_SHORT).show()
+
+                        viewModel.getloadLocationData(naverMap.contentBounds)
+
                     }
                 }
             }
@@ -183,7 +204,9 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
 
             override fun onCancelled(error: DatabaseError) {}
         })
+
     }
+
 
     private fun addMarker(marker: Marker) {
         markers.add(marker)
@@ -212,31 +235,6 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         naverMap.minZoom = 10.0
     }
 
-    private fun loadLocationData(bounds: LatLngBounds) {
-        // Firebase
-        val database = Firebase.database
-        val locationRef = database.getReference("location")
-
-        locationRef.get().addOnSuccessListener { snapshot ->
-
-            for (locationSnapshot in snapshot.children) {
-                val location = locationSnapshot.getValue(UserLocation::class.java)
-                if (location != null && bounds.contains(
-                        LatLng(
-                            location.latitude,
-                            location.longitude
-                        )
-                    )
-                ) {
-                    Log.d("LoadLocationData", "유저 아이디: ${locationSnapshot.key}")
-                    // 지도 영역에 포함되는 위치만 처리
-                    // null 방지 위해 orEmpty()
-                    val userUid = locationSnapshot.key.orEmpty()
-                    setMark(userUid, location)
-                }
-            }
-        }
-    }
 
     private fun setMark(userUid: String, location: UserLocation) = lifecycleScope.launch {
         if (!isAdded) return@launch //프래그먼트에서 액티비티가 연결되어 있는지 확인 만약 연결되어 있지 않다면 빠르게 종료해서requireContext호출을 방지
@@ -250,14 +248,6 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
     /** userlocation, useruid 받아서 naver 지도에 마커 생성, 반환 **/
     private fun createMarker(location: UserLocation, userUid: String): Marker {
         val marker = Marker()
-
-//         if (location !=null && location != UserLocation()) {
-//             marker.position = LatLng(location.latitude, location.longitude)}
-//         TedNaverClustering.with<UserLocation>(requireActivity(), naverMap)
-//             .minClusterSize(10)
-//             .items(listOf(location))
-//             .make()
-
 
         // 기본 네이버 초록 마커
         if (location != null && location != UserLocation()) {
@@ -280,10 +270,11 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    //viewmodel
     /** 마커 클릭 시, 프로필 띄우기 **/
     private fun markerClick(userUid: String) {
         lifecycleScope.launch {
-            val userDocument = firestore.collection("User").document(userUid).get()
+            val userDocument = firestore.collection("User").document(userUid).get() //비즈니스로직 db에 접근
                 .await() //컬렉셕에 사용자 uid로 접근하고 비동기로 동작 데이터 가져올때까지 기달
             val user = userDocument.toObject(User::class.java) //위에서 얻은 문서들을 user클래스의 인스턴스로 변환
             val intent = Intent(context, MapUserDetailActivity::class.java)
@@ -317,7 +308,6 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
             imageLoader?.execute(request)
         }
     }
-
 
     override fun onDestroyView() {
         _binding = null
