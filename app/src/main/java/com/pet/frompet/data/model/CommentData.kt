@@ -12,7 +12,7 @@ data class CommentData(
     val postDocumentId: String = "",
     val timestamp: Long = System.currentTimeMillis(),
     val reportCount: Int = 0,
-    val likeCount: Int = 0,  // 좋아요 개수
+    val likeCount: Int = 0,
     val likeUsers: List<String> = listOf(),
 ): Parcelable{
     constructor() : this("", "", "", "", 0, 0, 0, listOf())
