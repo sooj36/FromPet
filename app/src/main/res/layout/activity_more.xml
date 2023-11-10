@@ -65,6 +65,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="80dp"
+                android:src="@drawable/arrow_right"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_more_auth"
+                app:layout_constraintEnd_toEndOf="@+id/bt_more_auth"
+                app:layout_constraintHorizontal_bias="0.78"
+                app:layout_constraintStart_toEndOf="@+id/tv_more_auth"
+                app:layout_constraintTop_toTopOf="@+id/tv_more_auth" />
+
             <ImageButton
                 android:id="@+id/bt_more_auth"
                 android:layout_width="0dp"
@@ -98,6 +110,18 @@
                 android:layout_marginTop="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_more_auth" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="80dp"
+                android:src="@drawable/arrow_right"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_friends"
+                app:layout_constraintEnd_toEndOf="@+id/ib_more_password_reset"
+                app:layout_constraintHorizontal_bias="0.79"
+                app:layout_constraintStart_toEndOf="@+id/tv_friends"
+                app:layout_constraintTop_toTopOf="@+id/tv_friends"
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageButton
                 android:id="@+id/ib_more_password_reset"
@@ -134,6 +158,18 @@
                 android:layout_marginTop="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_more_password_reset" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="80dp"
+                android:src="@drawable/arrow_right"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_more_service"
+                app:layout_constraintEnd_toEndOf="@+id/ib_notification"
+                app:layout_constraintHorizontal_bias="0.808"
+                app:layout_constraintStart_toEndOf="@+id/tv_more_service"
+                app:layout_constraintTop_toTopOf="@+id/tv_more_service"
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageButton
                 android:id="@+id/ib_notification"

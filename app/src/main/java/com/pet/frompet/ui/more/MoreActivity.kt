@@ -32,6 +32,11 @@ class MoreActivity : AppCompatActivity() {
             showLogoutBottomSheet()
         }
 
+        binding.ibMorePasswordReset.setOnClickListener {
+            val intent = Intent(this,MorePasswordResetActivity::class.java)
+            startActivity(intent)
+        }
+
 
     }
 
