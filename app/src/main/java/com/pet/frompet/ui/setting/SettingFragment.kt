@@ -27,6 +27,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.pet.frompet.ui.more.MoreActivity
 
 class SettingFragment : Fragment() {
 
@@ -85,10 +86,10 @@ class SettingFragment : Fragment() {
             startActivity(intent)
         }
 
-/*
-        binding.ibLogOut.setOnClickListener {
-            showLogoutBottomSheet()
-        }*/
+        binding.ibMore.setOnClickListener {
+            val intent = Intent(requireActivity(),MoreActivity::class.java)
+            startActivity(intent)
+        }
 
 
 
