@@ -88,6 +88,8 @@ class CommunityDetailActivity : AppCompatActivity() {
             showBottomSheet(commentData)
         }, { commentData, imageView, textView1, textView2 ->
             likeClick(commentData, imageView, textView1, textView2)
+        },{ commentData ->
+            reReplyClick(commentData)
         })
 
         recyclerView.adapter = adapter
@@ -471,8 +473,14 @@ class CommunityDetailActivity : AppCompatActivity() {
             runOnUiThread { showToast("좋아요 실패했습니다", Toast.LENGTH_SHORT) }
         }
     }
+    private fun reReplyClick(commentData: CommentData) {
+        val intent = Intent(this, ReCommentActivity::class.java)
 
+        intent.putExtra("commentData", commentData)
+        intent.putExtra("communityData", communityData)
 
+        startActivity(intent)
+    }
 
 
 }

@@ -5,12 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_pet_profile"
@@ -72,12 +67,12 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_last_time" />
 
         <ImageView
-            android:id="@+id/bt_add_reply"
+            android:id="@+id/iv_add_reply"
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_marginStart="20dp"
-            android:src="@drawable/icon_google"
-            android:visibility="gone"
+            android:src="@drawable/icon_re_reply"
+
             app:layout_constraintBottom_toBottomOf="@+id/textView11"
             app:layout_constraintStart_toEndOf="@+id/textView11"
             app:layout_constraintTop_toTopOf="@+id/textView11" />
@@ -108,21 +103,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:text="답글쓰기"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/bt_add_reply"
-            app:layout_constraintStart_toEndOf="@+id/bt_add_reply"
-            app:layout_constraintTop_toTopOf="@+id/bt_add_reply" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_re_reply"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/iv_thumbs_up"
-            app:layout_constraintTop_toBottomOf="@+id/bt_add_reply" />
-
+            app:layout_constraintBottom_toBottomOf="@+id/iv_add_reply"
+            app:layout_constraintStart_toEndOf="@+id/iv_add_reply"
+            app:layout_constraintTop_toTopOf="@+id/iv_add_reply" />
         <TextView
             android:id="@+id/textView11"
             android:layout_width="wrap_content"
@@ -143,6 +126,28 @@
             app:layout_constraintStart_toStartOf="@+id/iv_thumbs_up"
             app:layout_constraintTop_toTopOf="@+id/textView9" />
 
+        <ImageButton
+            android:id="@+id/bt_re_reply"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/textView10"
+            app:layout_constraintEnd_toEndOf="@+id/textView10"
+            app:layout_constraintStart_toStartOf="@+id/iv_add_reply"
+            app:layout_constraintTop_toTopOf="@+id/textView10" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_re_reply"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="79dp"
+            android:layout_marginTop="130dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
