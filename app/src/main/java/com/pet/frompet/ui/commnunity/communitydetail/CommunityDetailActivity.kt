@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -36,6 +37,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.pet.frompet.ui.chat.activity.ChatPullScreenActivity
 import com.pet.frompet.ui.map.MapUserDetailActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -120,6 +122,7 @@ class CommunityDetailActivity : AppCompatActivity() {
         val lastTime = binding.tvLastTime
         replyCountTextView = binding.tvReplyCount
         val address =binding.tvAddress
+        val image = binding.ivGoGalley
 
 
 
@@ -134,9 +137,21 @@ class CommunityDetailActivity : AppCompatActivity() {
                 val addressText = getAddressGeocoder(this, latitude, longitude)
                 address.text = addressText
             }
+            if (it.imageUrl.isNullOrEmpty()) {
+                image.isVisible = false
+
+            } else {
+                image.isVisible = true
+                image.load(it.imageUrl)
+                          }
             loadUserData(it.uid)
             setChipColor(it.tag)
             Log.d("tag","what is tag${it.tag}")
+        }
+        image.setOnClickListener {
+            val intent = Intent(this,ChatPullScreenActivity::class.java)
+            intent.putExtra(ChatPullScreenActivity.IMAGE_URL,communityData?.imageUrl)
+            startActivity(intent)
         }
 
 

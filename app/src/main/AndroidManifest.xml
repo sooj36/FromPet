@@ -67,13 +67,14 @@
         <activity
             android:name=".ui.commnunity.communitydetail.CommunityDetailActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.commnunity.communitydetail.CommunityDetailUpdateActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.commnunity.communityadd.CommunityAddActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity
             android:name=".ui.commnunity.community.CommunityActivity"
