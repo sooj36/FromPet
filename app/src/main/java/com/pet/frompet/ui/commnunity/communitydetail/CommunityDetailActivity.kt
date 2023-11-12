@@ -241,29 +241,33 @@ class CommunityDetailActivity : AppCompatActivity() {
     }
 
     private fun showPopup(v: View, docsId: String?) {
-        val popup = PopupMenu(this, v) // 팝업 객체 선언
-        menuInflater.inflate(R.menu.popup_menu, popup.menu) // 메뉴 레이아웃 inflate
+        val currentUseruid = currentUser?.uid?:""
 
 
+        if (communityData?.uid == currentUseruid) {
+            val popup = PopupMenu(this, v)
+            menuInflater.inflate(R.menu.popup_menu, popup.menu)
 
-        popup.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.delete -> {
-                    // 삭제
-                    deleteCommunity(docsId)
-                    true
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.delete -> {
+
+                        deleteCommunity(docsId)
+                        true
+                    }
+                    R.id.cut -> {
+                        updateActivity()
+                        true
+                    }
+                    else -> false
                 }
-
-                R.id.cut -> {
-                    updateActivity()
-                    true
-                }
-
-                else -> false
             }
+            popup.show()
+        } else {
+            showToast(getString(R.string.commu_no_accecs), Toast.LENGTH_SHORT)
         }
-        popup.show()
     }
+
 
 
     private fun updateActivity() {
