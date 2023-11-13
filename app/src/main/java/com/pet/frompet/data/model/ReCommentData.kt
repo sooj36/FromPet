@@ -14,5 +14,5 @@ data class ReCommentData(
     val likeCount: Int = 0,//뭐야!
     val likeUsers: List<String> = listOf()
 ): Parcelable {
-    constructor() : this("", "", "", "", 0,0,0,listOf()) // 기본 생성자 추가
+    constructor() : this("", "", "", "", 0,0,0,listOf())
 }
