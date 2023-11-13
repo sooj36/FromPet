@@ -63,7 +63,7 @@ class MapViewModel() : ViewModel() {
     // 현재 사용자 위치 FB 업로드
     fun currentLocationUpload(latitude : Double, longitude : Double) {
         val userLocation = UserLocation(latitude, longitude)
-        locationRef.child(currentUserId).setValue(userLocation) //viewmodel로 1 --
+        locationRef.child(currentUserId).setValue(userLocation)
 
     }
 }

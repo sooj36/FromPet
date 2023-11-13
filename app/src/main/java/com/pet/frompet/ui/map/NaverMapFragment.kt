@@ -173,8 +173,10 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             if (location != null) {
                 // 사용자 현재 위치 파베에 업로드
-                val userLocation = UserLocation(location.latitude, location.longitude)
-                locationRef.child(currentUserId).setValue(userLocation) //viewmodel로 1 --
+//                val userLocation = UserLocation(location.latitude, location.longitude)
+//                locationRef.child(currentUserId).setValue(userLocation) //viewmodel로 1 --
+                viewModel.currentLocationUpload(location.latitude, location.longitude)
+
 
                 val cameraUpdate =
                     CameraUpdate.scrollTo(LatLng(location.latitude, location.longitude))
@@ -213,6 +215,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
     private fun addMarker(marker: Marker) {
         markers.add(marker)
         Log.d("LoadLocationData", "마커 저장 띵 ${marker}")
+        Log.d("LoadLocationData", "마커 저장 띵 ${markers.size}")
     }
 
     private fun removeMarkers() {
