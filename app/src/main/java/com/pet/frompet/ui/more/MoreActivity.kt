@@ -16,6 +16,7 @@ import com.pet.frompet.R
 import com.pet.frompet.databinding.ActivityLoginBinding
 import com.pet.frompet.databinding.ActivityMoreBinding
 import com.pet.frompet.ui.login.LoginActivity
+import com.pet.frompet.ui.more.signout.SignOutActivity
 
 class MoreActivity : AppCompatActivity() {
 
@@ -34,6 +35,10 @@ class MoreActivity : AppCompatActivity() {
 
         binding.ibMorePasswordReset.setOnClickListener {
             val intent = Intent(this,MorePasswordResetActivity::class.java)
+            startActivity(intent)
+        }
+        binding.btMoreAuth.setOnClickListener {
+            val intent = Intent(this, SignOutActivity::class.java)
             startActivity(intent)
         }
 
