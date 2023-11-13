@@ -26,7 +26,7 @@ class LoadingActivity : AppCompatActivity() {
 
 
     private fun startActivityAfterDelay() {
-        val delayMillis = 2000 // 2초 후에 앱을 재시작합니다. 원하는 시간으로 조절하세요.
+        val delayMillis = 1000 // 1초 후에 앱을 재시작합니다. 원하는 시간으로 조절하세요.
         val intent = Intent(this, MainActivity::class.java) // 재시작할 액티비티를 지정
         val pendingIntent = PendingIntent.getActivity(
             this, 0, intent, PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
@@ -44,7 +44,9 @@ class LoadingActivity : AppCompatActivity() {
         ReplaceWith("super.onBackPressed()", "androidx.appcompat.app.AppCompatActivity")
     )
     override fun onBackPressed() {
-        finish()
+        val i = Intent(this@LoadingActivity, MainActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(i)
     }
 
     override fun onDestroy() {
