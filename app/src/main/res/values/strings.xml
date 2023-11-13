@@ -109,4 +109,5 @@
     <string name="category_fish">물고기</string>
     <string name="this_is_last_card">마지막 카드입니다</string>
     <string name="enter_a_search_word">주소를 입력하세요</string>
+    <string name="commu_no_accecs">접근 권한이 없습니다.</string>
 </resources>
