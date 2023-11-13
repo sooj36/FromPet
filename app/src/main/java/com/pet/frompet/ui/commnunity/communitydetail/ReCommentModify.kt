@@ -25,7 +25,7 @@ class ReCommentModify : AppCompatActivity() {
 
         etReComment = findViewById(R.id.etComment)
 
-        // ReCommentModify 액티비티로 전달된 데이터 가져오기
+
         reCommentData = intent.getParcelableExtra("reCommentData")
         communityData = intent.getParcelableExtra("communityData")
         val reCommentText = intent.getStringExtra("reCommentText")

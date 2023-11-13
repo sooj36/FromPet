@@ -169,12 +169,11 @@ class CommunityDetailActivity : AppCompatActivity() {
         }
 
         binding.threedots.setOnClickListener {
-            showPopup(it, communityData?.docsId) // 팝업 메뉴 표시
+            showPopup(it, communityData?.docsId)
         }
 
 
         binding.btnDetailEnroll.setOnClickListener {
-            // 댓글 추가 버튼 클릭 시 호출되는 함수
             addComment()
         }
         loadComments()
