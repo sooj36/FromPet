@@ -1,40 +1,60 @@
 package com.pet.frompet.ui.map
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.pet.frompet.data.model.UserLocation
-import com.pet.frompet.data.repository.map.MapRepository
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.launch
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.geometry.LatLngBounds
 
-class MapViewModel(val repository: MapRepository) : ViewModel() {
-    val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-
-    private val _userLocation = MutableLiveData<UserLocation>()
-    val userLocation : LiveData<UserLocation> get() =_userLocation
+class MapViewModel() : ViewModel() {
 
     private val database = Firebase.database
     private val locationRef = database.getReference("location")
 
-    init {
-        loadUserLocation()
-    }
+    private val _userLocationInfo = MutableLiveData<UserLocationInfo>()
+    val userLocation : LiveData<UserLocationInfo> get() = _userLocationInfo
 
-    private fun loadUserLocation() {
-        locationRef.child(currentUserId).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                _userLocation.value = snapshot.getValue(UserLocation::class.java)
+    // 상태 클래스 (상태패턴)
+    data class UserLocationInfo(
+        val userUid : List<String> = emptyList(),
+        val userLocations : List<UserLocation> = emptyList()
+    )
+
+
+    fun getloadLocationData(bounds: LatLngBounds) {
+
+        val userUids = mutableListOf<String>()
+        val locationList = mutableListOf<UserLocation>()
+        var userLocationInfo = UserLocationInfo()
+
+        locationRef.get().addOnSuccessListener { snapshot ->
+
+            for (locationSnapshot in snapshot.children) {
+                val location =
+                    locationSnapshot.getValue(com.pet.frompet.data.model.UserLocation::class.java)
+                if (location != null && bounds.contains(
+                        LatLng(
+                            location.latitude,
+                            location.longitude
+                        )
+                    )
+                ) {
+                    Log.d("LoadLocationData", "유저 아이디: ${locationSnapshot.key}")
+                    // 지도 영역에 포함되는 위치만 처리
+                    // null 방지 위해 orEmpty()
+                    val userUid = locationSnapshot.key.orEmpty()
+                    userUids.add(userUid)
+
+                    // 위치 정보를 리스트에 추가
+                    locationList.add(UserLocation(location.latitude, location.longitude))
+                }
             }
-
-            override fun onCancelled(error: DatabaseError) {}
-        })
+            userLocationInfo = userLocationInfo.copy(userUids, locationList)
+            _userLocationInfo.value = userLocationInfo
         }
     }
+}

@@ -37,6 +37,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.pet.frompet.data.model.ReCommentData
 import com.pet.frompet.ui.chat.activity.ChatPullScreenActivity
 import com.pet.frompet.ui.map.MapUserDetailActivity
 import kotlinx.coroutines.CoroutineScope
@@ -53,6 +54,8 @@ class CommunityDetailActivity : AppCompatActivity() {
 
     private val currentUser = FirebaseAuth.getInstance().currentUser
     private val communityViewModel: CommunityViewModel by viewModels()
+
+
 
     private val store = FirebaseFirestore.getInstance()
     private fun hideKeyboard() {
@@ -88,7 +91,14 @@ class CommunityDetailActivity : AppCompatActivity() {
             showBottomSheet(commentData)
         }, { commentData, imageView, textView1, textView2 ->
             likeClick(commentData, imageView, textView1, textView2)
+        },{ commentData ->
+            reReplyClick(commentData)
+        }, reCommentModifyClick = { reCommentData ->
+            showReCommentBottomSheet(reCommentData)
+        },reCommentLikeClick = { reCommentData, imageView, textView1, textView2 ->
+            reCommentLikeClick(reCommentData, imageView, textView1, textView2)
         })
+
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -159,12 +169,11 @@ class CommunityDetailActivity : AppCompatActivity() {
         }
 
         binding.threedots.setOnClickListener {
-            showPopup(it, communityData?.docsId) // 팝업 메뉴 표시
+            showPopup(it, communityData?.docsId)
         }
 
 
         binding.btnDetailEnroll.setOnClickListener {
-            // 댓글 추가 버튼 클릭 시 호출되는 함수
             addComment()
         }
         loadComments()
@@ -239,29 +248,33 @@ class CommunityDetailActivity : AppCompatActivity() {
     }
 
     private fun showPopup(v: View, docsId: String?) {
-        val popup = PopupMenu(this, v) // 팝업 객체 선언
-        menuInflater.inflate(R.menu.popup_menu, popup.menu) // 메뉴 레이아웃 inflate
+        val currentUseruid = currentUser?.uid?:""
 
 
+        if (communityData?.uid == currentUseruid) {
+            val popup = PopupMenu(this, v)
+            menuInflater.inflate(R.menu.popup_menu, popup.menu)
 
-        popup.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.delete -> {
-                    // 삭제
-                    deleteCommunity(docsId)
-                    true
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.delete -> {
+
+                        deleteCommunity(docsId)
+                        true
+                    }
+                    R.id.cut -> {
+                        updateActivity()
+                        true
+                    }
+                    else -> false
                 }
-
-                R.id.cut -> {
-                    updateActivity()
-                    true
-                }
-
-                else -> false
             }
+            popup.show()
+        } else {
+            showToast(getString(R.string.commu_no_accecs), Toast.LENGTH_SHORT)
         }
-        popup.show()
     }
+
 
 
     private fun updateActivity() {
@@ -360,8 +373,8 @@ class CommunityDetailActivity : AppCompatActivity() {
             querySnapshot?.let {
                 val comments = it.toObjects(CommentData::class.java)
                 adapter.submitList(comments)
-                val commentCount = comments.size
-                replyCountTextView.text = commentCount.toString()
+                val totalCommentCount = comments.sumBy { it.reCommentCount ?: 0 } + comments.size
+                replyCountTextView.text = totalCommentCount.toString()
             }
         }
     }
@@ -445,7 +458,6 @@ class CommunityDetailActivity : AppCompatActivity() {
     }
 
     private fun likeClick(commentData: CommentData, imageView: ImageView, textView1: TextView, textView2: TextView) {
-        Log.d("CommunityDetailActivity", "likeClick called with $commentData")
         val likeUsers = commentData.likeUsers
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val commentDocumentRef = store.collection("Community")
@@ -453,7 +465,6 @@ class CommunityDetailActivity : AppCompatActivity() {
             .collection("Comment")
             .document(commentData.commentId)
         store.runTransaction { transaction ->
-            Log.d("CommunityDetailActivity", "Running transaction...")
             val snapshot = transaction.get(commentDocumentRef)
             val newLikeCount: Long
             val newLikeUsers: List<String>
@@ -471,7 +482,148 @@ class CommunityDetailActivity : AppCompatActivity() {
             runOnUiThread { showToast("좋아요 실패했습니다", Toast.LENGTH_SHORT) }
         }
     }
+    private fun reReplyClick(commentData: CommentData) {
+        val intent = Intent(this, ReCommentActivity::class.java)
 
+        intent.putExtra("commentData", commentData)
+        intent.putExtra("communityData", communityData)
+
+        startActivity(intent)
+    }
+    private fun showReCommentBottomSheet(reCommentData: ReCommentData) {
+        val layoutId = if (reCommentData.authorUid == FirebaseAuth.getInstance().currentUser?.uid) {
+            R.layout.bottom_sheet_layout
+        } else {
+            R.layout.bottom_sheet_layout2
+        }
+
+        val view = layoutInflater.inflate(layoutId, null)
+        val dialog = BottomSheetDialog(this)
+        dialog.setContentView(view)
+
+        if (layoutId == R.layout.bottom_sheet_layout) {
+            val modifyTextView = view.findViewById<TextView>(R.id.bottom_sheet_modify)
+            val deleteTextView = view.findViewById<TextView>(R.id.bottom_sheet_delete)
+
+            modifyTextView.setOnClickListener {
+                val intent = Intent(this, ReCommentModify::class.java)
+                intent.putExtra("reCommentText", reCommentData.content)
+                intent.putExtra("reCommentData", reCommentData)
+                intent.putExtra("communityData", communityData)
+                startActivity(intent)
+                dialog.dismiss()
+            }
+
+            deleteTextView.setOnClickListener {
+                val reCommentDocumentRef = store.collection("Community")
+                    .document(communityData?.docsId ?: "")
+                    .collection("Comment")
+                    .document(reCommentData.commentId)
+                    .collection("ReComment")
+                    .document(reCommentData.reCommentId)
+                val commentDocumentRef = store.collection("Community")
+                    .document(communityData?.docsId ?: "")
+                    .collection("Comment")
+                    .document(reCommentData.commentId)
+                store.runTransaction { transaction ->
+                    val commentSnapshot = transaction.get(commentDocumentRef)
+                    val oldReCommentCount = commentSnapshot.getLong("reCommentCount") ?: 0
+                    if (oldReCommentCount > 0) {
+                        transaction.update(commentDocumentRef, "reCommentCount", oldReCommentCount - 1)
+                    }
+                    transaction.delete(reCommentDocumentRef)
+                    null
+                }.addOnSuccessListener {
+                    showToast("대댓글이 삭제되었습니다", Toast.LENGTH_SHORT)
+                    dialog.dismiss()
+                }.addOnFailureListener {
+                    showToast("대댓글 삭제에 실패했습니다", Toast.LENGTH_SHORT)
+                    dialog.dismiss()
+                }
+            }
+
+        }else {
+            val reportTextView = view.findViewById<TextView>(R.id.bottom_sheet_report)
+
+            reportTextView.setOnClickListener {
+                val reCommentDocumentRef = store.collection("Community")
+                    .document(communityData?.docsId ?: "")
+                    .collection("Comment")
+                    .document(reCommentData.commentId)
+                    .collection("ReComment")
+                    .document(reCommentData.reCommentId)
+
+                val commentDocumentRef = store.collection("Community")
+                    .document(communityData?.docsId ?: "")
+                    .collection("Comment")
+                    .document(reCommentData.commentId)
+
+                store.runTransaction { transaction ->
+                    val commentSnapshot = transaction.get(commentDocumentRef)
+                    val oldReCommentCount = commentSnapshot.getLong("reCommentCount") ?: 0
+
+                    val snapshot = transaction.get(reCommentDocumentRef)
+                    val newReportCount = snapshot.getLong("reportCount")?.plus(1) ?: 1
+                    transaction.update(reCommentDocumentRef, "reportCount", newReportCount)
+
+                    // 신고 횟수가 10회 이상이면 해당 대댓글 삭제
+                    if (newReportCount >= 10) {
+                        if (oldReCommentCount > 0) {
+                            transaction.update(commentDocumentRef, "reCommentCount", oldReCommentCount - 1)
+                        }
+                        transaction.delete(reCommentDocumentRef)
+                    }
+                    null
+                }.addOnSuccessListener {
+                    showToast("신고가 접수되었습니다", Toast.LENGTH_SHORT)
+                    dialog.dismiss()
+                }.addOnFailureListener {
+                    showToast("신고 접수에 실패했습니다", Toast.LENGTH_SHORT)
+                    dialog.dismiss()
+                }
+            }
+        }
+
+        dialog.show()
+
+        val dimView = View(this)
+        dimView.setBackgroundColor(Color.parseColor("#80000000"))
+        val parentLayout = findViewById<ViewGroup>(android.R.id.content)
+        parentLayout.addView(dimView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+
+        dialog.setOnDismissListener {
+            parentLayout.removeView(dimView)
+        }
+    }
+    private fun reCommentLikeClick(reCommentData: ReCommentData, imageView: ImageView, textView1: TextView, textView2: TextView) {
+        Log.d("ReCommentActivity", "reCommentLikeClick called with $reCommentData")
+        val likeUsers = reCommentData.likeUsers
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val reCommentDocumentRef = store.collection("Community")
+            .document(communityData?.docsId ?: "")
+            .collection("Comment")
+            .document(reCommentData.commentId)
+            .collection("ReComment")
+            .document(reCommentData.reCommentId)
+        store.runTransaction { transaction ->
+            Log.d("ReCommentActivity", "Running transaction...")
+            val snapshot = transaction.get(reCommentDocumentRef)
+            val newLikeCount: Long
+            val newLikeUsers: List<String>
+            if (likeUsers.contains(uid)) {
+                newLikeCount = (snapshot.getLong("likeCount") ?: 1) - 1
+                newLikeUsers = likeUsers - uid
+            } else {
+                newLikeCount = (snapshot.getLong("likeCount") ?: 0) + 1
+                newLikeUsers = likeUsers + uid
+            }
+            transaction.update(reCommentDocumentRef, "likeCount", newLikeCount)
+            transaction.update(reCommentDocumentRef, "likeUsers", newLikeUsers)
+            null
+        }.addOnFailureListener {
+            runOnUiThread { showToast("좋아요 실패했습니다", Toast.LENGTH_SHORT) }
+        }
+    }
 
 
 
