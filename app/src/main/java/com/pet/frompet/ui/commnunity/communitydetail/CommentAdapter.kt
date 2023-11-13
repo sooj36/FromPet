@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -32,7 +33,9 @@ import java.util.TimeZone
 class CommentAdapter(
     private val modifyClick: (CommentData) -> Unit,
     private val likeClick: (CommentData, ImageView, TextView, TextView) -> Unit,
-    private val reReplyClick: (CommentData) -> Unit
+    private val reReplyClick: (CommentData) -> Unit,
+    private val reCommentModifyClick: (ReCommentData) -> Unit,
+    private val reCommentLikeClick: (ReCommentData, ImageView, TextView, TextView) -> Unit
 ) : ListAdapter<CommentData, CommentAdapter.ViewHolder>(CommentDiffCallback) {
 
 
@@ -60,6 +63,12 @@ class CommentAdapter(
                 val uid = FirebaseAuth.getInstance().currentUser?.uid
                 val likeUsers = commentData.likeUsers
                 val likeCount = commentData.likeCount
+
+                if (itemView.context is ReCommentActivity) {
+                    textView10.visibility = View.GONE
+                    btReReply.visibility = View.GONE
+                    ivAddReply.visibility = View.GONE
+                }
 
                 if (likeUsers.contains(uid)) {
                     textView11.text = likeCount.toString()
@@ -112,19 +121,22 @@ class CommentAdapter(
                     reReplyClick(commentData)
                 }
                 val reCommentAdapter = ReCommentAdapter(
-                    modifyClick = { /* 대댓글 수정 처리 */ },
+                    modifyClick = { reCommentData ->
+                        reCommentModifyClick(reCommentData)
+                    },
                     likeClick = { reCommentData, imageView, textView1, textView2 ->
-                        /* 대댓글 좋아요 처리 */
+                        reCommentLikeClick.invoke(reCommentData, imageView, textView1, textView2)
                     }
                 )
                 binding.rvReReply.layoutManager = LinearLayoutManager(itemView.context)
                 binding.rvReReply.adapter = reCommentAdapter
 
-                loadReComments(commentData, reCommentAdapter)
+                loadReComments(commentData, reCommentAdapter, textView10)
+
             }
         }
     }
-    fun loadReComments(commentData: CommentData, reCommentAdapter: ReCommentAdapter) {
+    fun loadReComments(commentData: CommentData, reCommentAdapter: ReCommentAdapter, textView: TextView) {
         FirebaseFirestore.getInstance()
             .collection("Community")
             .document(commentData.postDocumentId)
@@ -140,10 +152,14 @@ class CommentAdapter(
 
                 val reComments = snapshot?.documents?.mapNotNull { it.toObject(ReCommentData::class.java) }
                 Log.d("CommentAdapter", "ReComments for comment ${commentData.commentId}: $reComments")
+
+                val reCommentCount = reComments?.size ?: 0
+                textView.text = if (reCommentCount > 0) "답글$reCommentCount" else "답글쓰기"
+
                 reCommentAdapter.submitList(reComments)
             }
-
     }
+
     fun reloadReComments(commentData: CommentData) {
         val position = currentList.indexOfFirst { it.commentId == commentData.commentId }
         if (position != -1) {
