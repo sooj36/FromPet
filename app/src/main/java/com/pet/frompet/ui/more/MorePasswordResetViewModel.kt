@@ -27,6 +27,21 @@ class MorePasswordResetViewModel @Inject constructor(
     val allEventsFlow = eventsChannel.receiveAsFlow()
 
 
+    fun deleteAccount() = viewModelScope.launch {
+        try {
+            val result = userRepository.deleteAccount()
+            if(result){
+                eventsChannel.send(LoginViewModel.AllEvents.Message("회원 탈퇴 성공"))
+            }else{
+                eventsChannel.send(LoginViewModel.AllEvents.Error("회원 탈퇴 실패"))
+            }
+        }catch (e: Exception){
+            val error = e.toString().split(":").toTypedArray()
+            eventsChannel.send(LoginViewModel.AllEvents.Error(error[1]))
+        }
+    }
+
+
     fun verifySendPasswordReset(email: String) {
         if (email.isEmpty()) {
             viewModelScope.launch {
