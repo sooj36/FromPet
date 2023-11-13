@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val granted = permissions.entries.all { it.value }
             if (granted) {
-                showToast("위치 권한이 승인되었습니다.필터기능을 위해서 앱을 재실행 해주세요.", Toast.LENGTH_SHORT)
+                showToast("위치 권한이 승인되었습니다.\n필터기능을 위해서 앱을 재실행 해주세요.", Toast.LENGTH_SHORT)
                 homeFilterViewModel.getCurrentUserLocation()
                 homeFilterViewModel.currentFilter?.let {
                     homeFilterViewModel.filterUsers(it)
