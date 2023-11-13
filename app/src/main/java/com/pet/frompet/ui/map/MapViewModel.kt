@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.pet.frompet.data.model.UserLocation
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -14,6 +15,7 @@ class MapViewModel() : ViewModel() {
 
     private val database = Firebase.database
     private val locationRef = database.getReference("location")
+    private val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: "" // 현재 uid 갖고 옴
 
     private val _userLocationInfo = MutableLiveData<UserLocationInfo>()
     val userLocation : LiveData<UserLocationInfo> get() = _userLocationInfo
@@ -56,5 +58,12 @@ class MapViewModel() : ViewModel() {
             userLocationInfo = userLocationInfo.copy(userUids, locationList)
             _userLocationInfo.value = userLocationInfo
         }
+    }
+
+    // 현재 사용자 위치 FB 업로드
+    fun currentLocationUpload(latitude : Double, longitude : Double) {
+        val userLocation = UserLocation(latitude, longitude)
+        locationRef.child(currentUserId).setValue(userLocation) //viewmodel로 1 --
+
     }
 }

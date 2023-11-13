@@ -58,7 +58,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private lateinit var naverMap: NaverMap
+    private var naverMap: NaverMap? = null
     private val firestore = FirebaseFirestore.getInstance()
     private val database = Firebase.database
     private val locationRef = database.getReference("location")
@@ -101,6 +101,24 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
             initMapView()
         }
 
+
+
+    }
+
+
+
+    private fun initMapView() {
+        val mapFragment =
+            childFragmentManager.findFragmentById(R.id.naver_map_fragment) as MapFragment?
+                ?: MapFragment.newInstance().also {
+                    childFragmentManager.beginTransaction().add(R.id.naver_map_fragment, it)
+                        .commit()
+                }
+
+        // fragment의 getMapAsync() 메서드로 OnMapReadyCallBack 콜백을 등록하면, 비동기로 NaverMap 객체를 얻을 수 있음
+        mapFragment.getMapAsync(this)
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+
         observeViewModel()
 
     }
@@ -117,19 +135,6 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         }
-    }
-
-    private fun initMapView() {
-        val mapFragment =
-            childFragmentManager.findFragmentById(R.id.naver_map_fragment) as MapFragment?
-                ?: MapFragment.newInstance().also {
-                    childFragmentManager.beginTransaction().add(R.id.naver_map_fragment, it)
-                        .commit()
-                }
-
-        // fragment의 getMapAsync() 메서드로 OnMapReadyCallBack 콜백을 등록하면, 비동기로 NaverMap 객체를 얻을 수 있음
-        mapFragment.getMapAsync(this)
-        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
     }
 
     // hasPermission()에서는 위치 권한 있 -> true , 없 -> false
@@ -168,24 +173,21 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             if (location != null) {
                 // 사용자 현재 위치 파베에 업로드
-                val userLocation = UserLocation(location.latitude, location.longitude) // 사용자 위도 경도
-                location.let {//null있어서 let필요 x
-                    locationRef.child(currentUserId).setValue(userLocation) //viewmodel로 1 --
+                val userLocation = UserLocation(location.latitude, location.longitude)
+                locationRef.child(currentUserId).setValue(userLocation) //viewmodel로 1 --
 
-                    val cameraUpdate =
-                        CameraUpdate.scrollTo(LatLng(location.latitude, location.longitude))
-                            .animate(CameraAnimation.Easing, 2000)
-                            .reason(CameraUpdate.REASON_GESTURE)
-                    naverMap.moveCamera(cameraUpdate)
+                val cameraUpdate =
+                    CameraUpdate.scrollTo(LatLng(location.latitude, location.longitude))
+                        .animate(CameraAnimation.Easing, 2000)
+                        .reason(CameraUpdate.REASON_GESTURE)
+                naverMap.moveCamera(cameraUpdate)
 
-                    naverMap.addOnCameraIdleListener {
-                        resetMarker() // 마커리셋
-
-                        viewModel.getloadLocationData(naverMap.contentBounds)
-
-                    }
+                naverMap.addOnCameraIdleListener {
+                    resetMarker()
+                    viewModel.getloadLocationData(naverMap.contentBounds)
                 }
             }
+
         }
         locationRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -227,17 +229,17 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setUpMap() {
-        naverMap.locationSource = locationSource //현위치
-        naverMap.uiSettings.isLocationButtonEnabled = true // 현 위치 버튼 기능
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow // 위치를 추적하면서 카메라도 같이 움직임
+        naverMap?.locationSource = locationSource //현위치
+        naverMap?.uiSettings?.isLocationButtonEnabled = true // 현 위치 버튼 기능
+        naverMap?.locationTrackingMode = LocationTrackingMode.Follow // 위치를 추적하면서 카메라도 같이 움직임
         // 줌
-        naverMap.maxZoom = 13.0  // (최대 21)
-        naverMap.minZoom = 10.0
+        naverMap?.maxZoom = 13.0  // (최대 21)
+        naverMap?.minZoom = 10.0
     }
 
 
     private fun setMark(userUid: String, location: UserLocation) = lifecycleScope.launch {
-        if (!isAdded) return@launch //프래그먼트에서 액티비티가 연결되어 있는지 확인 만약 연결되어 있지 않다면 빠르게 종료해서requireContext호출을 방지
+        if (!isAdded) return@launch //프래그먼트에서 액티비티가 연결되어 있는지 확인 만약 연결되어 있지 않다면 빠르게 종료해서 requireContext호출을 방지
         if (userUid != currentUserId) {
             val marker = createMarker(location, userUid)
             setUserProfileImage(userUid, marker)
