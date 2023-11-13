@@ -13,7 +13,7 @@ interface BaseAuthenticator {
 
     suspend fun signInWithCredential(credential: AuthCredential): FirebaseUser?
 
-
+    suspend fun deleteAccount(): Boolean
     fun signOut() : FirebaseUser?
 
     fun getUser() : FirebaseUser?
