@@ -14,7 +14,7 @@ data class CommentData(
     val reportCount: Int = 0,
     val likeCount: Int = 0,
     val likeUsers: List<String> = listOf(),
-    val reCommentCount: Int? = null, // 이 부분을 추가합니다.
+    val reCommentCount: Int? = null,
 ): Parcelable{
     constructor() : this("", "", "", "", 0, 0, 0, listOf(), null)
 }

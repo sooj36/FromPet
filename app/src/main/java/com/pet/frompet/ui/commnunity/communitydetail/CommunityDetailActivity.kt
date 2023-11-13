@@ -596,7 +596,6 @@ class CommunityDetailActivity : AppCompatActivity() {
         }
     }
     private fun reCommentLikeClick(reCommentData: ReCommentData, imageView: ImageView, textView1: TextView, textView2: TextView) {
-        Log.d("ReCommentActivity", "reCommentLikeClick called with $reCommentData")
         val likeUsers = reCommentData.likeUsers
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val reCommentDocumentRef = store.collection("Community")
@@ -606,7 +605,6 @@ class CommunityDetailActivity : AppCompatActivity() {
             .collection("ReComment")
             .document(reCommentData.reCommentId)
         store.runTransaction { transaction ->
-            Log.d("ReCommentActivity", "Running transaction...")
             val snapshot = transaction.get(reCommentDocumentRef)
             val newLikeCount: Long
             val newLikeUsers: List<String>

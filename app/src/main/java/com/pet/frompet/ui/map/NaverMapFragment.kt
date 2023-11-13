@@ -58,7 +58,7 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private lateinit var naverMap: NaverMap
+    private  var naverMap: NaverMap? = null
     private val firestore = FirebaseFirestore.getInstance()
     private val database = Firebase.database
     private val locationRef = database.getReference("location")
@@ -227,12 +227,12 @@ class NaverMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setUpMap() {
-        naverMap.locationSource = locationSource //현위치
-        naverMap.uiSettings.isLocationButtonEnabled = true // 현 위치 버튼 기능
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow // 위치를 추적하면서 카메라도 같이 움직임
+        naverMap?.locationSource = locationSource //현위치
+        naverMap?.uiSettings?.isLocationButtonEnabled = true // 현 위치 버튼 기능
+        naverMap?.locationTrackingMode = LocationTrackingMode.Follow // 위치를 추적하면서 카메라도 같이 움직임
         // 줌
-        naverMap.maxZoom = 13.0  // (최대 21)
-        naverMap.minZoom = 10.0
+        naverMap?.maxZoom = 13.0  // (최대 21)
+        naverMap?.minZoom = 10.0
     }
 
 
