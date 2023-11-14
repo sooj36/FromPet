@@ -44,13 +44,20 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             fcmTokenManager.fetchAndBaseFCMToken(it.uid)  // 새로운 FCM 토큰을 가져와서 저장 앱 삭제나 했을경우에
         }
     }
-    private fun getPendingIntent(context : Context): PendingIntent{
-        val intent = Intent(context,MainActivity::class.java).apply {
+    private fun getPendingIntent(context : Context): PendingIntent {
+        val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra("navigation","chatHomeFragment")
+            putExtra("navigation", "chatHomeFragment")
         }
-        return PendingIntent.getActivity(context,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+        return PendingIntent.getActivity(context, 0, intent, pendingIntentFlags)
     }
+
 
     private fun showNotification(title: String, message: String) {
         val channelId = "FromPetNotificationChannel"
