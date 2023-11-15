@@ -7,23 +7,64 @@
 
 
 ## 목차
-  - [개요](#개요)
-  - [앱 설명](#앱-설명)
+  - [팀원 소개](#팀원-구성)
+  - [개발환경](#1-개발환경)
+  - [프로젝트 소개](#2-프로젝트-소개)
+  - [페이지별 기능](#3-페이지별-기능)
+  - [앱 설명](#3-앱-설명)
   - [이용 방법](#이용방법)
+ 
 
 <br/>
 
-## 개요 
- - 프로젝트 이름: FromPet
- - 프로젝트 지속기간: 2023.10 -2023.11.14
- - 개발 엔진 및 언어: Android Studio & Kotlin
+
+## 팀원 구성
+
+<div align="center">
+
+| **박세준** | **사석현** | **이승현** | **이수진** |
+| :------: |  :------: | :------: | :------: |
+| [<img src= "https://github.com/NBCampFinalProject/FromPet/assets/106301222/3a256a71-5a3f-4fa2-8e69-81086de97bd8" height=180 width=180> <br/> @boradorying](https://github.com/boradorying) | [<img src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/9c8d5ad1-4a24-4ea4-b374-c8c9161fa6f3" height=180 width=180> <br/> @4seokhyeon](https://github.com/4seokhyeon)| [<img src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/11049fcc-d48f-4cfa-a839-f85f1d3f12fc" height=180 width=180> <br/> @shyr0809](https://github.com/shyr0809)|[<img src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/3826a521-c98c-4f73-b944-25c704bd87b1" height=180 width=180> <br/> @sooj36](https://github.com/sooj36) |
+</div>
+
+## 1. 개발환경 
+ - 안드로이드 스튜디오
  - 데이터 베이스 및 서버: FireBase
- - 맴버: 팀 FromPet (박세준, 사석현, 이승현, 이수진)
+ - 데일리 스크럼 및 회의록 : [Notion](https://www.notion.so/12-b5e63529398b49e68ab10b59e636e6ea)
+ - 디자인 : [Figma](https://www.figma.com/file/78mamyOeOlT9VOeaRywoH7/12%EC%A1%B0-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84?type=design&node-id=59-12&mode=design&t=l6CIi1VZS6vIykLs-0)
+<br/>
+
+ - 프로젝트 지속기간: 2023.10 -2023.11.14
+
+ - 개발 엔진 및 언어: Android Studio & Kotlin
+ 
 
 <br/>
-<br/>
 
-## 앱 설명
+
+## 2. 프로젝트 소개
+- FromPet은 반려동물과 함께 소중한 시간을 보내고 있는 사람들을 타겟팅한 반려동물 커뮤니티 어플입니다.
+- 귀여운 반려 동물을 카드에서 발견하면 상대방에게 좋아요를 보냄으로써 더욱 깊은 이야기를 할 수 있게 채팅이 구현되어있습니다!
+- 또한 내가 보고싶은 반려동물의 종류와 
+
+
+## 3. 페이지별 기능
+
+### [초기화면]
+- 첫 화면은 splash 화면이 뷰페이저로 나타납니다.
+    - 로그인이 되어 있지 않은 경우 : Login 화면
+    - 로그인이 되어 있는 경우 : Home 화면
+<div align="center">
+
+| 초기화면 |
+|--|
+|<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/aac2a14e-4de0-41cf-99a6-b863652eb26c.gif"/>|
+
+</div>
+
+<br>
+
+##  앱 설명
 |![Screenshot_1699940635](https://github.com/NBCampFinalProject/FromPet/assets/106301222/6ca781cc-7c62-426a-aabc-557de1d9ea7d) | ![Screenshot_1699941196](https://github.com/NBCampFinalProject/FromPet/assets/106301222/29b8785e-d591-423e-8e01-68263abe0b28)|![Screenshot_1699941371](https://github.com/NBCampFinalProject/FromPet/assets/106301222/dbd313c6-2fec-4ef3-b861-9ac749c503f4)|
 |:---:|:---:|:---:|
 |홈화면|홈 필터 화면|홈 디테일 화면|
@@ -47,7 +88,6 @@
 
 
 
-
 -  반려 동물 커뮤니티 어플입니다. <br/>
   홈화면에서 유저를 카드뷰로 확인할 수 있으며 위의 화면과 같이 자신이 원하는 상대방의 대한 정보를 필터링하여 식별 할 수 있습니다.🙏<br/>
 - 상대방과 채팅을 하며 친해져 보세요! <br/>
@@ -57,5 +97,8 @@
 
 
 ## 이용방법
-- 이렇게 이용해요
+- 홈화면에서 마음에 드는 반려동물을 좋아요 해보세요! <br/>
+그럼 상대방에게 좋아요 표시가 됩니다! 하지만 너무 연연하지 말아요 상대방이 마음에 들지 않으면 거절 할 수도 있답니다...🫢 좌절은 No~ No~
+
+- 
 
