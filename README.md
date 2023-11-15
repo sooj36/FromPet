@@ -89,18 +89,18 @@
 - 회원 정보가 없을 경우 : 회원정보 입력 화면
 - 회원 정보가 있을 경우 : 홈 화면
 <div align="center">
-<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/86e81ee8-55c7-42ae-b242-b0e645717624"/>
-<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/b360d26a-f31c-416d-8489-feccb93a4b24"/>
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/86e81ee8-55c7-42ae-b242-b0e645717624.gif"/>
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/b360d26a-f31c-416d-8489-feccb93a4b24.gif"/>
 </div>
 
 ### [로그아웃]
 * * *
-<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/65918bae-5399-4668-af2a-c4a2cc13dc5f"/>
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/65918bae-5399-4668-af2a-c4a2cc13dc5f.git"/>
 <br>
 
 ### [홈 화면]
-* * *
-<img width="30%" src=""/>
+* * *                             
+<img width="30%" src=/>
 
 
 
