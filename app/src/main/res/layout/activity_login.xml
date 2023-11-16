@@ -148,16 +148,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_google" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="-5dp"
-        android:layout_marginTop="15dp"
-        android:text="@string/tv_signup"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/user_password_etvl"
-        app:layout_constraintTop_toBottomOf="@+id/user_password_etvl" />
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-5dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="24dp"
+            android:text="@string/tv_signup"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/sign_up_txt"
+            app:layout_constraintStart_toStartOf="@+id/user_password_etvl"
+            app:layout_constraintTop_toBottomOf="@+id/user_password_etvl" />
 
      <TextView
         android:id="@+id/sign_up_txt"

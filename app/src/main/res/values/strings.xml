@@ -37,7 +37,7 @@
     <string name="et_login_password">비밀번호</string>
     <string name="bt_login">로그인</string>
     <string name="tv_find_password">비밀번호 찾기</string>
-    <string name="tv_signup">이메일로 회원가입 진행하기</string>
+    <string name="tv_signup">이메일로 회원가입</string>
     <string name="tvb_signup">회원가입</string>
     <string name="message_event">메시지: %s</string>
     <string name="error_code_event">오류 코드: %d</string>
