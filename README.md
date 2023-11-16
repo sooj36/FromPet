@@ -1,3 +1,16 @@
+# 반려동물 커뮤니티 앱 FROMPET
+
+![frompet](https://github.com/NBCampFinalProject/FromPet/assets/106301222/7107c904-d779-4371-a31a-7582e0334cae)
+
+-배포 : 구글 플레이 스토어 검색 FROMPET
+- Test ID : test@test.com
+- Test PW : 123123
+
+
+<br>
+
+
+
 <div align="center">
 <h2>[2023] 반려동물 커뮤니티 From Pet 어플 제작 🐕</h2>
 사용자는 반려동물의 정보를 입력하여 회원가입을 진행하며 자신과 가까운 사용자를 조회하며 채팅 & 커뮤니티 & 지도를 이용할 수 있는 어플입니다~! <br> 사람 대 사람으로 이루어지는 어플이기 때문에 개발자가 사용자 입장에서 많은 이용을 해보며 런칭하게 되었습니다. <br> 여러 반려동물의 정보와 상대방과 채팅을 하면서 친해져봐요 🙌
@@ -11,7 +24,9 @@
   - [개발환경](#1-개발환경)
   - [프로젝트 소개](#2-프로젝트-소개)
   - [페이지별 기능](#3-페이지별-기능)
-  - [이용 방법](#이용방법)
+  - [이용 방법](#4-이용-방법)
+  - [개선 목표](#5-개선-목표)
+  - [프로젝트 후기](#6-프로젝트-후기)
  
 
 <br/>
@@ -69,7 +84,7 @@
 
   
 
-! <img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/cfae4ae3-a6c8-42ce-919b-d40c86db1361.gif"/>
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/cfae4ae3-a6c8-42ce-919b-d40c86db1361.gif"/>
 <br>
 
 
@@ -99,12 +114,54 @@
 <br>
 
 ### [홈 화면]
-* * *                             
-<img width="30%" src=/>
+* * *   
+- 스와이프 하여 어플 사용자에게 좋아요 표시를 해보세요!
+- 화살표를 누르면 상대방의 프로필을 자세하게 볼 수 있습니다.
+- 필터를 사용해 내가 원하는 반려동물을 필터링 해서 조회 해볼 수 있습니다.
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/33536db5-2d6f-4ef2-9a5a-3d44f7990e54"/>
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/bd25f7f0-b087-440f-b24d-a2c926c746af"/>
+<br>
+
+### [채팅 화면]
+* * *
+- 채팅화면은 홈화면에서 매칭이 서로 된 유저끼리만 채팅을 지원합니다.
+- 오른쪽 목록은 나에게 좋아요를 보낸 유저의 프로필을 조회할 수 있습니다.
+- 실시간으로 상대방과 채팅을 할 수 있습니다.
+- 물론 상대방이 채팅에서 마음에 들지 않는다면 우측 상단의 나가기 버튼으로 채팅방을 닫을 수 있습니다.
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/0611251d-df5d-4a9c-b8e5-287ddfc577a5"/>
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/038c1efe-e241-496d-a818-596fe26a037b"/>
+<br>
+
+### [지도 화면]
+* * *
+- 내 위치를 기반해서 근처의 유저가 있는지 지도상으로 찾아볼 수 있습니다.
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/bbcfb994-0a6f-43da-a222-c3ef604fe6f6"/>
+<br>
+
+### [커뮤니티]
+* * *
+- 커뮤니티를 통해 다른 유저들과 여러가지 정보를 공유할 수 있습니다.
+- 각 동물 이미지에 맞는 정보들만 카테고리로 조회할 수 있습니다.
+- 클립으로 원하는 정보들만 모아서 볼 수 있고 상단에 검색을 통해 내가 원하는 키워드만 검색할 수 있습니다.
+- 커뮤니티에서 원하는 정보에 댓글과 대댓글을 달아 상대방과 소통을 할 수 있습니다.
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/97335949-4714-48c5-9fca-bae1b3b94706"/>
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/3bca7a63-6b6f-4d01-b4c5-0773b99ba546"/>
+<br>
+
+### [마이페이지 화면]
+* * *
+- 마이페이지에서 프로필 수정을 할 수 있습니다.
+- 내가 어떤 사용자와 친구가 되어있는지도 한번에 조회 가능합니다.
+- 알림관리에서 토글 버튼으로 알림기능을 on&off 할 수 있습니다.
+- 설정에서는 회원 탈퇴와 비밀번호 초기화를 진행 할 수 있습니다.
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/7e6821ce-eaa6-45c9-b9b5-01adc47f180d"/>
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/903b299c-7269-40ba-9463-dd175d7ac1cb"/>
+<br/>
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/73b11397-2d1b-48da-839f-4f66cc1f4020"/>
+<img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/3cf92a25-dc17-4c9c-a7bf-da82290b735c)"/>
 
 
-
-## 이용방법
+## 4. 이용 방법
 - 홈화면에서 마음에 드는 반려동물을 좋아요 해보세요! <br/>
 그럼 상대방에게 좋아요 표시가 됩니다! 하지만 너무 연연하지 말아요 상대방이 마음에 들지 않으면 거절 할 수도 있답니다...🫢 좌절은 No~ No~
 
@@ -114,4 +171,29 @@
   매칭된 상대방과 여러정보를 공유하며 채팅으로써 친해져보세요! 물론 상대방이 맘에 들지 않으면 나가기로 친구를 아예 끊을 수도 있습니다! 🫨<br/>
 - FromPet만의 커뮤니티를 이용해 보세요 ! 💬<br/>
   상단에는 매칭된 유저의 등수와 쌍을 확인할수가 있고 하단에는 반려동물의 타입에 따라서 카테고리 정보를 각각 조회해 볼 수 있습니다! 🌈 <br/> 사용자의 반려동물 타입 요구가 많아지면 추후에 업데이트를 할 예정입니다!🤔
+
+
+## 5. 개선 목표
+- 배포이후에 사용자의 니즈를 수렴하여 꾸준한 업데이트를 할 예정 [Notion](https://www.notion.so/02fe3fcc274c427faebca42a290a2d90)
+- MVVM 패턴이 적용되지 않은 부분을 리펙토링하여 유지보수
+    - 로그인 로직에 사용된 Dagger Hilt에 대한 팀원 전체 이해도 증가 -> 모든 구조에 적용(리펙토링)
+    - 파이어베이스 서버를 AWS 혹은 데이터 베이스 수정으로 빠릿한 어플, 최적화에 유지보수를 할 예정
+ 
+## 6. 프로젝트 후기  
+
+### 박세준
+
+<br>
+
+### 사석현
+
+<br>
+
+### 이승현
+
+<br>
+
+### 이수진
+
+<br>
 
