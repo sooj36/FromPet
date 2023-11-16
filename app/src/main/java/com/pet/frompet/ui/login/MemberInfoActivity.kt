@@ -72,6 +72,7 @@ class MemberInfoActivity : AppCompatActivity() {
                     contentUpload(petProfile)
                 } else {
                     showToast(getString(R.string.profile_image_choose))
+                    return@setOnClickListener
                 }
 
                 if (petName.isEmpty()) {
