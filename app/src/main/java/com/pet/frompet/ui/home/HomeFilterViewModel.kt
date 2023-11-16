@@ -144,20 +144,26 @@ class HomeFilterViewModel(private val app :Application): ViewModel() {
         })
     }
     private fun applyDistanceFilter(users: List<User>, filter: Filter): List<User> {
-        // 현재 사용자 위치가 없으면 빈 목록을 반환합니다
+        // 현재 사용자 위치가 없으면 빈 목록을 반환합니다.
         val currentUserLocation = currentUserLocation ?: return emptyList()
-        // 거리 필터링을 적용합니다
+
+
         return users.filter { user ->
             user.userLocation?.let { userLocation ->
-                val otherUserLocation = Location("").apply {
-                    latitude = userLocation.latitude
-                    longitude = userLocation.longitude
+                if (userLocation.latitude in -90.0..90.0 && userLocation.longitude in -180.0..180.0) {
+                    val otherUserLocation = Location("").apply {
+                        latitude = userLocation.latitude
+                        longitude = userLocation.longitude
+                    }
+                    val distance = currentUserLocation.distanceTo(otherUserLocation) / 1000 // km 단위
+                    distance <= filter.distanceFrom
+                } else {
+                    false
                 }
-                val distance = currentUserLocation.distanceTo(otherUserLocation) / 1000 // km 단위
-                distance <= filter.distanceFrom
             } ?: false
         }
     }
+
 
     // 사용자가 카드를 스와이프할 때 호출할 함수입니다:박세준
     fun userSwiped(userId: String) {
