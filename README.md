@@ -2,7 +2,7 @@
 
 ![frompet](https://github.com/NBCampFinalProject/FromPet/assets/106301222/7107c904-d779-4371-a31a-7582e0334cae)
 
--배포 : 구글 플레이 스토어 검색 FROMPET
+- 배포 : 구글 플레이 스토어 검색 FROMPET
 - Test ID : test@test.com
 - Test PW : 123123
 
