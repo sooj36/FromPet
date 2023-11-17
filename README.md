@@ -46,6 +46,7 @@
  - 데이터 베이스 및 서버: FireBase
  - 데일리 스크럼 및 트러블 슈팅 : [Notion](https://www.notion.so/12-b5e63529398b49e68ab10b59e636e6ea)
  - 디자인 : [Figma](https://www.figma.com/file/78mamyOeOlT9VOeaRywoH7/12%EC%A1%B0-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84?type=design&node-id=59-12&mode=design&t=l6CIi1VZS6vIykLs-0)
+ - 코드 컨벤션 : [Notion](https://www.notion.so/618057cdc78149119e50a43eebb110d6)
 <br/>
 
  - 프로젝트 지속기간: 2023.10 -2023.11.14
