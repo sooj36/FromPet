@@ -125,6 +125,7 @@
 ### [지도 화면]
 * * *
 - 내 위치를 기반해서 근처의 유저가 있는지 지도상으로 찾아볼 수 있습니다.
+- 쌓이는 데이터 방지를 위해 카메라를 화면을 기준으로 옮겨질때마마 유저가 리셋되고 새롭게 세팅 
 <img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/bbcfb994-0a6f-43da-a222-c3ef604fe6f6"/>
 <br>
 
