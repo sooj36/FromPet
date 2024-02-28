@@ -24,7 +24,6 @@
   - [프로젝트 소개](#2-프로젝트-소개)
   - [페이지별 기능](#3-페이지별-기능)
   - [이용 방법](#4-이용-방법)
-  - [개선 목표](#5-개선-목표)
 
 <br/>
 
@@ -32,7 +31,6 @@
 ## 1. 개발환경 
  - 안드로이드 스튜디오
  - 데이터 베이스 및 서버: FireBase
- - 데일리 스크럼 및 트러블 슈팅 : [Notion](https://www.notion.so/12-b5e63529398b49e68ab10b59e636e6ea)
  - 디자인 : [Figma](https://www.figma.com/file/78mamyOeOlT9VOeaRywoH7/12%EC%A1%B0-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84?type=design&node-id=59-12&mode=design&t=l6CIi1VZS6vIykLs-0)
  - 코드 컨벤션 : [Notion](https://www.notion.so/618057cdc78149119e50a43eebb110d6)
 <br/>
@@ -129,6 +127,10 @@
 <img width="30%" src="https://github.com/NBCampFinalProject/FromPet/assets/106301222/bbcfb994-0a6f-43da-a222-c3ef604fe6f6"/>
 <br>
 
+- `Repository`패턴을 적용해 각 페이지의 `repository` , `repositoryImpl`  생성하여 `viewModel`의 복잡성 낮춤
+- **`Naver Map API`** 및 `Firebase` 활용하여 기존 기본 마크를 위치 기반 사용자 프로필로 구현
+- 데이터 축적 방지를 위해 스크린을 기반하여 데이터 초기화 및 재생산 전략 구현
+
 ### [커뮤니티]
 * * *
 - 커뮤니티를 통해 다른 유저들과 여러가지 정보를 공유할 수 있습니다.
@@ -163,11 +165,4 @@
   매칭된 상대방과 여러정보를 공유하며 채팅으로써 친해져보세요! 물론 상대방이 맘에 들지 않으면 나가기로 친구를 아예 끊을 수도 있습니다! 🫨<br/>
 - FromPet만의 커뮤니티를 이용해 보세요 ! 💬<br/>
   상단에는 매칭된 유저의 등수와 쌍을 확인할수가 있고 하단에는 반려동물의 타입에 따라서 카테고리 정보를 각각 조회해 볼 수 있습니다! 🌈 <br/> 사용자의 반려동물 타입 요구가 많아지면 추후에 업데이트를 할 예정입니다!🤔
-
-
-## 5. 개선 목표
-- 배포이후에 사용자의 니즈를 수렴하여 꾸준한 업데이트를 할 예정 [Notion](https://www.notion.so/02fe3fcc274c427faebca42a290a2d90)
-- MVVM 패턴이 적용되지 않은 부분을 리펙토링하여 유지보수
-    - 로그인 로직에 사용된 Dagger Hilt에 대한 팀원 전체 이해도 증가 -> 모든 구조에 적용(리펙토링)
-    - 파이어베이스 서버를 AWS 혹은 데이터 베이스 수정으로 빠릿한 어플, 최적화에 유지보수를 할 예정
 
